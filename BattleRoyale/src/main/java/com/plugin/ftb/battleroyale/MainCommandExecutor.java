@@ -17,5 +17,4 @@ public class MainCommandExecutor implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		return false;
 	}
-
 }
