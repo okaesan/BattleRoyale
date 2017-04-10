@@ -82,6 +82,18 @@ public class MainListener implements Listener {
 		}
 	}
 
+	@EventHandler
+	public void onDamage(EntityDamageEvent event){
+		if(event.getEntity() instanceof Player){
+			Player player = (Player)event.getEntity();
+			Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
+			
+			//DEADチームはダメージを受けないように
+			if(board.getTeam(TEAM_DEAD_NAME).hasPlayer(player)){
+				event.setCancelled(true);
+			}
+		}
+	}
 	//デバッグ用
 	public void broadcast(String message){
 		BattleRoyale.broadcast(message);
