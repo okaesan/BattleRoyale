@@ -54,7 +54,7 @@ public class BattleRoyale extends JavaPlugin{
 		teamDead.setPrefix(ChatColor.GRAY.toString());
 		teamDead.setSuffix(ChatColor.RESET.toString());
 		teamDead.setDisplayName("team dead");
-		teamDead.setAllowFriendlyFire(true);
+		teamDead.setAllowFriendlyFire(false);
 	}
 
 	/*
