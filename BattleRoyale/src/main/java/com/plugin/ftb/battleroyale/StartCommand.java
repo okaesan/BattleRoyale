@@ -13,9 +13,13 @@ public class StartCommand implements CommandExecutor {
 	public static BattleRoyale plugin = BattleRoyale.plugin;
 	public static String prefix = BattleRoyale.prefix;
 
+	/*
+	 * ゲーム開始コマンド
+	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		MainListener.c = 1;
+		//SLOWエフェクトを削除
 		for (Player p : plugin.getServer().getOnlinePlayers()) {
 			p.removePotionEffect(PotionEffectType.SLOW);
 		}
