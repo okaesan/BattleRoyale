@@ -11,32 +11,44 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
 public class BattleRoyale extends JavaPlugin{
-	
+
 	public static BattleRoyale plugin;
-	
+
 	//生存者チーム
   public static final String TEAM_ALIVE_NAME = "team_alive";
   private Team teamAlive;
   //死亡者チーム
-  public static final String TEAM_DEAD_NAME = "team_dead"; 
+  public static final String TEAM_DEAD_NAME = "team_dead";
   private Team teamDead;
-    
+
  	//キル数カウント
  	public static HashMap<Player, Integer> killCount = new HashMap<>();
 	//ポイントカウント
  	public static HashMap<Player, Integer> pointCount = new HashMap<>();
-    
+
 	@Override
 	public void onEnable(){
-		
+
+		/*
+		 * おか制作
+		 * ステージ登録、チェストへのアイテム配置
+		 */
+		getCommand("battleroyale").setExecutor(new MainCommandExecutor(this));
+		this.saveDefaultConfig();
+
+		/*
+		 * かなあみさん制作
+		 * スコアボード関連
+		 */
+
 		plugin = this;
 
 		getServer().getPluginManager().registerEvents(new MainListener(), this);	//イベントリスナを登録
-		
+
 		// メインスコアボードを取得
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
 		Scoreboard board = manager.getMainScoreboard();
- 
+
 		// チームを新規作成
 		teamAlive = board.getTeam(TEAM_ALIVE_NAME);
 		if(teamAlive != null){
