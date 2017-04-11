@@ -10,8 +10,11 @@ import org.bukkit.entity.Player;
 
 public class StartPointCommand implements CommandExecutor {
 
-	private BattleRoyale plugin; // Mainクラスを扱う。このクラスでは使ってないからほんとはいらない。
+	private BattleRoyale plugin;
+	
+	//addコマンドを実行したプレイヤーリスト
 	public static ArrayList<Player> adders = new ArrayList<>();
+	//removeコマンドを実行したプレイヤーリスト
 	public static ArrayList<Player> removers = new ArrayList<>();
 
 	public static String prefix = BattleRoyale.prefix;
@@ -20,12 +23,15 @@ public class StartPointCommand implements CommandExecutor {
 		this.plugin = plugin;
 	}
 
+	/*
+	 * 武器,防具配布用音符ブロックを登録、削除
+	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (sender instanceof Player) {
 			if (args.length != 1) {
-				sender.sendMessage(prefix + ChatColor.GRAY + "/startpoint " + ChatColor.RED + "add\n" + prefix
-						+ ChatColor.GRAY + "/startpoint " + ChatColor.RED + "remove");
+				sender.sendMessage(prefix + ChatColor.GRAY + "/startpoint " + ChatColor.RED + "add\n" +
+						   prefix + ChatColor.GRAY + "/startpoint " + ChatColor.RED + "remove");
 				return true;
 			}
 
@@ -44,8 +50,8 @@ public class StartPointCommand implements CommandExecutor {
 				}
 				sender.sendMessage(prefix + ChatColor.GREEN + "音符ブロックを右クリックしてください。");
 			} else {
-				sender.sendMessage(prefix + ChatColor.GRAY + "/startpoint " + ChatColor.RED + "add\n" + prefix
-						+ ChatColor.GRAY + "/startpoint " + ChatColor.RED + "remove");
+				sender.sendMessage(prefix + ChatColor.GRAY + "/startpoint " + ChatColor.RED + "add\n" +
+						   prefix + ChatColor.GRAY + "/startpoint " + ChatColor.RED + "remove");
 			}
 			return true;
 		} else {
