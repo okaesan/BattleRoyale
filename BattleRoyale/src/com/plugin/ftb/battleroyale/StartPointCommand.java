@@ -10,8 +10,6 @@ import org.bukkit.entity.Player;
 
 public class StartPointCommand implements CommandExecutor {
 
-	private BattleRoyale plugin;
-	
 	//addコマンドを実行したプレイヤーリスト
 	public static ArrayList<Player> adders = new ArrayList<>();
 	//removeコマンドを実行したプレイヤーリスト
@@ -20,7 +18,6 @@ public class StartPointCommand implements CommandExecutor {
 	public static String prefix = BattleRoyale.prefix;
 
 	public StartPointCommand(BattleRoyale plugin) {
-		this.plugin = plugin;
 	}
 
 	/*

@@ -99,6 +99,7 @@ public class MainListener implements Listener {
 	/*
 	 * DEADチームは一切のダメージを受けないようにする
 	 */
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onDamage(EntityDamageEvent event) {
 		if (event.getEntity() instanceof Player) {
@@ -181,8 +182,6 @@ public class MainListener implements Listener {
 	@EventHandler
 	public void BeforeGame(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
-		ItemStack itemhas = new ItemStack(Material.MAGMA_CREAM);
-		boolean h = player.getInventory().contains(itemhas);
 		/*
 		 * if (c == 1){ itemhas = new ItemStack(Material.MAGMA_CREAM);
 		 * player.getInventory().remove(itemhas); } else if(h == true){ Location
