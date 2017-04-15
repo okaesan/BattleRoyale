@@ -51,6 +51,7 @@ public class BattleRoyale extends JavaPlugin {
 
 		// イベントリスナ登録
 		getServer().getPluginManager().registerEvents(new MainListener(), this);
+		getServer().getPluginManager().registerEvents(new SignJoin(), this);
 
 		// メインスコアボードを取得
 		ScoreboardManager manager = Bukkit.getScoreboardManager();

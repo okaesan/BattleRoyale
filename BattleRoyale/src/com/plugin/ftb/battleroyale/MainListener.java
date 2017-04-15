@@ -45,10 +45,10 @@ public class MainListener implements Listener {
 	@EventHandler
 	public static void subChest(BlockBreakEvent e){
 		Player player = (Player)e.getPlayer();
-		
+
 		if(MainCommandExecutor.judEdit == 2&&player.getInventory().getItemInHand().getType()==Material.STONE){
 			MainConfig.subChestConfig(e.getBlock().getLocation(), player);
-			
+
 		}
 	}
 
