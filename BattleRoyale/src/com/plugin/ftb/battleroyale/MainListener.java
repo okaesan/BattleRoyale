@@ -1,8 +1,10 @@
 package com.plugin.ftb.battleroyale;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -45,10 +47,10 @@ public class MainListener implements Listener {
 	@EventHandler
 	public static void subChest(BlockBreakEvent e){
 		Player player = (Player)e.getPlayer();
-
+		
 		if(MainCommandExecutor.judEdit == 2&&player.getInventory().getItemInHand().getType()==Material.STONE){
 			MainConfig.subChestConfig(e.getBlock().getLocation(), player);
-
+			
 		}
 	}
 
@@ -109,20 +111,74 @@ public class MainListener implements Listener {
 			skull.update();
 		}
 
-		// キル数をカウント
-		if (killCount.containsKey(killer)) {
-			killCount.put(killer, killCount.get(killer) + 1);
-		} else {
-			killCount.put(killer, 1);
-		}
-
-		// 最後の1人だった場合ポイントを加算
-		if (board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() == 1) {
+		if(killer != null){
+			// キル数をカウント
+			if (killCount.containsKey(killer)) {
+				killCount.put(killer, killCount.get(killer) + 1);
+			} else {
+				killCount.put(killer, 1);
+			}
+			//ポイントをカウント
 			if (pointCount.containsKey(killer)) {
 				pointCount.put(killer, pointCount.get(killer) + 1);
 			} else {
 				pointCount.put(killer, 1);
 			}
+		}
+
+		// 最後の1人だった場合5ポイントを加算
+		if (board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() == 1) {
+			if(killer != null){
+				if (pointCount.containsKey(killer)) {
+					pointCount.put(killer, pointCount.get(killer) + 5);
+				} else {
+					pointCount.put(killer, 1);
+				}
+			}
+			
+			/*
+			 * 終了時統計を表示
+			 */
+			//0ポイントのプレイヤーはデータがないので追加する
+			for(Player p : Bukkit.getServer().getOnlinePlayers()){
+				if(!pointCount.containsKey(p)){
+					pointCount.put(p, 0);
+					broadcast(pointCount.size() + "");
+				}
+				if(!killCount.containsKey(p)){
+					killCount.put(p, 0);
+				}
+			}
+			ArrayList<Player> pointRank = MainUtils.scoreSort(pointCount);
+			broadcast(ChatColor.DARK_AQUA + "------------終了------------");
+			int same = 0;//同率のプレイヤー用
+			for(int i=0; i<pointRank.size(); i++){
+				if(i >= 5)
+					break;
+				
+				//前の順位と同じポイントだった場合同じ順位にする
+				if(i >= 1){
+					if(pointCount.get(pointRank.get(i-1)) == pointCount.get(pointRank.get(i))){
+						same -= 1;
+					}else{
+						same = 0;
+					}
+				}
+				int rank = i+1 + same;
+				
+				ChatColor color = ChatColor.WHITE;
+				if(rank == 1)
+					color = ChatColor.GOLD;
+				if(rank == 2)
+					color = ChatColor.YELLOW;
+				if(rank == 3)
+					color = ChatColor.GREEN;
+				
+				broadcast(" " + color + String.valueOf(rank) + "位 : " + pointRank.get(i).getName());
+				broadcast(" " + ChatColor.RED + pointCount.get(pointRank.get(i)) + ChatColor.GRAY + " point, " + 
+						ChatColor.RED + killCount.get(pointRank.get(i)) + ChatColor.GRAY + " kill");
+			}
+			broadcast(ChatColor.DARK_AQUA + "-----------------------------");
 		}
 	}
 
@@ -240,7 +296,7 @@ public class MainListener implements Listener {
 		}
 	}
 
-	// デバッグ用
+	// ブロードキャスト
 	public void broadcast(String message) {
 		BattleRoyale.broadcast(message);
 	}

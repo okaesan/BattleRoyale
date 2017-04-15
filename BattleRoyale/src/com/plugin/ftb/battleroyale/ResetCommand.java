@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 public class ResetCommand implements CommandExecutor {
-
+	
 	public static BattleRoyale plugin = BattleRoyale.plugin;
 	public static String prefix = BattleRoyale.prefix;
 

@@ -1,8 +1,11 @@
 package com.plugin.ftb.battleroyale;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.command.Command;
@@ -12,11 +15,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Scoreboard;
 
 public class StartCommand implements CommandExecutor {
 
 	public static BattleRoyale plugin = BattleRoyale.plugin;
 	public static String prefix = BattleRoyale.prefix;
+	// キル数カウント
+	public static HashMap<Player, Integer> killCount = BattleRoyale.killCount;
+	// ポイントカウント
+	public static HashMap<Player, Integer> pointCount = BattleRoyale.pointCount;
 
 	public static int locX,locY,locZ;
 	static int r, c = 0, item;
@@ -24,6 +32,7 @@ public class StartCommand implements CommandExecutor {
 	/*
 	 * ゲーム開始コマンド
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		MainListener.c = 1;
@@ -35,6 +44,7 @@ public class StartCommand implements CommandExecutor {
 		setChest((Player)sender);
 
 		Bukkit.broadcastMessage(prefix + ChatColor.GOLD + "ゲームスタート");
+		
 		return true;
 	}
 
