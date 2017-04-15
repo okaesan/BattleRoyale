@@ -126,9 +126,15 @@ public class MainListener implements Listener {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler(ignoreCancelled = true)
 	public void onCick(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
+		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
+		
+		/*
+		 * 音符ブロックをクリックしたとき、装備を付与し、ゲームに参加させる
+		 */
 		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			Block block = event.getClickedBlock();
 			Material material = block.getType();
@@ -143,7 +149,17 @@ public class MainListener implements Listener {
 					StartPointCommand.removers.remove(player);
 					return;
 				}
-
+				
+				/*
+				 * PlayerをAliveチームに登録して参加
+				 */
+				if (!board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
+					board.getTeam(TEAM_ALIVE_NAME).addPlayer(player);
+				}
+				
+				/*
+				 * ランダムで装備品を付与
+				 */
 				MainConfig.loadConfig();
 				if (MainConfig.locations != null && MainConfig.locations.contains(block.getLocation())) {
 					Random md = new Random();
