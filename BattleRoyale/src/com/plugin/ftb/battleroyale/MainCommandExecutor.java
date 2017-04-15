@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 public class MainCommandExecutor implements CommandExecutor {
 
 	public static BattleRoyale _plugin = BattleRoyale.plugin;
+	public static int judEdit;
 
 	public MainCommandExecutor(BattleRoyale plugin) {
 		MainCommandExecutor._plugin = plugin;
@@ -35,9 +36,12 @@ public class MainCommandExecutor implements CommandExecutor {
 			}
 
 			Player _player = (Player) sender;
+
 			/*
 			 * 対角線でステージの登録を行うためのL、Rの登録
 			 * 引数の0と1は、LとRの識別子でMainConfigクラスで関数が増えるのを防ぐため
+			 * とか言ってるけど結局文の数は対して変わってないのでわざわざswitch文使わなくてよかったかもです><
+			 * 解読する際はみにくいかと思いますが頑張ってください・・・笑
 			 */
 			switch(args[0]){
 			case "stageL":
@@ -48,14 +52,40 @@ public class MainCommandExecutor implements CommandExecutor {
 				return true;
 
 			case "stageR":
-				Location _locR = _player.getLocation();
+				if(_plugin.getConfig().get("stagelocationsL")!=null){
+					Location _locR = _player.getLocation();
 
-				MainConfig.makeStage(_locR,_player,1);
+					MainConfig.makeStage(_locR,_player,1);
+
+					return true;
+
+				}else{
+					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "stageLから設定してください");
+
+					return true;
+				}
+
+			case "chestEdit":
+				if(_plugin.getConfig().get("stagelocationsR")!=null){
+					judEdit = 2;
+
+					return true;
+
+				}else{
+					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "stageRを設定してください");
+
+					return true;
+				}
+
+			case "chestCom":
+				judEdit = 0;
 
 				return true;
+
 			default:
-				_player.sendMessage(BattleRoyale.prefix+ChatColor.GRAY+"\n/battleroyale " + ChatColor.RED + "stageL\n"
-						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED+"stageR");
+				_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "\n/battleroyale " + ChatColor.RED + "stageL\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "stageR\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "chestEdit");
 				return true;
 			}
 		}

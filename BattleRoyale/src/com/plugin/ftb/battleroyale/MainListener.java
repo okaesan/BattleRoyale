@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -35,6 +36,18 @@ public class MainListener implements Listener {
 	public static HashMap<Player, Integer> killCount = BattleRoyale.killCount;
 	// ポイントカウント
 	public static HashMap<Player, Integer> pointCount = BattleRoyale.pointCount;
+
+
+	@SuppressWarnings("deprecation")
+	@EventHandler
+	public static void subChest(BlockBreakEvent e){
+		Player player = (Player)e.getPlayer();
+		
+		if(MainCommandExecutor.judEdit == 2&&player.getInventory().getItemInHand().getType()==Material.STONE){
+			MainConfig.subChestConfig(e.getBlock().getLocation(), player);
+			
+		}
+	}
 
 	/*
 	 * 死亡者チャットを実装

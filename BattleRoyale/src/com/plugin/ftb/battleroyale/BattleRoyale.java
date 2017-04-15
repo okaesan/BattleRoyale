@@ -33,7 +33,7 @@ public class BattleRoyale extends JavaPlugin {
 	 * その他
 	 */
 	public static BattleRoyale plugin;
-	// メッセージ用接頭文字列
+	// メッセージ用接頭文字列C
 	public static String prefix = ChatColor.GRAY + "[BattleRoyale]";
 
 	@Override
@@ -78,7 +78,7 @@ public class BattleRoyale extends JavaPlugin {
 
 	/*
 	 * ブロードキャストするメソッド。簡略化しただけです。デバッグ用
-	 * 
+	 *
 	 * @param message ブロードキャストするメッセージ
 	 */
 	public static void broadcast(String message) {

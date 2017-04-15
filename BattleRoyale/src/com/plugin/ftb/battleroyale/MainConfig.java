@@ -12,12 +12,16 @@ public class MainConfig extends BattleRoyale {
 	public static ArrayList<Location> locations = new ArrayList<>();
 	public static ArrayList<Location> _stagelocationsL = new ArrayList<>();
 	public static ArrayList<Location> _stagelocationsR = new ArrayList<>();
+	public static ArrayList<Integer> _chestlocations = new ArrayList<>();
+
+	public static int chestCount;
 
 	/*
 	 * configからlocationsを取得
 	 */
 	@SuppressWarnings("unchecked")
 	public static void loadConfig() {
+
 		plugin.reloadConfig();
 		locations = new ArrayList<>();
 		locations = (ArrayList<Location>) plugin.getConfig().get("locations");
@@ -35,6 +39,12 @@ public class MainConfig extends BattleRoyale {
 		_stagelocationsR = (ArrayList<Location>) plugin.getConfig().get("stagelocationsR");
 		if (_stagelocationsR == null) {
 			_stagelocationsR = new ArrayList<>();
+		}
+
+		_chestlocations = new ArrayList<>();
+		_chestlocations = (ArrayList<Integer>) plugin.getConfig().get("chestlocations");
+		if (_chestlocations == null) {
+			_chestlocations = new ArrayList<>();
 		}
 	}
 
@@ -89,7 +99,32 @@ public class MainConfig extends BattleRoyale {
 
 			return;
 		}
+	}
 
+	public static void subChestConfig(Location loc, Player player){
+		loadConfig();
+
+		if(_chestlocations.contains(loc)){
+			player.sendMessage(BattleRoyale.prefix + ChatColor.RED + "このチェストは既に追加されています");
+			return;
+		}
+
+		chestCount = plugin.getConfig().getInt("chestCounter");
+		chestCount++;
+
+		_chestlocations.add(loc.getBlockX());
+		_chestlocations.add(loc.getBlockY());
+		_chestlocations.add(loc.getBlockZ());
+
+		plugin.getConfig().set("chestlocations", null);
+
+		plugin.getConfig().set("chestCounter", chestCount);
+		plugin.getConfig().set("chestlocations"+chestCount+".x", _chestlocations.get(0));
+		plugin.getConfig().set("chestlocations"+chestCount+".y", _chestlocations.get(1));
+		plugin.getConfig().set("chestlocations"+chestCount+".z", _chestlocations.get(2));
+		plugin.saveConfig();
+
+		player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "このチェストを追加しました");
 	}
 
 	/*

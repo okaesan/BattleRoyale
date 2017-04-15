@@ -1,0 +1,8 @@
+chestItem:
+  setItemCounter: 3
+  #https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html
+  #木の剣などplugin内部で使用するMaterialIDはItemidとは異なるので探すの大変ですが上記のurlを参照してください
+  #例:× ItemID = WOODEN_SWORD , ○ MaterialID = WOOD_SWORD
+  item1: APPLE
+  item2: IRON_AXE
+  item3: WOOD_SWORD
