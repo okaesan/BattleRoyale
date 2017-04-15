@@ -6,7 +6,10 @@ import java.util.Random;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.SkullType;
 import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -76,9 +79,6 @@ public class MainListener implements Listener {
 		}
 	}
 
-	/*
-	 * キル数、残り人数をカウント
-	 */
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
@@ -90,6 +90,23 @@ public class MainListener implements Listener {
 		if (board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
 			board.getTeam(TEAM_ALIVE_NAME).removePlayer(player);
 			board.getTeam(TEAM_DEAD_NAME).addPlayer(player);
+			
+			//死亡後、ドロップアイテムをチェストに保管
+			Block block = player.getLocation().getBlock();
+			block.setType(Material.CHEST);
+			Chest chest = (Chest)block.getState();
+			for(ItemStack itemStack : event.getDrops()){
+				chest.getInventory().addItem(itemStack);
+			}
+			event.getDrops().clear();
+			
+			//プレイヤーの頭を置く
+			block = player.getLocation().add(0, 1, 0).getBlock();
+			block.setTypeIdAndData(Material.SKULL.getId(), (byte)1, true);
+			Skull skull = (Skull)block.getState();
+			skull.setSkullType(SkullType.PLAYER);
+			skull.setOwningPlayer(player);
+			skull.update();
 		}
 
 		// キル数をカウント
