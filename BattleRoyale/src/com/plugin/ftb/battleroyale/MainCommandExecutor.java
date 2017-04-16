@@ -1,11 +1,14 @@
 package com.plugin.ftb.battleroyale;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class MainCommandExecutor implements CommandExecutor {
 
@@ -27,6 +30,7 @@ public class MainCommandExecutor implements CommandExecutor {
 	 *
 	 * @param args コマンドの引数
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -81,11 +85,22 @@ public class MainCommandExecutor implements CommandExecutor {
 				judEdit = 0;
 
 				return true;
-
+				
+			case "setMap":
+				ItemStack item = _player.getItemInHand();
+				if(item.getType().equals(Material.MAP)){
+					MainConfig.setMap(item.getDurability());
+					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "マップを設定しました。");
+				}else{
+					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "マップを持ってコマンドを実行してください。");
+				}
+				
+				return true;
 			default:
 				_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "\n/battleroyale " + ChatColor.RED + "stageL\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "stageR\n"
-						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "chestEdit");
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "chestEdit\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setMap");
 				return true;
 			}
 		}

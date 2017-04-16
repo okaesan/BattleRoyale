@@ -179,6 +179,15 @@ public class MainConfig extends BattleRoyale {
 
 		player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "音符ブロックを削除しました。");
 	}
+	
+	/*
+	 * マップを保存する
+	 */
+	public static void setMap(Short map){
+		loadConfig();
+		plugin.getConfig().set("map", map);
+		plugin.saveConfig();
+	}
 
 	// デバッグ用
 	public static void broadcast(String message) {
