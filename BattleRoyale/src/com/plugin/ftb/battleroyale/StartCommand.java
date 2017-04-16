@@ -48,8 +48,8 @@ public class StartCommand implements CommandExecutor {
 		_player.sendMessage("3");
 
 		Bukkit.broadcastMessage(prefix + ChatColor.GOLD + "ゲームスタート");
-		
-		deathA.deathArea(_player);
+
+		deathA.deathArea();
 
 		return true;
 	}
