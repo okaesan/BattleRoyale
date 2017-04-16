@@ -25,6 +25,7 @@ public class StartCommand implements CommandExecutor {
 	 	public static HashMap<Player, Integer> pointCount = BattleRoyale.pointCount;
 
 	DeathArea deathA = new DeathArea();
+	PlusDeathArea PdeathA = new PlusDeathArea();
 
 	public static int locX,locY,locZ;
 	static int r, c = 0, item;
@@ -36,20 +37,20 @@ public class StartCommand implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		MainListener.c = 1;
 		Player _player = (Player)sender;
-		_player.sendMessage("1");
 		//SLOWエフェクトを削除
 		/*for (Player p : SignJoin.join) {
 			p.sendMessage("wa-i");
 			p.removePotionEffect(PotionEffectType.SLOW);
 		}*/
-		_player.sendMessage("2");
 
 		setChest((Player)sender);
-		_player.sendMessage("3");
+
 
 		Bukkit.broadcastMessage(prefix + ChatColor.GOLD + "ゲームスタート");
 
 		deathA.deathArea();
+		PdeathA.setPlusDeath();
+		PdeathA.plus(_player);
 
 		return true;
 	}

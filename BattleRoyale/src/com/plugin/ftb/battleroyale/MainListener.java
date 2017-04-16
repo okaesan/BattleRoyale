@@ -179,6 +179,8 @@ public class MainListener implements Listener {
 						ChatColor.RED + killCount.get(pointRank.get(i)) + ChatColor.GRAY + " kill");
 			}
 			broadcast(ChatColor.DARK_AQUA + "-----------------------------");
+
+
 		}
 	}
 
