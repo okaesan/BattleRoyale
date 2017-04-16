@@ -5,7 +5,6 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.command.Command;
@@ -14,17 +13,18 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.Scoreboard;
 
 public class StartCommand implements CommandExecutor {
 
 	public static BattleRoyale plugin = BattleRoyale.plugin;
 	public static String prefix = BattleRoyale.prefix;
-	// キル数カウント
-	public static HashMap<Player, Integer> killCount = BattleRoyale.killCount;
-	// ポイントカウント
-	public static HashMap<Player, Integer> pointCount = BattleRoyale.pointCount;
+
+	 	// キル数カウント
+	 	public static HashMap<Player, Integer> killCount = BattleRoyale.killCount;
+	 	// ポイントカウント
+	 	public static HashMap<Player, Integer> pointCount = BattleRoyale.pointCount;
+
+	DeathArea deathA = new DeathArea();
 
 	public static int locX,locY,locZ;
 	static int r, c = 0, item;
@@ -32,19 +32,25 @@ public class StartCommand implements CommandExecutor {
 	/*
 	 * ゲーム開始コマンド
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		MainListener.c = 1;
+		Player _player = (Player)sender;
+		_player.sendMessage("1");
 		//SLOWエフェクトを削除
-		for (Player p : plugin.getServer().getOnlinePlayers()) {
+		/*for (Player p : SignJoin.join) {
+			p.sendMessage("wa-i");
 			p.removePotionEffect(PotionEffectType.SLOW);
-		}
+		}*/
+		_player.sendMessage("2");
 
 		setChest((Player)sender);
+		_player.sendMessage("3");
 
 		Bukkit.broadcastMessage(prefix + ChatColor.GOLD + "ゲームスタート");
 		
+		deathA.deathArea(_player);
+
 		return true;
 	}
 

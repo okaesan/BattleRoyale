@@ -47,10 +47,10 @@ public class MainListener implements Listener {
 	@EventHandler
 	public static void subChest(BlockBreakEvent e){
 		Player player = (Player)e.getPlayer();
-		
+
 		if(MainCommandExecutor.judEdit == 2&&player.getInventory().getItemInHand().getType()==Material.STONE){
 			MainConfig.subChestConfig(e.getBlock().getLocation(), player);
-			
+
 		}
 	}
 
@@ -92,7 +92,7 @@ public class MainListener implements Listener {
 		if (board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
 			board.getTeam(TEAM_ALIVE_NAME).removePlayer(player);
 			board.getTeam(TEAM_DEAD_NAME).addPlayer(player);
-			
+
 			//死亡後、ドロップアイテムをチェストに保管
 			Block block = player.getLocation().getBlock();
 			block.setType(Material.CHEST);
@@ -101,7 +101,7 @@ public class MainListener implements Listener {
 				chest.getInventory().addItem(itemStack);
 			}
 			event.getDrops().clear();
-			
+
 			//プレイヤーの頭を置く
 			block = player.getLocation().add(0, 1, 0).getBlock();
 			block.setTypeIdAndData(Material.SKULL.getId(), (byte)1, true);
@@ -135,7 +135,7 @@ public class MainListener implements Listener {
 					pointCount.put(killer, 1);
 				}
 			}
-			
+
 			/*
 			 * 終了時統計を表示
 			 */
@@ -155,7 +155,7 @@ public class MainListener implements Listener {
 			for(int i=0; i<pointRank.size(); i++){
 				if(i >= 5)
 					break;
-				
+
 				//前の順位と同じポイントだった場合同じ順位にする
 				if(i >= 1){
 					if(pointCount.get(pointRank.get(i-1)) == pointCount.get(pointRank.get(i))){
@@ -165,7 +165,7 @@ public class MainListener implements Listener {
 					}
 				}
 				int rank = i+1 + same;
-				
+
 				ChatColor color = ChatColor.WHITE;
 				if(rank == 1)
 					color = ChatColor.GOLD;
@@ -173,9 +173,9 @@ public class MainListener implements Listener {
 					color = ChatColor.YELLOW;
 				if(rank == 3)
 					color = ChatColor.GREEN;
-				
+
 				broadcast(" " + color + String.valueOf(rank) + "位 : " + pointRank.get(i).getName());
-				broadcast(" " + ChatColor.RED + pointCount.get(pointRank.get(i)) + ChatColor.GRAY + " point, " + 
+				broadcast(" " + ChatColor.RED + pointCount.get(pointRank.get(i)) + ChatColor.GRAY + " point, " +
 						ChatColor.RED + killCount.get(pointRank.get(i)) + ChatColor.GRAY + " kill");
 			}
 			broadcast(ChatColor.DARK_AQUA + "-----------------------------");
@@ -204,7 +204,7 @@ public class MainListener implements Listener {
 	public void onCick(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
-		
+
 		/*
 		 * 音符ブロックをクリックしたとき、装備を付与し、ゲームに参加させる
 		 */
@@ -222,14 +222,14 @@ public class MainListener implements Listener {
 					StartPointCommand.removers.remove(player);
 					return;
 				}
-				
+
 				/*
 				 * PlayerをAliveチームに登録して参加
 				 */
 				if (!board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
 					board.getTeam(TEAM_ALIVE_NAME).addPlayer(player);
 				}
-				
+
 				/*
 				 * ランダムで装備品を付与
 				 */

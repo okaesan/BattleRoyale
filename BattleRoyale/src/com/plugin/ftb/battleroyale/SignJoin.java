@@ -1,10 +1,7 @@
 package com.plugin.ftb.battleroyale;
 
-import java.util.ArrayList;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,9 +12,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.scoreboard.Scoreboard;
 
 public class SignJoin implements Listener {
-	
+
 	public static BattleRoyale plugin = BattleRoyale.plugin;
-	
+
 	// チーム名
 	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
 	public static final String TEAM_DEAD_NAME = BattleRoyale.TEAM_DEAD_NAME;
@@ -50,9 +47,9 @@ public class SignJoin implements Listener {
             			_player.sendMessage(ChatColor.GREEN + "既に参加しています！");
             			return;
             		}
-            		
+
             		board.getTeam(TEAM_ALIVE_NAME).addPlayer(_player);
-            		
+
             		s.setLine(1, ChatColor.GRAY + String.valueOf(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50));
             		s.update();
             		return;
