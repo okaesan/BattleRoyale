@@ -134,6 +134,7 @@ public class MainListener implements Listener {
 				} else {
 					pointCount.put(killer, 1);
 				}
+				
 			}
 
 			/*

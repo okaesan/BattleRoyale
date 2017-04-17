@@ -1,7 +1,6 @@
 package com.plugin.ftb.battleroyale;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -59,26 +58,18 @@ public class MainConfig extends BattleRoyale {
 	 *
 	 * @param jud stageLとstageRのどちらがコマンドとして入力されたかの識別子
 	 */
-	@SuppressWarnings("unchecked")
 	public static void makeStage(Location loc, Player player, int jud){
 		loadConfig();
 
 		switch(jud){
 		case 0:
-			check = (ArrayList<Integer>)plugin.getConfig().get("stagelocationsL");
-			/*
-			 * stageloacationsLパスに値が入力されているか確認
-			 */
-			if (check != null) {
-				player.sendMessage(BattleRoyale.prefix + "既に設定されています");
-				return;
-			}
 
 			_stagelocationsL.add(loc.getBlockX());
+
 			_stagelocationsL.add(loc.getBlockZ());
 
 			plugin.getConfig().set("stagelocationsL", null);
-			plugin.getConfig().set("stagelocationsL", Arrays.asList(_stagelocationsL));
+			plugin.getConfig().set("stagelocationsL", _stagelocationsL);
 			plugin.saveConfig();
 
 			player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "stageLを設定しました");
@@ -86,20 +77,15 @@ public class MainConfig extends BattleRoyale {
 			return;
 
 		case 1:
-			check = (ArrayList<Integer>)plugin.getConfig().get("stagelocationsR");
-			/*
-			 * stageloacationsRパスに値が入力されているか確認
-			 */
-			if (check != null) {
-				player.sendMessage(BattleRoyale.prefix + "既に設定されています");
-				return;
-			}
+
+			plugin.getConfig().set("stagelocationsR", null);
 
 			_stagelocationsR.add(loc.getBlockX());
+
 			_stagelocationsR.add(loc.getBlockZ());
 
 			plugin.getConfig().set("stagelocationsR", null);
-			plugin.getConfig().set("stagelocationsR", Arrays.asList(_stagelocationsR));
+			plugin.getConfig().set("stagelocationsR", _stagelocationsR);
 			plugin.saveConfig();
 
 			player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "stageRを設定しました");
@@ -179,7 +165,7 @@ public class MainConfig extends BattleRoyale {
 
 		player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "音符ブロックを削除しました。");
 	}
-	
+
 	/*
 	 * マップを保存する
 	 */
