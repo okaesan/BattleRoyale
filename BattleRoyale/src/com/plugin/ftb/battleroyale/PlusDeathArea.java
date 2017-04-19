@@ -204,7 +204,7 @@ class PlusDeathThreadClass extends BukkitRunnable{
 				if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
 					for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
 
-						p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
+						//p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
 
 						if(p.isOnline()){
 							if(pdaX-16<=(int)p.getPlayer().getLocation().getX()&&pdaX>=(int)p.getPlayer().getLocation().getX()
@@ -218,7 +218,7 @@ class PlusDeathThreadClass extends BukkitRunnable{
 				}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
 					for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
 
-						p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
+						//p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
 
 						if(p.isOnline()){
 							if(pdaX+16>=(int)p.getPlayer().getLocation().getX()&&pdaX<=(int)p.getPlayer().getLocation().getX()
@@ -233,7 +233,7 @@ class PlusDeathThreadClass extends BukkitRunnable{
 				}else if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
 					for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
 
-						p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
+						//p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
 
 						if(p.isOnline()){
 							if(pdaX-16<=(int)p.getPlayer().getLocation().getX()&&pdaX>=(int)p.getPlayer().getLocation().getX()
@@ -248,7 +248,7 @@ class PlusDeathThreadClass extends BukkitRunnable{
 				}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
 					for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
 
-						p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
+						//p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
 
 						if(p.isOnline()){
 							if(pdaX+16>=(int)p.getPlayer().getLocation().getX()&&pdaX<=(int)p.getPlayer().getLocation().getX()

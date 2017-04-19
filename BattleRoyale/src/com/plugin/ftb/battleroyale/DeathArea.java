@@ -17,55 +17,53 @@ class ThreadClass extends BukkitRunnable{
     @SuppressWarnings("deprecation")
     public void run(){
         Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
-        Bukkit.broadcastMessage("ok");
 
         if(!(board.getTeam(TEAM_ALIVE_NAME).getSize()>0)){
         	this.cancel();
         }
-            locL = (ArrayList<Integer>) plugin.getConfig().getIntegerList("stagelocationsL");
-            locR = (ArrayList<Integer>) plugin.getConfig().getIntegerList("stagelocationsR");
+        locL = (ArrayList<Integer>) plugin.getConfig().getIntegerList("stagelocationsL");
+        locR = (ArrayList<Integer>) plugin.getConfig().getIntegerList("stagelocationsR");
 
-            if (((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1))){
-                for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
-                    if(p.isOnline()){
-                        if(locL.get(0)<(int)p.getPlayer().getLocation().getX()||locR.get(0)>(int)p.getPlayer().getLocation().getX()
-                                ||locL.get(1)<(int)p.getPlayer().getLocation().getZ()||locR.get(1)>(int)p.getPlayer().getLocation().getZ()){
-                            p.getPlayer().setHealth(0.0D);
-                        }
+        if (((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1))){
+            for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+                if(p.isOnline()){
+                    if(locL.get(0)<(int)p.getPlayer().getLocation().getX()||locR.get(0)>(int)p.getPlayer().getLocation().getX()
+                            ||locL.get(1)<(int)p.getPlayer().getLocation().getZ()||locR.get(1)>(int)p.getPlayer().getLocation().getZ()){
+                        p.getPlayer().setHealth(0.0D);
                     }
                 }
-            }else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
-                for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
-                    if(p.isOnline()){
-                        if((int)locL.get(0)>(int)p.getPlayer().getLocation().getX()||(int)locR.get(0)<(int)p.getPlayer().getLocation().getX()
-                                ||(int)locL.get(1)>(int)p.getPlayer().getLocation().getZ()||(int)locR.get(1)<(int)p.getPlayer().getLocation().getZ()){
-                            p.getPlayer().setHealth(0.0D);
-                        }
-                    }
-                }
-
-            }else if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
-                for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
-                    if(p.isOnline()){
-                        if((int)locL.get(0)<(int)p.getPlayer().getLocation().getX()||(int)locR.get(0)>(int)p.getPlayer().getLocation().getX()
-                                ||(int)locL.get(1)>(int)p.getPlayer().getLocation().getZ()||(int)locR.get(1)<(int)p.getPlayer().getLocation().getZ()){
-                            p.getPlayer().setHealth(0.0D);
-                        }
-                    }
-                }
-
-            }else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
-                for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
-                	if(p.isOnline()){
-                        if((int)locL.get(0)>(int)p.getPlayer().getLocation().getX()||(int)locR.get(0)<(int)p.getPlayer().getLocation().getX()
-                                ||(int)locL.get(1)<(int)p.getPlayer().getLocation().getZ()||(int)locR.get(1)>(int)p.getPlayer().getLocation().getZ()){
-                            p.getPlayer().setHealth(0.0D);
-                        }
-                    }
-                }
-            }else{
-
             }
+        }else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
+            for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+                if(p.isOnline()){
+                    if((int)locL.get(0)>(int)p.getPlayer().getLocation().getX()||(int)locR.get(0)<(int)p.getPlayer().getLocation().getX()
+                            ||(int)locL.get(1)>(int)p.getPlayer().getLocation().getZ()||(int)locR.get(1)<(int)p.getPlayer().getLocation().getZ()){
+                        p.getPlayer().setHealth(0.0D);
+                    }
+                }
+            }
+
+        }else if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
+            for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+                if(p.isOnline()){
+                    if((int)locL.get(0)<(int)p.getPlayer().getLocation().getX()||(int)locR.get(0)>(int)p.getPlayer().getLocation().getX()
+                            ||(int)locL.get(1)>(int)p.getPlayer().getLocation().getZ()||(int)locR.get(1)<(int)p.getPlayer().getLocation().getZ()){
+                        p.getPlayer().setHealth(0.0D);
+                    }
+                }
+            }
+
+        }else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
+            for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+            	if(p.isOnline()){
+                    if((int)locL.get(0)>(int)p.getPlayer().getLocation().getX()||(int)locR.get(0)<(int)p.getPlayer().getLocation().getX()
+                            ||(int)locL.get(1)<(int)p.getPlayer().getLocation().getZ()||(int)locR.get(1)>(int)p.getPlayer().getLocation().getZ()){
+                        p.getPlayer().setHealth(0.0D);
+                    }
+                }
+            }
+        }else{
+        }
     }
 }
 

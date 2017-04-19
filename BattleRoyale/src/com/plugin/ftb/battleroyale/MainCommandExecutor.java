@@ -1,5 +1,6 @@
 package com.plugin.ftb.battleroyale;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -55,34 +56,45 @@ public class MainCommandExecutor implements CommandExecutor {
 				return true;
 
 			case "stageR":
-				Location _locR = _player.getLocation();
+				if(_plugin.getConfig().get("stagelocationsL")!=null){
+					Location _locR = _player.getLocation();
 
-				MainConfig.makeStage(_locR,_player,1);
+					MainConfig.makeStage(_locR,_player,1);
 
-				return true;
+					return true;
+
+				}else{
+					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "stageLから設定してください");
+
+					return true;
+				}
 
 			case "chestEdit":
-				/*
-				 * MainListenerのsubChestからMainConfig
-				 */
-				judEdit = 2;
+				if(_plugin.getConfig().get("stagelocationsR")!=null){
+					judEdit = 2;
 
-				return true;
+					return true;
+
+				}else{
+					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "stageRを設定してください");
+
+					return true;
+				}
 
 			case "chestCom":
 				judEdit = 0;
 
 				return true;
-
+				
 			case "setMap":
 				ItemStack item = _player.getItemInHand();
 				if(item.getType().equals(Material.MAP)){
-					MainConfig.setMap(item.getDurability());
+					MainConfig.setMap(item);
 					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "マップを設定しました。");
 				}else{
 					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "マップを持ってコマンドを実行してください。");
 				}
-
+				
 				return true;
 			default:
 				_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "\n/battleroyale " + ChatColor.RED + "stageL\n"

@@ -1,10 +1,18 @@
 package com.plugin.ftb.battleroyale;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.imageio.ImageIO;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.map.MapCanvas;
+import org.bukkit.map.MapView;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -35,6 +43,8 @@ public class BattleRoyale extends JavaPlugin {
 	public static BattleRoyale plugin;
 	// メッセージ用接頭文字列C
 	public static String prefix = ChatColor.GRAY + "[BattleRoyale]";
+	//マップ用ピクセル
+	public static BufferedImage image;
 
 	@Override
 	public void onEnable() {
@@ -79,6 +89,17 @@ public class BattleRoyale extends JavaPlugin {
 		teamDead.setSuffix(ChatColor.RESET.toString());
 		teamDead.setDisplayName("team dead");
 		teamDead.setAllowFriendlyFire(false);
+		
+	}
+	
+	@Override
+	public void onDisable(){
+		MapCanvas canvas = CustomMap.mainCanvas;
+		for(int x=0; x<128; x++){
+			for(int y=0; y<128; y++){
+				//canvas.setPixel(x, y, canvas.getBasePixel(x, y));
+			}
+		}
 	}
 
 	/*

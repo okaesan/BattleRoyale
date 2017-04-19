@@ -58,8 +58,4 @@ public class SignJoin implements Listener {
         }
 
 	}
-	
-	public void finishGame(){
-		
-	}
 }

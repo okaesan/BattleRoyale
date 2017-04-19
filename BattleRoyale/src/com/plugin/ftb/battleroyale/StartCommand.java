@@ -51,6 +51,7 @@ public class StartCommand implements CommandExecutor {
 		deathA.deathArea();
 		PdeathA.setPlusDeath();
 		PdeathA.plus(_player);
+		MainConfig.giveMap();
 
 		return true;
 	}

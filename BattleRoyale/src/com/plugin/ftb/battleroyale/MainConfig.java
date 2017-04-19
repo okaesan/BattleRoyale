@@ -1,10 +1,17 @@
 package com.plugin.ftb.battleroyale;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.map.MapRenderer;
+import org.bukkit.map.MapView;
+import org.bukkit.map.MapView.Scale;
 
 public class MainConfig extends BattleRoyale {
 
@@ -48,6 +55,7 @@ public class MainConfig extends BattleRoyale {
 			_chestlocations = new ArrayList<>();
 		}
 	}
+
 
 	/*
 	 * ステージの対角線の座標
@@ -165,14 +173,58 @@ public class MainConfig extends BattleRoyale {
 
 		player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "音符ブロックを削除しました。");
 	}
-
+	
 	/*
 	 * マップを保存する
 	 */
-	public static void setMap(Short map){
+	@SuppressWarnings("deprecation")
+	public static void setMap(ItemStack map){
 		loadConfig();
-		plugin.getConfig().set("map", map);
+		MapView mapView = Bukkit.getServer().getMap(map.getDurability());
+		plugin.getConfig().set("mapWorld", mapView.getWorld().getName());
+		plugin.getConfig().set("mapNum", map.getDurability());
+		plugin.getConfig().set("mapX", mapView.getCenterX());
+		plugin.getConfig().set("mapZ", mapView.getCenterZ());
+		plugin.getConfig().set("mapScale", mapView.getScale().name());
 		plugin.saveConfig();
+	}
+	
+	/*
+	 * マップを配布する
+	 */
+	@SuppressWarnings("deprecation")
+	public static void giveMap(){
+		loadConfig();
+		//新しい地図データを作る
+        MapView view = Bukkit.getServer().createMap(plugin.getServer().getWorld(plugin.getConfig().getString("mapWorld")));
+        
+		view = Bukkit.getServer().getMap((short)plugin.getConfig().getInt("mapNum"));
+
+        //座標と縮尺を設定
+        view.setCenterX(plugin.getConfig().getInt("mapX"));
+        view.setCenterZ(plugin.getConfig().getInt("mapZ"));
+        
+		Scale scale = Scale.FARTHEST;
+		String scaleString = plugin.getConfig().getString("mapScale");
+		if(scaleString.equalsIgnoreCase("CLOSEST")){
+			scale = Scale.CLOSEST;
+		}if(scaleString.equalsIgnoreCase("CLOSE")){
+			scale = Scale.CLOSE;
+		}if(scaleString.equalsIgnoreCase("NORMAL")){
+			scale = Scale.NORMAL;
+		}if(scaleString.equalsIgnoreCase("FAR")){
+			scale = Scale.FAR;
+		}if(scaleString.equalsIgnoreCase("FARTHEST")){
+			scale = Scale.FARTHEST;
+		}
+        view.setScale(scale);
+        view.addRenderer(new CustomMap());
+        
+        ItemStack item = new ItemStack(Material.MAP, 1, view.getId());
+		for(Player player : Bukkit.getServer().getOnlinePlayers()){
+			player.getInventory().addItem(item);
+			player.updateInventory();
+		}
 	}
 
 	// デバッグ用

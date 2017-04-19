@@ -22,7 +22,9 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.server.MapInitializeEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.map.MapView;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
@@ -134,7 +136,6 @@ public class MainListener implements Listener {
 				} else {
 					pointCount.put(killer, 1);
 				}
-				
 			}
 
 			/*
@@ -298,6 +299,15 @@ public class MainListener implements Listener {
 			player.teleport(l);
 		}
 	}
+	
+	/*
+	@SuppressWarnings("deprecation")
+	@EventHandler
+	public void onMap(MapInitializeEvent event){
+		MapView map = event.getMap();
+		map.addRenderer(new CustomMap());
+		}
+		*/
 
 	// ブロードキャスト
 	public void broadcast(String message) {
