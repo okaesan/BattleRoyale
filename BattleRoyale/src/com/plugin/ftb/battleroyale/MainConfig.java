@@ -261,9 +261,6 @@ public class MainConfig extends BattleRoyale {
 		plugin.getConfig().set("mapX", mapView.getCenterX());
 		plugin.getConfig().set("mapZ", mapView.getCenterZ());
 		plugin.getConfig().set("mapScale", mapView.getScale().name());
-		plugin.getConfig().set("mapScale", mapView.getRenderers());
-		MapCanvas mapCanvas = null;
-		broadcast("" + mapCanvas);
 		plugin.saveConfig();
 	}
 
