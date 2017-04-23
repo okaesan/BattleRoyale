@@ -1,7 +1,6 @@
 package com.plugin.ftb.battleroyale;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,6 +20,9 @@ public class MainConfig extends BattleRoyale {
 	public static ArrayList<Integer> _stagelocationsL = new ArrayList<>();
 	public static ArrayList<Integer> _stagelocationsR = new ArrayList<>();
 	public static ArrayList<Integer> _chestlocations = new ArrayList<>();
+	public static ArrayList<Integer> _lobbypoint = new ArrayList<>();
+	public static ArrayList<Integer> _startpoint = new ArrayList<>();
+	public static ArrayList<Integer> _deathpoint = new ArrayList<>();
 	public static ArrayList<Integer> check = new ArrayList<>();
 
 	public static int chestCount;
@@ -55,8 +57,37 @@ public class MainConfig extends BattleRoyale {
 		if (_chestlocations == null) {
 			_chestlocations = new ArrayList<>();
 		}
+
+		_startpoint = new ArrayList<>();
+		_startpoint = (ArrayList<Integer>) plugin.getConfig().get("Startpoint");
+		if (_startpoint == null) {
+			_startpoint = new ArrayList<>();
+		}
+
+		_deathpoint = new ArrayList<>();
+		_deathpoint = (ArrayList<Integer>) plugin.getConfig().get("Deathpoint");
+		if (_deathpoint == null) {
+			_deathpoint = new ArrayList<>();
+		}
+
+		_lobbypoint = new ArrayList<>();
+		_lobbypoint = (ArrayList<Integer>) plugin.getConfig().get("Lobbypoint");
+		if(_lobbypoint == null){
+			_lobbypoint = new ArrayList<>();
+		}
 	}
 
+	public static void setSign(Location loc){
+		loadConfig();
+
+		plugin.getConfig().set("SignValue", null);
+
+		plugin.getConfig().set("SignValue.x", loc.getBlockX());
+		plugin.getConfig().set("SignValue.y", loc.getBlockY());
+		plugin.getConfig().set("SignValue.z", loc.getBlockZ());
+
+		plugin.saveConfig();
+	}
 
 	/*
 	 * ステージの対角線の座標
@@ -81,7 +112,7 @@ public class MainConfig extends BattleRoyale {
 			plugin.getConfig().set("stagelocationsL", _stagelocationsL);
 			plugin.saveConfig();
 
-			player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "stageLを設定しました");
+			player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "StageLを設定しました");
 
 			return;
 
@@ -97,12 +128,55 @@ public class MainConfig extends BattleRoyale {
 			plugin.getConfig().set("stagelocationsR", _stagelocationsR);
 			plugin.saveConfig();
 
-			player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "stageRを設定しました");
+			player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "StageRを設定しました");
 
 			return;
 		}
 	}
 
+	//lobbypointの設定
+	public static void setLobbypoint(Location loc, Player player){
+		loadConfig();
+
+		_lobbypoint.add((int)loc.getX());
+		_lobbypoint.add((int)loc.getY());
+		_lobbypoint.add((int)loc.getZ());
+
+		plugin.getConfig().set("Lobbypoint", null);
+
+		plugin.getConfig().set("Lobbypoint", _lobbypoint);
+		plugin.saveConfig();
+	}
+
+	//startpointの設定
+	public static void setStartpoint(Location loc, Player player){
+		loadConfig();
+
+		_startpoint.add((int)loc.getX());
+		_startpoint.add((int)loc.getY());
+		_startpoint.add((int)loc.getZ());
+
+		plugin.getConfig().set("Startpoint", null);
+
+		plugin.getConfig().set("Startpoint", _startpoint);
+		plugin.saveConfig();
+	}
+
+	//Deathpointの設定
+	public static void setDeathpoint(Location loc, Player player){
+		loadConfig();
+
+		_deathpoint.add((int)loc.getX());
+		_deathpoint.add((int)loc.getY());
+		_deathpoint.add((int)loc.getZ());
+
+		plugin.getConfig().set("Deathpoint", null);
+
+		plugin.getConfig().set("Deathpoint", _deathpoint);
+		plugin.saveConfig();
+	}
+
+	//chestの設定
 	public static void subChestConfig(Location loc, Player player){
 		loadConfig();
 
@@ -174,7 +248,7 @@ public class MainConfig extends BattleRoyale {
 
 		player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "音符ブロックを削除しました。");
 	}
-	
+
 	/*
 	 * マップを保存する
 	 */
@@ -192,7 +266,7 @@ public class MainConfig extends BattleRoyale {
 		broadcast("" + mapCanvas);
 		plugin.saveConfig();
 	}
-	
+
 	/*
 	 * マップを配布する
 	 */
@@ -205,7 +279,7 @@ public class MainConfig extends BattleRoyale {
         //座標と縮尺を設定
         view.setCenterX(plugin.getConfig().getInt("mapX"));
         view.setCenterZ(plugin.getConfig().getInt("mapZ"));
-        
+
 		Scale scale = Scale.FARTHEST;
 		String scaleString = plugin.getConfig().getString("mapScale");
 		if(scaleString.equalsIgnoreCase("CLOSEST")){
@@ -220,7 +294,6 @@ public class MainConfig extends BattleRoyale {
 			scale = Scale.FARTHEST;
 		}
         view.setScale(scale);
-        
         for(MapRenderer ren : view.getRenderers()){
         	view.removeRenderer(ren);
         }
@@ -228,7 +301,7 @@ public class MainConfig extends BattleRoyale {
         	view.addRenderer(ren);
         }
         view.addRenderer(new CustomMap());
-        
+
         ItemStack item = new ItemStack(Material.MAP, 1, view.getId());
 		for(Player player : Bukkit.getServer().getOnlinePlayers()){
 			player.getInventory().addItem(item);

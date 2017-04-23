@@ -1,9 +1,9 @@
 package com.plugin.ftb.battleroyale;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -17,6 +17,7 @@ public class PlusDeathArea {
 
 	public static int betaLx, betaLz, betaRx, betaRz;
 	public static int deathAreaCount=0;
+	public static int beta=0;
 
 	public void setPlusDeath(){
 		locL = (ArrayList<Integer>) plugin.getConfig().getIntegerList("stagelocationsL");
@@ -131,12 +132,12 @@ public class PlusDeathArea {
 		}
 	}
 
-	public void plus(Player p){
+	public void plus(){
 
 		PlusThreadClass pth = new PlusThreadClass();
 		PlusDeathThreadClass pdth = new PlusDeathThreadClass();
 
-		pth.runTaskTimer(plugin, 600, 300);
+		pth.runTaskTimer(plugin,600,300);
 		pdth.runTaskTimer(plugin, 0, 100);
 	}
 }
@@ -144,32 +145,30 @@ public class PlusDeathArea {
 class PlusThreadClass extends BukkitRunnable{
 
 	public static BattleRoyale plugin = BattleRoyale.plugin;
+	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
 
 	public static ArrayList<Integer> deathRan = new ArrayList<Integer>();
+	public static ArrayList<Integer> deathRanCount = new ArrayList<Integer>();
 
+	int count=0;
+
+	@SuppressWarnings("deprecation")
 	public void run(){
+		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
 
-		int beta;
-			do{
-				beta = (int)(Math.random()*1000+(int)PlusDeathArea.plusDeathX.size()+1)%((int)PlusDeathArea.plusDeathX.size()+1);
-				for(int i : deathRan){
-					if(beta==i){
-						beta=10000;
-						break;
-					}
-				}
-				if(beta==10000){
+		if(!(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size()>0)){
+        	this.cancel();
+        }
 
-				}else{
-					break;
-				}
-			}while(true);
-
-			deathRan.add(beta);
-
-			if(PlusDeathArea.plusDeathX.size()==deathRan.size()){
-				this.cancel();
+		if(PlusDeathArea.beta==0){
+			for(int i=0; i<PlusDeathArea.plusDeathX.size(); i++){
+				deathRan.add(PlusDeathArea.beta);
+				PlusDeathArea.beta++;
+				Collections.shuffle(deathRan);
 			}
+		}
+		deathRanCount.add(count);
+		count++;
 	}
 }
 
@@ -192,11 +191,13 @@ class PlusDeathThreadClass extends BukkitRunnable{
 		locL = (ArrayList<Integer>) plugin.getConfig().getIntegerList("stagelocationsL");
 		locR = (ArrayList<Integer>) plugin.getConfig().getIntegerList("stagelocationsR");
 
-		if(!(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size()>0)){
+		if(!(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size()>1)){
         	this.cancel();
         }
 
-		for(int r:PlusThreadClass.deathRan){
+		for(int i:PlusThreadClass.deathRanCount){
+
+			int r = PlusThreadClass.deathRan.get(i);
 
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);

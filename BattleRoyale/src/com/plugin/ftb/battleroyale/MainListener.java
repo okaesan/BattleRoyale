@@ -8,9 +8,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.SkullType;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,10 +24,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.server.MapInitializeEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.map.MapView;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -44,14 +43,17 @@ public class MainListener implements Listener {
 	// ポイントカウント
 	public static HashMap<Player, Integer> pointCount = BattleRoyale.pointCount;
 
+	public static ArrayList<Integer> loc = new ArrayList<>();
+	public static ArrayList<Integer> locB = new ArrayList<>();
 
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public static void subChest(BlockBreakEvent e){
-		Player player = (Player)e.getPlayer();
+		Player _player = (Player)e.getPlayer();
 
-		if(MainCommandExecutor.judEdit == 2&&player.getInventory().getItemInHand().getType()==Material.STONE){
-			MainConfig.subChestConfig(e.getBlock().getLocation(), player);
+		if(MainCommandExecutor.judEdit == 2&&_player.getInventory().getItemInHand().getType()==Material.BONE
+				&&MainCommandExecutor.setChestPlayer.contains(_player)){
+			MainConfig.subChestConfig(e.getBlock().getLocation(), _player);
 
 		}
 	}
@@ -89,6 +91,10 @@ public class MainListener implements Listener {
 		Player player = event.getEntity();
 		Player killer = player.getKiller();
 		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
+
+		loc = (ArrayList<Integer>) plugin.getConfig().getIntegerList("Deathpoint");
+		Location wor = new Location(Bukkit.getWorld("world"),loc.get(0),loc.get(1),loc.get(2));
+		player.teleport(wor);
 
 		// 死亡後、DEADチームへ移行
 		if (board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
@@ -182,6 +188,35 @@ public class MainListener implements Listener {
 			}
 			broadcast(ChatColor.DARK_AQUA + "-----------------------------");
 
+			/*
+			 * ゲーム終了後、全員をロビーに戻す
+			 * 看板の値をリセット
+			 */
+			locB = (ArrayList<Integer>) plugin.getConfig().getIntegerList("Lobbypoint");
+			Location worB = new Location(Bukkit.getWorld("world"),loc.get(0),loc.get(1),loc.get(2));
+
+			OfflinePlayer WinP = (OfflinePlayer) board.getTeam(TEAM_ALIVE_NAME).getPlayers();
+			WinP.getPlayer().teleport(worB);
+			board.getTeam(TEAM_ALIVE_NAME).removePlayer(killer);
+			for(OfflinePlayer p : board.getTeam(TEAM_DEAD_NAME).getPlayers()){
+				p.getPlayer().teleport(worB);
+				board.getTeam(TEAM_DEAD_NAME).removePlayer(p);
+			}
+			int locX = plugin.getConfig().getInt("SignValue.x");
+			int locY = plugin.getConfig().getInt("SignValue.y");
+			int locZ = plugin.getConfig().getInt("SignValue.z");
+
+			Block b = Bukkit.getWorld("world").getBlockAt(locX, locY, locZ);
+
+			if (b.getType()==Material.WALL_SIGN || b.getType()==Material.SIGN_POST) {
+
+				Sign ee = (Sign) b.getState();
+
+	        	ee.setLine(1, ChatColor.GRAY + String.valueOf(plugin.getServer().getScoreboardManager().getMainScoreboard().getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50));
+
+	        	ee.update();
+
+			}
 
 		}
 	}
@@ -242,8 +277,6 @@ public class MainListener implements Listener {
 					Random md = new Random();
 					player.getEquipment().clear();
 					player.getInventory().clear();
-					PotionEffect p = new PotionEffect(PotionEffectType.SLOW, 10000, 10);
-					player.addPotionEffect(p);
 					// ItemStack h = new ItemStack(Material.MAGMA_CREAM, 64);
 					// player.getInventory().addItem(h);
 					int itemran = md.nextInt(4);
@@ -299,7 +332,7 @@ public class MainListener implements Listener {
 			player.teleport(l);
 		}
 	}
-	
+
 	/*
 	@SuppressWarnings("deprecation")
 	@EventHandler

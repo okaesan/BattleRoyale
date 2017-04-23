@@ -2,7 +2,6 @@ package com.plugin.ftb.battleroyale;
 
 import java.util.ArrayList;
 
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
@@ -18,7 +17,7 @@ class ThreadClass extends BukkitRunnable{
     public void run(){
         Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
 
-        if(!(board.getTeam(TEAM_ALIVE_NAME).getSize()>0)){
+        if(!(board.getTeam(TEAM_ALIVE_NAME).getSize()>1)){
         	this.cancel();
         }
         locL = (ArrayList<Integer>) plugin.getConfig().getIntegerList("stagelocationsL");

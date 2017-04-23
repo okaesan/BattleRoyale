@@ -1,5 +1,7 @@
 package com.plugin.ftb.battleroyale;
 
+import java.util.Random;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
@@ -9,11 +11,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 
 public class SignJoin implements Listener {
 
 	public static BattleRoyale plugin = BattleRoyale.plugin;
+	public Sign s;
 
 	// チーム名
 	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
@@ -27,6 +31,7 @@ public class SignJoin implements Listener {
         	e.setLine(1, ChatColor.GRAY + String.valueOf(plugin.getServer().getScoreboardManager().getMainScoreboard().getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50));
         	e.setLine(2, ChatColor.GREEN + "Join to Click");
         	e.setLine(3, "-------------");
+        	MainConfig.setSign(e.getBlock().getLocation());
         }
 
 	}
@@ -34,6 +39,8 @@ public class SignJoin implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void joinSign(PlayerInteractEvent e){
+		//自動でゲームスタートの機能(廃止)
+		//StartCommand start = new StartCommand();
 		if (e.getAction()==Action.RIGHT_CLICK_BLOCK){
             if (e.getClickedBlock().getType()==Material.WALL_SIGN || e.getClickedBlock().getType()==Material.SIGN_POST){
             	Sign s = ((Sign) e.getClickedBlock().getState());
@@ -52,10 +59,61 @@ public class SignJoin implements Listener {
 
             		s.setLine(1, ChatColor.GRAY + String.valueOf(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50));
             		s.update();
+
+            		giveItems(_player);
+
+            		//自動でゲームスタートの機能(廃止)
+            		/*
+            		if(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size()>2){
+            			start.autoStart();
+            		}
+            		*/
             		return;
             	}
             }
         }
 
+	}
+
+	public void giveItems(Player player){
+		Random md = new Random();
+		player.getEquipment().clear();
+		player.getInventory().clear();
+		// ItemStack h = new ItemStack(Material.MAGMA_CREAM, 64);
+		// player.getInventory().addItem(h);
+		int itemran = md.nextInt(4);
+		if (itemran == 0) {
+			ItemStack item = new ItemStack(Material.WOOD_SWORD);
+			player.getInventory().addItem(item);
+		} else if (itemran == 1) {
+			ItemStack item = new ItemStack(Material.STONE_SWORD);
+			player.getInventory().addItem(item);
+		} else if (itemran == 2) {
+			ItemStack item = new ItemStack(Material.GOLD_SWORD);
+			player.getInventory().addItem(item);
+		} else if (itemran == 3) {
+			ItemStack item = new ItemStack(Material.IRON_SWORD);
+			player.getInventory().addItem(item);
+		} else {
+			ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
+			player.getInventory().addItem(item);
+		}
+		itemran = md.nextInt(4);
+		if (itemran == 0) {
+			ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE);
+			player.getInventory().addItem(item);
+		} else if (itemran == 1) {
+			ItemStack item = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
+			player.getInventory().addItem(item);
+		} else if (itemran == 2) {
+			ItemStack item = new ItemStack(Material.GOLD_CHESTPLATE);
+			player.getInventory().addItem(item);
+		} else if (itemran == 3) {
+			ItemStack item = new ItemStack(Material.DIAMOND_CHESTPLATE);
+			player.getInventory().addItem(item);
+		} else {
+			ItemStack item = new ItemStack(Material.IRON_CHESTPLATE);
+			player.getInventory().addItem(item);
+		}
 	}
 }

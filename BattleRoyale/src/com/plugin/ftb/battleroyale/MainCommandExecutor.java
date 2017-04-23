@@ -1,6 +1,7 @@
 package com.plugin.ftb.battleroyale;
 
-import org.bukkit.Bukkit;
+import java.util.ArrayList;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -14,6 +15,8 @@ public class MainCommandExecutor implements CommandExecutor {
 
 	public static BattleRoyale _plugin = BattleRoyale.plugin;
 	public static int judEdit;
+
+	public static ArrayList<Player> setChestPlayer = new ArrayList<>();
 
 	public MainCommandExecutor(BattleRoyale plugin) {
 		MainCommandExecutor._plugin = plugin;
@@ -48,14 +51,14 @@ public class MainCommandExecutor implements CommandExecutor {
 			 * 解読する際はみにくいかと思いますが頑張ってください・・・笑
 			 */
 			switch(args[0]){
-			case "stageL":
+			case "setStageL":
 				Location _locL = _player.getLocation();
 
 				MainConfig.makeStage(_locL,_player,0);
 
 				return true;
 
-			case "stageR":
+			case "setStageR":
 				if(_plugin.getConfig().get("stagelocationsL")!=null){
 					Location _locR = _player.getLocation();
 
@@ -69,9 +72,11 @@ public class MainCommandExecutor implements CommandExecutor {
 					return true;
 				}
 
-			case "chestEdit":
+			case "setChest":
 				if(_plugin.getConfig().get("stagelocationsR")!=null){
 					judEdit = 2;
+					_player.sendMessage(BattleRoyale.prefix + ChatColor.AQUA + "骨を持って左クリックでチェストの位置を編集してください");
+					setChestPlayer.add(_player);
 
 					return true;
 
@@ -81,11 +86,14 @@ public class MainCommandExecutor implements CommandExecutor {
 					return true;
 				}
 
-			case "chestCom":
+			case "comChest":
 				judEdit = 0;
-
+				_player.sendMessage(BattleRoyale.prefix + ChatColor.AQUA + "チェストの位置を確定しました");
+				if(setChestPlayer.contains(_player)){
+					setChestPlayer.remove(_player);
+				}
 				return true;
-				
+
 			case "setMap":
 				ItemStack item = _player.getItemInHand();
 				if(item.getType().equals(Material.MAP)){
@@ -94,12 +102,38 @@ public class MainCommandExecutor implements CommandExecutor {
 				}else{
 					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "マップを持ってコマンドを実行してください。");
 				}
-				
+
 				return true;
+
+			case "setLobbypoint":
+				MainConfig.setLobbypoint(_player.getLocation(), _player);
+
+				_player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "Lobbypointを設定しました");
+
+				return true;
+
+			case "setStartpoint":
+				MainConfig.setStartpoint(_player.getLocation(), _player);
+
+				_player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "Startpointを設定しました");
+
+				return true;
+
+			case "setDeathpoint":
+				MainConfig.setDeathpoint(_player.getLocation(), _player);
+
+				_player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "Deathpointを設定しました");
+
+				return true;
+
 			default:
-				_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "\n/battleroyale " + ChatColor.RED + "stageL\n"
-						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "stageR\n"
-						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "chestEdit\n"
+				_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "\n/battleroyale " + ChatColor.RED + "setStageL\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setStageR\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setLobbypoint\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setStartpoint\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setDeathpoint\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setChest\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "comChest\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setMap");
 				return true;
 			}
