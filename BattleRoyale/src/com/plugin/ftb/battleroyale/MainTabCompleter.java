@@ -16,7 +16,11 @@ public class MainTabCompleter implements TabCompleter{
 			if(label.equalsIgnoreCase("battleroyale")){
 				tab.add("stageL");
 				tab.add("stageR");
-				tab.add("chestEdit");
+				tab.add("setLobbypoint");
+				tab.add("setStartpoint");
+				tab.add("setDeathpoint");
+				tab.add("setChest");
+				tab.add("comChest");
 				tab.add("setMap");
 			}if(label.equalsIgnoreCase("startpoint")){
 				tab.add("add");
