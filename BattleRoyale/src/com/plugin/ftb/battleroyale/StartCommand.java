@@ -13,6 +13,8 @@ import org.bukkit.block.Chest;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -32,7 +34,7 @@ class countDown extends BukkitRunnable{
 
 	public static ArrayList<Integer> loc = new ArrayList<>();
 
-	int _countdown = 10;
+	int _countdown = 0;
 
 	@SuppressWarnings("deprecation")
 	public void run(){
@@ -163,6 +165,11 @@ public class StartCommand implements CommandExecutor {
 	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		if(!(sender instanceof Player)){
+			sender.sendMessage("ゲーム内から実行してください。");
+			return true;
+		}
+		
 		MainListener.c = 1;
 
 		//SLOWエフェクトを削除
@@ -170,7 +177,6 @@ public class StartCommand implements CommandExecutor {
 			p.sendMessage("wa-i");
 			p.removePotionEffect(PotionEffectType.SLOW);
 		}*/
-
 		setChest((Player)sender);
 
 		countDown cd = new countDown();

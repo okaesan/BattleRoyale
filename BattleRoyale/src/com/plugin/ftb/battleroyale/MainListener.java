@@ -3,6 +3,7 @@ package com.plugin.ftb.battleroyale;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -193,11 +194,18 @@ public class MainListener implements Listener {
 			 * 看板の値をリセット
 			 */
 			locB = (ArrayList<Integer>) plugin.getConfig().getIntegerList("Lobbypoint");
-			Location worB = new Location(Bukkit.getWorld("world"),loc.get(0),loc.get(1),loc.get(2));
+			///////loc.get()になってました。
+			Location worB = new Location(Bukkit.getWorld("world"),locB.get(0),locB.get(1),locB.get(2));
 
-			OfflinePlayer WinP = (OfflinePlayer) board.getTeam(TEAM_ALIVE_NAME).getPlayers();
-			WinP.getPlayer().teleport(worB);
-			board.getTeam(TEAM_ALIVE_NAME).removePlayer(killer);
+			///////キャストできないってエラーが出たので勝手に変えました。m(_ _)m
+			for(Player WinP : Bukkit.getOnlinePlayers()){
+				if(board.getTeam(TEAM_ALIVE_NAME).hasPlayer(WinP)){
+					WinP.teleport(worB);
+				}
+			}
+			if(killer != null)
+				board.getTeam(TEAM_ALIVE_NAME).removePlayer(killer);
+			//////
 			for(OfflinePlayer p : board.getTeam(TEAM_DEAD_NAME).getPlayers()){
 				p.getPlayer().teleport(worB);
 				board.getTeam(TEAM_DEAD_NAME).removePlayer(p);

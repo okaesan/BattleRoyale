@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapCanvas;
@@ -261,6 +262,7 @@ public class MainConfig extends BattleRoyale {
 		plugin.getConfig().set("mapX", mapView.getCenterX());
 		plugin.getConfig().set("mapZ", mapView.getCenterZ());
 		plugin.getConfig().set("mapScale", mapView.getScale().name());
+		broadcast(mapView.getScale().name() );
 		plugin.saveConfig();
 	}
 
@@ -270,15 +272,59 @@ public class MainConfig extends BattleRoyale {
 	@SuppressWarnings("deprecation")
 	public static void giveMap(){
 		loadConfig();
-		//新しい地図データを作る
-        MapView view = Bukkit.getServer().createMap(plugin.getServer().getWorld(plugin.getConfig().getString("mapWorld")));
-
-        //座標と縮尺を設定
-        view.setCenterX(plugin.getConfig().getInt("mapX"));
-        view.setCenterZ(plugin.getConfig().getInt("mapZ"));
-
-		Scale scale = Scale.FARTHEST;
+		for(Player player : Bukkit.getServer().getOnlinePlayers()){
+			//新しい地図データを作る
+	        MapView view = Bukkit.getServer().createMap(plugin.getServer().getWorld(plugin.getConfig().getString("mapWorld")));
+	        
+	        //座標と縮尺を設定
+	        view.setCenterX(plugin.getConfig().getInt("mapX"));
+	        view.setCenterZ(plugin.getConfig().getInt("mapZ"));
+	
+			Scale scale = Scale.FARTHEST;
+			String scaleString = plugin.getConfig().getString("mapScale");
+			if(scaleString.equalsIgnoreCase("CLOSEST")){
+				scale = Scale.CLOSEST;
+			}if(scaleString.equalsIgnoreCase("CLOSE")){
+				scale = Scale.CLOSE;
+			}if(scaleString.equalsIgnoreCase("NORMAL")){
+				scale = Scale.NORMAL;
+			}if(scaleString.equalsIgnoreCase("FAR")){
+				scale = Scale.FAR;
+			}if(scaleString.equalsIgnoreCase("FARTHEST")){
+				scale = Scale.FARTHEST;
+			}
+	        view.setScale(scale);
+	        
+	        //設定したマップをレンダリング
+	        MapView setMap = Bukkit.getServer().getMap((short)plugin.getConfig().getInt("mapNum"));
+	        //座標と縮尺を設定
+	        setMap.setCenterX(plugin.getConfig().getInt("mapX"));
+	        setMap.setCenterZ(plugin.getConfig().getInt("mapZ"));
+	        setMap.setScale(scale);
+	        
+	        //レンダーを追加
+	        for(MapRenderer ren : setMap.getRenderers()){
+	        	view.addRenderer(ren);
+	        }
+	        view.addRenderer(new CursorRenderer());
+	        view.addRenderer(new CustomMap());
+	        
+	        //マップを初期設定
+	        initializeMap(view);
+	        
+	        ItemStack item = new ItemStack(Material.MAP, 1, view.getId());
+			player.getInventory().addItem(item);
+			player.updateInventory();
+		}
+	}
+	
+	/*
+	 * マップの初期設定
+	 */
+	public static void initializeMap(MapView map){
+		plugin.reloadConfig();
 		String scaleString = plugin.getConfig().getString("mapScale");
+		Scale scale = Scale.FARTHEST;
 		if(scaleString.equalsIgnoreCase("CLOSEST")){
 			scale = Scale.CLOSEST;
 		}if(scaleString.equalsIgnoreCase("CLOSE")){
@@ -290,20 +336,52 @@ public class MainConfig extends BattleRoyale {
 		}if(scaleString.equalsIgnoreCase("FARTHEST")){
 			scale = Scale.FARTHEST;
 		}
-        view.setScale(scale);
-        for(MapRenderer ren : view.getRenderers()){
-        	view.removeRenderer(ren);
-        }
-        for(MapRenderer ren : Bukkit.getServer().getMap((short)plugin.getConfig().getInt("mapNum")).getRenderers()){
-        	view.addRenderer(ren);
-        }
-        view.addRenderer(new CustomMap());
 
-        ItemStack item = new ItemStack(Material.MAP, 1, view.getId());
-		for(Player player : Bukkit.getServer().getOnlinePlayers()){
-			player.getInventory().addItem(item);
-			player.updateInventory();
+		int edgeX = map.getCenterX();
+		int edgeZ = map.getCenterZ();
+
+		//マップの左下の座標を計算
+		//CLOSESTの時、1ピクセル=座標1
+		float locPerPix = 16;
+		float pixPerLoc = 1;
+
+		if(scale.equals(Scale.CLOSEST)){
+			edgeX -= 64;
+			edgeZ -= 64;
+		}if(scale.equals(Scale.CLOSE)){
+			edgeX -= 128;
+			edgeZ -= 128;
+			locPerPix /= 2;
+			pixPerLoc *= 2;
 		}
+		if(scale.equals(Scale.NORMAL)){
+			edgeX -= 256;
+			edgeZ -= 256;
+			locPerPix /= 4;
+			pixPerLoc *= 4;
+		}
+		if(scale.equals(Scale.FAR)){
+			edgeX -= 512;
+			edgeZ -= 512;
+			locPerPix /= 8;
+			pixPerLoc *= 8;
+		}
+		if(scale.equals(Scale.FARTHEST)){
+			edgeX -= 1024;
+			edgeZ -= 1024;
+			locPerPix /= 16;
+			pixPerLoc *= 16;
+		}
+		
+		CustomMap.edgeX = edgeX;
+		CustomMap.edgeZ = edgeZ;
+		CustomMap.locPerPix = locPerPix;
+		CustomMap.pixPerLoc = pixPerLoc;
+		
+		CursorRenderer.edgeX = edgeX;
+		CursorRenderer.edgeZ = edgeZ;
+		CursorRenderer.locPerPix = locPerPix;
+		CursorRenderer.pixPerLoc = pixPerLoc;
 	}
 
 	// デバッグ用
