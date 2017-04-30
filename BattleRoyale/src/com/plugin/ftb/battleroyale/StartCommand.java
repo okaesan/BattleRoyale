@@ -34,7 +34,7 @@ class countDown extends BukkitRunnable{
 
 	public static ArrayList<Integer> loc = new ArrayList<>();
 
-	int _countdown = 0;
+	int _countdown = 10;
 
 	@SuppressWarnings("deprecation")
 	public void run(){
