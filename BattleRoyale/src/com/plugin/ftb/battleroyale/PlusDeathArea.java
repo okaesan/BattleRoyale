@@ -148,9 +148,14 @@ class PlusThreadClass extends BukkitRunnable{
 	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
 
 	public static ArrayList<Integer> deathRan = new ArrayList<Integer>();
+	
+	//猶予段階のエリア
 	public static ArrayList<Integer> deathRanCount = new ArrayList<Integer>();
+	//猶予後のエリア
+	public static ArrayList<Integer> deathRanCountPast = new ArrayList<Integer>();
 
 	int count=0;
+	int countPast=0;
 
 	@SuppressWarnings("deprecation")
 	public void run(){
@@ -163,12 +168,24 @@ class PlusThreadClass extends BukkitRunnable{
 		if(PlusDeathArea.beta==0){
 			for(int i=0; i<PlusDeathArea.plusDeathX.size(); i++){
 				deathRan.add(PlusDeathArea.beta);
+		        
 				PlusDeathArea.beta++;
 				Collections.shuffle(deathRan);
 			}
 		}
 		deathRanCount.add(count);
 		count++;
+		
+		/*
+		 * 5秒後に追加
+		 */
+		new BukkitRunnable() {					 
+            @Override
+            public void run() {
+            	deathRanCountPast.add(countPast);
+            	countPast++;
+            }
+        }.runTaskLater(plugin, 600);
 	}
 }
 
@@ -195,7 +212,7 @@ class PlusDeathThreadClass extends BukkitRunnable{
         	this.cancel();
         }
 
-		for(int i:PlusThreadClass.deathRanCount){
+		for(int i:PlusThreadClass.deathRanCountPast){
 
 			int r = PlusThreadClass.deathRan.get(i);
 
