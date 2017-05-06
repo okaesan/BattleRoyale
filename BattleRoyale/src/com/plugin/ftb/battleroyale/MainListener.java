@@ -2,14 +2,11 @@ package com.plugin.ftb.battleroyale;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Random;
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.SkullType;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -18,16 +15,73 @@ import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
+
+class RunTP extends BukkitRunnable{
+
+	public static BattleRoyale plugin = BattleRoyale.plugin;
+
+	// チーム名
+	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
+	public static final String TEAM_DEAD_NAME = BattleRoyale.TEAM_DEAD_NAME;
+
+	public static ArrayList<Integer> locB = new ArrayList<>();
+
+	int locX = plugin.getConfig().getInt("SignValue.x");
+	int locY = plugin.getConfig().getInt("SignValue.y");
+	int locZ = plugin.getConfig().getInt("SignValue.z");
+
+	@SuppressWarnings("deprecation")
+	public void run(){
+		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
+
+		locB = (ArrayList<Integer>) plugin.getConfig().getIntegerList("Lobbypoint");
+		///////loc.get()になってました。
+		Location worB = new Location(Bukkit.getWorld("world"),locB.get(0),locB.get(1),locB.get(2));
+
+		for(Player p : Bukkit.getOnlinePlayers()){
+			if(board.getTeam(TEAM_ALIVE_NAME).hasPlayer(p)){
+
+				p.getPlayer().teleport(worB);
+				board.getTeam(TEAM_ALIVE_NAME).removePlayer(p);
+
+			}else if(board.getTeam(TEAM_DEAD_NAME).hasPlayer(p)){
+
+				p.getPlayer().teleport(worB);
+				board.getTeam(TEAM_DEAD_NAME).removePlayer(p);
+
+			}
+		}
+
+		Block b = Bukkit.getWorld("world").getBlockAt(locX, locY, locZ);
+
+		if (b.getType()==Material.WALL_SIGN || b.getType()==Material.SIGN_POST) {
+
+			Sign ee = (Sign) b.getState();
+
+        	ee.setLine(1, ChatColor.BOLD + String.valueOf(plugin.getServer().getScoreboardManager().getMainScoreboard().getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50));
+
+        	ee.update();
+
+		}
+
+		PlusThreadClass.deathRan.clear();
+		PlusThreadClass.deathRanCount.clear();
+		PlusThreadClass.deathRanCountPast.clear();
+		PlusDeathArea.plusDeathX.clear();
+		PlusDeathArea.plusDeathZ.clear();
+
+		this.cancel();
+	}
+}
+
 
 public class MainListener implements Listener {
 
@@ -88,14 +142,22 @@ public class MainListener implements Listener {
 
 	@SuppressWarnings("deprecation")
 	@EventHandler
+	public void onRespawn(PlayerRespawnEvent e){
+		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
+		loc = (ArrayList<Integer>) plugin.getConfig().getIntegerList("Deathpoint");
+		Location wor = new Location(Bukkit.getWorld("world"),loc.get(0),loc.get(1),loc.get(2));
+
+		if(board.getTeam(TEAM_DEAD_NAME).hasPlayer(e.getPlayer())||board.getTeam(TEAM_ALIVE_NAME).hasPlayer(e.getPlayer())){
+			e.setRespawnLocation(wor);
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
 		Player player = event.getEntity();
 		Player killer = player.getKiller();
 		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
-
-		loc = (ArrayList<Integer>) plugin.getConfig().getIntegerList("Deathpoint");
-		Location wor = new Location(Bukkit.getWorld("world"),loc.get(0),loc.get(1),loc.get(2));
-		player.teleport(wor);
 
 		// 死亡後、DEADチームへ移行
 		if (board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
@@ -193,38 +255,21 @@ public class MainListener implements Listener {
 			 * ゲーム終了後、全員をロビーに戻す
 			 * 看板の値をリセット
 			 */
-			locB = (ArrayList<Integer>) plugin.getConfig().getIntegerList("Lobbypoint");
-			///////loc.get()になってました。
-			Location worB = new Location(Bukkit.getWorld("world"),locB.get(0),locB.get(1),locB.get(2));
 
-			///////キャストできないってエラーが出たので勝手に変えました。m(_ _)m
-			for(Player WinP : Bukkit.getOnlinePlayers()){
-				if(board.getTeam(TEAM_ALIVE_NAME).hasPlayer(WinP)){
-					WinP.teleport(worB);
+			for(Player p : Bukkit.getOnlinePlayers()){
+				if(board.getTeam(TEAM_ALIVE_NAME).hasPlayer(p)){
+
+					p.sendMessage(BattleRoyale.prefix+"10秒後にロビーへ戻ります");
+
+				}else if(board.getTeam(TEAM_DEAD_NAME).hasPlayer(p)){
+
+					p.sendMessage(BattleRoyale.prefix+"10秒後にロビーへ戻ります");
+
 				}
 			}
-			if(killer != null)
-				board.getTeam(TEAM_ALIVE_NAME).removePlayer(killer);
-			//////
-			for(OfflinePlayer p : board.getTeam(TEAM_DEAD_NAME).getPlayers()){
-				p.getPlayer().teleport(worB);
-				board.getTeam(TEAM_DEAD_NAME).removePlayer(p);
-			}
-			int locX = plugin.getConfig().getInt("SignValue.x");
-			int locY = plugin.getConfig().getInt("SignValue.y");
-			int locZ = plugin.getConfig().getInt("SignValue.z");
 
-			Block b = Bukkit.getWorld("world").getBlockAt(locX, locY, locZ);
-
-			if (b.getType()==Material.WALL_SIGN || b.getType()==Material.SIGN_POST) {
-
-				Sign ee = (Sign) b.getState();
-
-	        	ee.setLine(1, ChatColor.GRAY + String.valueOf(plugin.getServer().getScoreboardManager().getMainScoreboard().getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50));
-
-	        	ee.update();
-
-			}
+			RunTP rtp = new RunTP();
+			rtp.runTaskTimer(plugin, 200, 100);
 
 		}
 	}
@@ -245,16 +290,15 @@ public class MainListener implements Listener {
 			}
 		}
 	}
-
+/*
 	@SuppressWarnings("deprecation")
 	@EventHandler(ignoreCancelled = true)
 	public void onCick(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
 
-		/*
-		 * 音符ブロックをクリックしたとき、装備を付与し、ゲームに参加させる
-		 */
+		 // 音符ブロックをクリックしたとき、装備を付与し、ゲームに参加させる
+
 		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 			Block block = event.getClickedBlock();
 			Material material = block.getType();
@@ -270,16 +314,14 @@ public class MainListener implements Listener {
 					return;
 				}
 
-				/*
-				 * PlayerをAliveチームに登録して参加
-				 */
+				 // PlayerをAliveチームに登録して参加
+
 				if (!board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
 					board.getTeam(TEAM_ALIVE_NAME).addPlayer(player);
 				}
 
-				/*
-				 * ランダムで装備品を付与
-				 */
+				 // ランダムで装備品を付与
+
 				MainConfig.loadConfig();
 				if (MainConfig.locations != null && MainConfig.locations.contains(block.getLocation())) {
 					Random md = new Random();
@@ -329,11 +371,11 @@ public class MainListener implements Listener {
 	@EventHandler
 	public void BeforeGame(PlayerMoveEvent event) {
 		Player player = event.getPlayer();
-		/*
-		 * if (c == 1){ itemhas = new ItemStack(Material.MAGMA_CREAM);
-		 * player.getInventory().remove(itemhas); } else if(h == true){ Location
-		 * l = player.getLocation(); player.teleport(l);
-		 */
+
+		 // if (c == 1){ itemhas = new ItemStack(Material.MAGMA_CREAM);
+		 // player.getInventory().remove(itemhas); } else if(h == true){ Location
+		 // l = player.getLocation(); player.teleport(l);
+
 		Boolean t = player.hasPotionEffect(PotionEffectType.SLOW);
 		if (t == true) {
 			Location l = player.getLocation();
@@ -341,7 +383,6 @@ public class MainListener implements Listener {
 		}
 	}
 
-	/*
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onMap(MapInitializeEvent event){

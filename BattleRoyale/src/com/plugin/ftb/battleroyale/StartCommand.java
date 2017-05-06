@@ -10,11 +10,6 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -140,7 +135,7 @@ class countDown extends BukkitRunnable{
 	}
 }*/
 
-public class StartCommand implements CommandExecutor {
+public class StartCommand extends BattleRoyale {
 
 	public static BattleRoyale plugin = BattleRoyale.plugin;
 	public static String prefix = BattleRoyale.prefix;
@@ -163,13 +158,8 @@ public class StartCommand implements CommandExecutor {
 	/*
 	 * ゲーム開始コマンド
 	 */
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if(!(sender instanceof Player)){
-			sender.sendMessage("ゲーム内から実行してください。");
-			return true;
-		}
-		
+	public static void startGame() {
+
 		MainListener.c = 1;
 
 		//SLOWエフェクトを削除
@@ -177,12 +167,12 @@ public class StartCommand implements CommandExecutor {
 			p.sendMessage("wa-i");
 			p.removePotionEffect(PotionEffectType.SLOW);
 		}*/
-		setChest((Player)sender);
+		plugin.reloadConfig();
+
+		setChest();
 
 		countDown cd = new countDown();
 		cd.runTaskTimer(plugin, 0, 20);
-
-		return true;
 	}
 
 	//自動でゲームスタートの機能(廃止)
@@ -193,7 +183,7 @@ public class StartCommand implements CommandExecutor {
 	}
 	 */
 
-	public void setChest(Player p){
+	public static void setChest(){
 
 		for(int i = 1; i <= plugin.getConfig().getInt("chestCounter"); i++){
 

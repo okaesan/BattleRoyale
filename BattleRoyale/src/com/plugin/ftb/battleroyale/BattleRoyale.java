@@ -45,9 +45,9 @@ public class BattleRoyale extends JavaPlugin {
 
 		// コマンド登録
 		getCommand("battleroyale").setExecutor(new MainCommandExecutor(this));
-		getCommand("startpoint").setExecutor(new StartPointCommand(this));
-		getCommand("startgame").setExecutor(new StartCommand());
-		getCommand("resetgame").setExecutor(new ResetCommand());
+		//getCommand("startpoint").setExecutor(new StartPointCommand(this));
+		//getCommand("startgame").setExecutor(new StartCommand());
+		//getCommand("resetgame").setExecutor(new ResetCommand());
 
 		//タブ補完登録
 		getCommand("battleroyale").setTabCompleter(new MainTabCompleter());

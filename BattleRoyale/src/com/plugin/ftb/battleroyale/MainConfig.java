@@ -6,10 +6,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.map.MapCanvas;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 import org.bukkit.map.MapView.Scale;
@@ -24,6 +22,7 @@ public class MainConfig extends BattleRoyale {
 	public static ArrayList<Integer> _lobbypoint = new ArrayList<>();
 	public static ArrayList<Integer> _startpoint = new ArrayList<>();
 	public static ArrayList<Integer> _deathpoint = new ArrayList<>();
+	public static ArrayList<Integer> _Timer = new ArrayList<>();
 	public static ArrayList<Integer> check = new ArrayList<>();
 
 	public static int chestCount;
@@ -75,6 +74,12 @@ public class MainConfig extends BattleRoyale {
 		_lobbypoint = (ArrayList<Integer>) plugin.getConfig().get("Lobbypoint");
 		if(_lobbypoint == null){
 			_lobbypoint = new ArrayList<>();
+		}
+
+		_Timer = new ArrayList<>();
+		_Timer = (ArrayList<Integer>) plugin.getConfig().get("Timer");
+		if(_Timer == null){
+			_Timer = new ArrayList<>();
 		}
 	}
 
@@ -177,6 +182,18 @@ public class MainConfig extends BattleRoyale {
 		plugin.saveConfig();
 	}
 
+	public static void setTimer(int a, int b){
+		loadConfig();
+
+		_Timer.add(a);
+		_Timer.add(b);
+
+		plugin.getConfig().set("Timer", null);
+
+		plugin.getConfig().set("Timer", _Timer);
+		plugin.saveConfig();
+	}
+
 	//chestの設定
 	public static void subChestConfig(Location loc, Player player){
 		loadConfig();
@@ -210,7 +227,7 @@ public class MainConfig extends BattleRoyale {
 	 * @param loc 音符ブロックのロケーション
 	 *
 	 * @param player コマンド発信者
-	 */
+	 *
 	public static void addButton(Location loc, Player player) {
 		loadConfig();
 
@@ -227,13 +244,13 @@ public class MainConfig extends BattleRoyale {
 		player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "音符ブロックを設定しました。");
 	}
 
-	/*
+	*
 	 * 登録していた音符ブロックを削除
 	 *
 	 * @param loc 音符ブロックのロケーション
 	 *
 	 * @param player コマンド発信者
-	 */
+	 *
 	public static void removeButton(Location loc, Player player) {
 		loadConfig();
 
@@ -249,6 +266,7 @@ public class MainConfig extends BattleRoyale {
 
 		player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "音符ブロックを削除しました。");
 	}
+	*/
 
 	/*
 	 * マップを保存する
@@ -275,11 +293,11 @@ public class MainConfig extends BattleRoyale {
 		for(Player player : Bukkit.getServer().getOnlinePlayers()){
 			//新しい地図データを作る
 	        MapView view = Bukkit.getServer().createMap(plugin.getServer().getWorld(plugin.getConfig().getString("mapWorld")));
-	        
+
 	        //座標と縮尺を設定
 	        view.setCenterX(plugin.getConfig().getInt("mapX"));
 	        view.setCenterZ(plugin.getConfig().getInt("mapZ"));
-	
+
 			Scale scale = Scale.FARTHEST;
 			String scaleString = plugin.getConfig().getString("mapScale");
 			if(scaleString.equalsIgnoreCase("CLOSEST")){
@@ -294,30 +312,30 @@ public class MainConfig extends BattleRoyale {
 				scale = Scale.FARTHEST;
 			}
 	        view.setScale(scale);
-	        
+
 	        //設定したマップをレンダリング
 	        MapView setMap = Bukkit.getServer().getMap((short)plugin.getConfig().getInt("mapNum"));
 	        //座標と縮尺を設定
 	        setMap.setCenterX(plugin.getConfig().getInt("mapX"));
 	        setMap.setCenterZ(plugin.getConfig().getInt("mapZ"));
 	        setMap.setScale(scale);
-	        
+
 	        //レンダーを追加
 	        for(MapRenderer ren : setMap.getRenderers()){
 	        	view.addRenderer(ren);
 	        }
 	        view.addRenderer(new CursorRenderer());
 	        view.addRenderer(new CustomMap());
-	        
+
 	        //マップを初期設定
 	        initializeMap(view);
-	        
+
 	        ItemStack item = new ItemStack(Material.MAP, 1, view.getId());
 			player.getInventory().addItem(item);
 			player.updateInventory();
 		}
 	}
-	
+
 	/*
 	 * マップの初期設定
 	 */
@@ -372,12 +390,12 @@ public class MainConfig extends BattleRoyale {
 			locPerPix /= 16;
 			pixPerLoc *= 16;
 		}
-		
+
 		CustomMap.edgeX = edgeX;
 		CustomMap.edgeZ = edgeZ;
 		CustomMap.locPerPix = locPerPix;
 		CustomMap.pixPerLoc = pixPerLoc;
-		
+
 		CursorRenderer.edgeX = edgeX;
 		CursorRenderer.edgeZ = edgeZ;
 		CursorRenderer.locPerPix = locPerPix;

@@ -134,10 +134,14 @@ public class PlusDeathArea {
 
 	public void plus(){
 
+		ArrayList<Integer> Timer = new ArrayList<Integer>();
+
 		PlusThreadClass pth = new PlusThreadClass();
 		PlusDeathThreadClass pdth = new PlusDeathThreadClass();
 
-		pth.runTaskTimer(plugin,600,300);
+		Timer = (ArrayList<Integer>) plugin.getConfig().getIntegerList("Timer");
+
+		pth.runTaskTimer(plugin,Timer.get(0),Timer.get(1));
 		pdth.runTaskTimer(plugin, 0, 100);
 	}
 }
@@ -148,7 +152,7 @@ class PlusThreadClass extends BukkitRunnable{
 	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
 
 	public static ArrayList<Integer> deathRan = new ArrayList<Integer>();
-	
+
 	//猶予段階のエリア
 	public static ArrayList<Integer> deathRanCount = new ArrayList<Integer>();
 	//猶予後のエリア
@@ -161,25 +165,29 @@ class PlusThreadClass extends BukkitRunnable{
 	public void run(){
 		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
 
-		if(!(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size()>0)){
+		if(!(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size()>1)){
         	this.cancel();
+        	count=0;
+        	countPast=0;
+        	PlusDeathArea.beta=0;
+        	return;
         }
 
 		if(PlusDeathArea.beta==0){
 			for(int i=0; i<PlusDeathArea.plusDeathX.size(); i++){
 				deathRan.add(PlusDeathArea.beta);
-		        
+
 				PlusDeathArea.beta++;
 				Collections.shuffle(deathRan);
 			}
 		}
 		deathRanCount.add(count);
 		count++;
-		
+
 		/*
-		 * 5秒後に追加
+		 * 30秒後に追加
 		 */
-		new BukkitRunnable() {					 
+		new BukkitRunnable() {
             @Override
             public void run() {
             	deathRanCountPast.add(countPast);
@@ -198,7 +206,6 @@ class PlusDeathThreadClass extends BukkitRunnable{
 	public static ArrayList<Integer> locR = new ArrayList<Integer>();
 
 	public static int betaLx, betaLz, betaRx, betaRz;
-	public static int deathAreaCount=0;
 
 	//deathAreaCount++;
 

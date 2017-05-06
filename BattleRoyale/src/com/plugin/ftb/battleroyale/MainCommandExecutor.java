@@ -72,39 +72,6 @@ public class MainCommandExecutor implements CommandExecutor {
 					return true;
 				}
 
-			case "setChest":
-				if(_plugin.getConfig().get("stagelocationsR")!=null){
-					judEdit = 2;
-					_player.sendMessage(BattleRoyale.prefix + ChatColor.AQUA + "骨を持って左クリックでチェストの位置を編集してください");
-					setChestPlayer.add(_player);
-
-					return true;
-
-				}else{
-					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "stageRを設定してください");
-
-					return true;
-				}
-
-			case "comChest":
-				judEdit = 0;
-				_player.sendMessage(BattleRoyale.prefix + ChatColor.AQUA + "チェストの位置を確定しました");
-				if(setChestPlayer.contains(_player)){
-					setChestPlayer.remove(_player);
-				}
-				return true;
-
-			case "setMap":
-				ItemStack item = _player.getItemInHand();
-				if(item.getType().equals(Material.MAP)){
-					MainConfig.setMap(item);
-					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "マップを設定しました。");
-				}else{
-					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "マップを持ってコマンドを実行してください。");
-				}
-
-				return true;
-
 			case "setLobbypoint":
 				MainConfig.setLobbypoint(_player.getLocation(), _player);
 
@@ -126,15 +93,58 @@ public class MainCommandExecutor implements CommandExecutor {
 
 				return true;
 
+			case "setMap":
+				ItemStack item = _player.getItemInHand();
+				if(item.getType().equals(Material.MAP)){
+					MainConfig.setMap(item);
+					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "マップを設定しました。");
+				}else{
+					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "マップを持ってコマンドを実行してください。");
+				}
+
+				return true;
+
+			case "setTimer":
+				if(args[1] != null && args[2] != null){
+					MainConfig.setTimer(Integer.parseInt(args[1]),Integer.parseInt(args[2]));
+				}else{
+					_player.sendMessage(BattleRoyale.prefix + "/battleroyale setTimer" + ChatColor.RED + " t1 t2\n"
+							+ ChatColor.GRAY + "t1には最初の禁止区域が追加されるまでの時間(20で1秒)\n"
+									+ "t2にはそれ以降何秒おきに禁止区域を追加するかの時間(20で1秒)\n"
+									+ "例:/battleroyale setTimer 1500 1000");
+				}
+
+				return true;
+
+			case "setChest":
+				judEdit = 2;
+				_player.sendMessage(BattleRoyale.prefix + ChatColor.AQUA + "骨を持って左クリックでチェストの位置を編集してください");
+				setChestPlayer.add(_player);
+
+				return true;
+
+			case "comChest":
+				judEdit = 0;
+				_player.sendMessage(BattleRoyale.prefix + ChatColor.AQUA + "チェストの位置を確定しました");
+				if(setChestPlayer.contains(_player)){
+					setChestPlayer.remove(_player);
+				}
+				return true;
+
+			case "startgame":
+				StartCommand.startGame();
+				return true;
+
 			default:
 				_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "\n/battleroyale " + ChatColor.RED + "setStageL\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setStageR\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setLobbypoint\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setStartpoint\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setDeathpoint\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setMap\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setTimer t1 t2\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setChest\n"
-						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "comChest\n"
-						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setMap");
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "comChest");
 				return true;
 			}
 		}

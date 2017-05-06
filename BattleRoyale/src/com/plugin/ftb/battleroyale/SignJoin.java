@@ -28,7 +28,7 @@ public class SignJoin implements Listener {
 	public void onSign(SignChangeEvent e){
         if(e.getLine(0).equals("[BattleRoyale]")&&e.getLine(1).equals("joincounter")&&e.getLine(2).equals("Join to Click")){
         	e.setLine(0, ChatColor.DARK_AQUA + "[BattleRoyale]");
-        	e.setLine(1, ChatColor.GRAY + String.valueOf(plugin.getServer().getScoreboardManager().getMainScoreboard().getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50));
+        	e.setLine(1, ChatColor.BOLD + String.valueOf(plugin.getServer().getScoreboardManager().getMainScoreboard().getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50));
         	e.setLine(2, ChatColor.GREEN + "Join to Click");
         	e.setLine(3, "-------------");
         	MainConfig.setSign(e.getBlock().getLocation());
@@ -48,7 +48,7 @@ public class SignJoin implements Listener {
             	Player _player = (Player)e.getPlayer();
             	Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
 
-            	if(s.getLine(0).equals(ChatColor.DARK_AQUA + "[BattleRoyale]")&&s.getLine(1).equals(ChatColor.GRAY + String.valueOf(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50))
+            	if(s.getLine(0).equals(ChatColor.DARK_AQUA + "[BattleRoyale]")&&s.getLine(1).equals(ChatColor.BOLD + String.valueOf(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50))
             			&&s.getLine(2).equals(ChatColor.GREEN + "Join to Click")&&s.getLine(3).equals("-------------")){
             		if(board.getTeam(TEAM_ALIVE_NAME).hasPlayer(_player)){
             			_player.sendMessage(ChatColor.GREEN + "既に参加しています！");
@@ -57,7 +57,7 @@ public class SignJoin implements Listener {
 
             		board.getTeam(TEAM_ALIVE_NAME).addPlayer(_player);
 
-            		s.setLine(1, ChatColor.GRAY + String.valueOf(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50));
+            		s.setLine(1, ChatColor.BOLD + String.valueOf(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50));
             		s.update();
 
             		giveItems(_player);

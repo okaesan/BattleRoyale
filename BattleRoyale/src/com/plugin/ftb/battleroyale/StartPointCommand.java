@@ -1,15 +1,12 @@
 package com.plugin.ftb.battleroyale;
 
-import java.util.ArrayList;
-
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class StartPointCommand implements CommandExecutor {
 
+	/*
 	//addコマンドを実行したプレイヤーリスト
 	public static ArrayList<Player> adders = new ArrayList<>();
 	//removeコマンドを実行したプレイヤーリスト
@@ -20,11 +17,12 @@ public class StartPointCommand implements CommandExecutor {
 	public StartPointCommand(BattleRoyale plugin) {
 	}
 
-	/*
-	 * 武器,防具配布用音符ブロックを登録、削除
+
+	//  武器,防具配布用音符ブロックを登録、削除
 	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		/*
 		if (sender instanceof Player) {
 			if (args.length != 1) {
 				sender.sendMessage(prefix + ChatColor.GRAY + "/startpoint " + ChatColor.RED + "add\n" +
@@ -55,5 +53,7 @@ public class StartPointCommand implements CommandExecutor {
 			sender.sendMessage(prefix + ChatColor.RED + "ゲーム内から実行してください。");
 			return true;
 		}
+		*/
+		return true;
 	}
 }
