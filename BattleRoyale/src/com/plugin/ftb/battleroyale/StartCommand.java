@@ -158,6 +158,7 @@ public class StartCommand extends BattleRoyale {
 	/*
 	 * ゲーム開始コマンド
 	 */
+	@SuppressWarnings("deprecation")
 	public static void startGame() {
 
 		MainListener.c = 1;

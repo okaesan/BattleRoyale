@@ -105,8 +105,10 @@ public class MainCommandExecutor implements CommandExecutor {
 				return true;
 
 			case "setTimer":
-				if(args[1] != null && args[2] != null){
+				//argsがnullの場合、args[num]でもえらーがでるのでlengthでチェックしたほうがいいです。。
+				if(args.length == 3){
 					MainConfig.setTimer(Integer.parseInt(args[1]),Integer.parseInt(args[2]));
+					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "時間を設定しました");
 				}else{
 					_player.sendMessage(BattleRoyale.prefix + "/battleroyale setTimer" + ChatColor.RED + " t1 t2\n"
 							+ ChatColor.GRAY + "t1には最初の禁止区域が追加されるまでの時間(20で1秒)\n"

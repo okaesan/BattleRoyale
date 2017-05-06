@@ -3,6 +3,8 @@ package com.plugin.ftb.battleroyale;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
@@ -179,6 +181,7 @@ class PlusThreadClass extends BukkitRunnable{
 			}
 		}
 		deathRanCount.add(count);
+		Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "30秒後" + ChatColor.GRAY + "に禁止区域が追加されます。");
 		count++;
 
 		/*
@@ -188,6 +191,7 @@ class PlusThreadClass extends BukkitRunnable{
             @Override
             public void run() {
             	deathRanCountPast.add(countPast);
+        		Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "禁止区域が追加されました。");
             	countPast++;
             }
         }.runTaskLater(plugin, 600);

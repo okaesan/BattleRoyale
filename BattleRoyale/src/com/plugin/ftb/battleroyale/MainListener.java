@@ -87,6 +87,10 @@ class RunTP extends BukkitRunnable{
 		PlusThreadClass.deathRanCountPast.clear();
 		PlusDeathArea.plusDeathX.clear();
 		PlusDeathArea.plusDeathZ.clear();
+		CustomMap.pastLoc.clear();
+		CustomMap.pastLocP.clear();
+		
+		Bukkit.getScheduler().cancelAllTasks();
 
 		return;
 	}
