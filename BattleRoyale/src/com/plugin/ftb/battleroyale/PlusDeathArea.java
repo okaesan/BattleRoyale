@@ -158,8 +158,8 @@ class PlusThreadClass extends BukkitRunnable{
 	//猶予後のエリア
 	public static ArrayList<Integer> deathRanCountPast = new ArrayList<Integer>();
 
-	int count=0;
-	int countPast=0;
+	public static int count=0;
+	public static int countPast=0;
 
 	@SuppressWarnings("deprecation")
 	public void run(){
@@ -167,9 +167,6 @@ class PlusThreadClass extends BukkitRunnable{
 
 		if(!(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size()>1)){
         	this.cancel();
-        	count=0;
-        	countPast=0;
-        	PlusDeathArea.beta=0;
         	return;
         }
 

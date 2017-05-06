@@ -72,13 +72,23 @@ class RunTP extends BukkitRunnable{
 
 		}
 
+		resetVar();
+
+		this.cancel();
+	}
+
+	public void resetVar(){
+
+		PlusThreadClass.count=0;
+    	PlusThreadClass.countPast=0;
+    	PlusDeathArea.beta=0;
 		PlusThreadClass.deathRan.clear();
 		PlusThreadClass.deathRanCount.clear();
 		PlusThreadClass.deathRanCountPast.clear();
 		PlusDeathArea.plusDeathX.clear();
 		PlusDeathArea.plusDeathZ.clear();
 
-		this.cancel();
+		return;
 	}
 }
 
