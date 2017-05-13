@@ -17,16 +17,6 @@ public class MainCommandExecutor implements CommandExecutor {
 	public static int judEdit;
 
 	public static ArrayList<Player> setChestPlayer = new ArrayList<>();
-	
-	public String errorMessage = BattleRoyale.prefix + ChatColor.GRAY + "\n/battleroyale " + ChatColor.RED + "setStageL\n"
-			+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setStageR\n"
-			+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setLobbypoint\n"
-			+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setStartpoint\n"
-			+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setDeathpoint\n"
-			+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setMap\n"
-			+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setTimer t1 t2\n"
-			+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setChest\n"
-			+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "comChest";
 
 	public MainCommandExecutor(BattleRoyale plugin) {
 		MainCommandExecutor._plugin = plugin;
@@ -48,12 +38,11 @@ public class MainCommandExecutor implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
 		if (sender instanceof Player) {
-			Player _player = (Player) sender;
-			
 			if (args.length == 0) {
-				_player.sendMessage(errorMessage);
-				return true;
+				return false;
 			}
+
+			Player _player = (Player) sender;
 
 			/*
 			 * 対角線でステージの登録を行うためのL、Rの登録
@@ -61,15 +50,15 @@ public class MainCommandExecutor implements CommandExecutor {
 			 * とか言ってるけど結局文の数は対して変わってないのでわざわざswitch文使わなくてよかったかもです><
 			 * 解読する際はみにくいかと思いますが頑張ってください・・・笑
 			 */
-			switch(args[0].toLowerCase()){
-			case "setstagel":
+			switch(args[0]){
+			case "setStageL":
 				Location _locL = _player.getLocation();
 
 				MainConfig.makeStage(_locL,_player,0);
 
 				return true;
 
-			case "setstager":
+			case "setStageR":
 				if(_plugin.getConfig().get("stagelocationsL")!=null){
 					Location _locR = _player.getLocation();
 
@@ -83,28 +72,28 @@ public class MainCommandExecutor implements CommandExecutor {
 					return true;
 				}
 
-			case "setlobbypoint":
+			case "setLobbypoint":
 				MainConfig.setLobbypoint(_player.getLocation(), _player);
 
 				_player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "Lobbypointを設定しました");
 
 				return true;
 
-			case "setstartpoint":
+			case "setStartpoint":
 				MainConfig.setStartpoint(_player.getLocation(), _player);
 
 				_player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "Startpointを設定しました");
 
 				return true;
 
-			case "setdeathpoint":
+			case "setDeathpoint":
 				MainConfig.setDeathpoint(_player.getLocation(), _player);
 
 				_player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "Deathpointを設定しました");
 
 				return true;
 
-			case "setmap":
+			case "setMap":
 				ItemStack item = _player.getItemInHand();
 				if(item.getType().equals(Material.MAP)){
 					MainConfig.setMap(item);
@@ -115,7 +104,7 @@ public class MainCommandExecutor implements CommandExecutor {
 
 				return true;
 
-			case "settimer":
+			case "setTimer":
 				//argsがnullの場合、args[num]でもえらーがでるのでlengthでチェックしたほうがいいです。。
 				if(args.length == 3){
 					MainConfig.setTimer(Integer.parseInt(args[1]),Integer.parseInt(args[2]));
@@ -129,14 +118,14 @@ public class MainCommandExecutor implements CommandExecutor {
 
 				return true;
 
-			case "setchest":
+			case "setChest":
 				judEdit = 2;
 				_player.sendMessage(BattleRoyale.prefix + ChatColor.AQUA + "骨を持って左クリックでチェストの位置を編集してください");
 				setChestPlayer.add(_player);
 
 				return true;
 
-			case "comchest":
+			case "comChest":
 				judEdit = 0;
 				_player.sendMessage(BattleRoyale.prefix + ChatColor.AQUA + "チェストの位置を確定しました");
 				if(setChestPlayer.contains(_player)){
@@ -149,7 +138,15 @@ public class MainCommandExecutor implements CommandExecutor {
 				return true;
 
 			default:
-				_player.sendMessage(errorMessage);
+				_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "\n/battleroyale " + ChatColor.RED + "setStageL\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setStageR\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setLobbypoint\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setStartpoint\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setDeathpoint\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setMap\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setTimer t1 t2\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setChest\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "comChest");
 				return true;
 			}
 		}
