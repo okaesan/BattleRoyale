@@ -12,23 +12,22 @@ public class MainTabCompleter implements TabCompleter{
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		List<String> tab = new ArrayList<>();
-		if (sender instanceof Player && args.length == 1) {
+		if (sender instanceof Player) {
 			if(label.equalsIgnoreCase("battleroyale")){
-				tab.add("stageL");
-				tab.add("stageR");
-				tab.add("setLobbypoint");
-				tab.add("setStartpoint");
-				tab.add("setDeathpoint");
-				tab.add("setChest");
-				tab.add("comChest");
-				tab.add("setMap");
-			}if(label.equalsIgnoreCase("startpoint")){
-				tab.add("add");
-				tab.add("remove");
+				if(args.length == 1){
+					tab.add("setStageL");
+					tab.add("setStageR");
+					tab.add("setLobbypoint");
+					tab.add("setStartpoint");
+					tab.add("setDeathpoint");
+					tab.add("setTimer");
+					tab.add("setChest");
+					tab.add("comChest");
+					tab.add("setMap");
+					return tab;
+				}
 			}
-			return tab;//タブ補完
 		}
-		
 		return tab;
 	}
 }
