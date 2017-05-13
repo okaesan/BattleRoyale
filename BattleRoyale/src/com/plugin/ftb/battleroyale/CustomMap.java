@@ -1,6 +1,7 @@
 package com.plugin.ftb.battleroyale;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,8 +31,8 @@ public class CustomMap extends MapRenderer {
 	public static String prefix = BattleRoyale.prefix;
 	
 	//描画済みの座標を記憶
-	public static ArrayList<Location> pastLoc = new ArrayList<>();
-	public static ArrayList<Location> pastLocP = new ArrayList<>();
+	public static HashMap<Player, ArrayList<Location>> pastLoc = new HashMap<>();
+	public static HashMap<Player, ArrayList<Location>> pastLocP = new HashMap<>();
 
 	@Override
 	public void render(MapView map, MapCanvas canvas, Player player) {
@@ -53,10 +54,12 @@ public class CustomMap extends MapRenderer {
 			 * 過去に描画した座標ならスキップ
 			 */
 			Location loc = new Location(Bukkit.getWorlds().get(0), pdaX, 0, pdaZ);
-			if(pastLoc.contains(loc)){
+			if(!pastLoc.containsKey(player)){
+				pastLoc.put(player, new ArrayList<Location>());
+			}else if(pastLoc.get(player).contains(loc)){
 				continue;
 			}
-			pastLoc.add(loc);
+			pastLoc.get(player).add(loc);
 			
 			if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
 				for(int x=0; x<locPerPix; x++){
@@ -130,10 +133,12 @@ public class CustomMap extends MapRenderer {
 			 * 過去に描画した座標ならスキップ
 			 */
 			Location loc = new Location(Bukkit.getWorlds().get(0), pdaX, 0, pdaZ);
-			if(pastLocP.contains(loc)){
+			if(!pastLocP.containsKey(player)){
+				pastLocP.put(player, new ArrayList<Location>());
+			}else if(pastLocP.get(player).contains(loc)){
 				continue;
 			}
-			pastLocP.add(loc);
+			pastLocP.get(player).add(loc);
 			
 			if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
 				for(int x=0; x<locPerPix; x++){
