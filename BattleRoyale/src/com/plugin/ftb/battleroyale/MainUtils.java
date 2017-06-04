@@ -16,21 +16,20 @@ public class MainUtils {
 	 * @return ソート後のKayリスト
 	 */
 	public static ArrayList<Player> scoreSort(HashMap<Player, Integer> hashMap){
-		ArrayList<Player> sortArray = new ArrayList<>();
-		for(Player player : hashMap.keySet()){
-			if(sortArray.isEmpty()){
+		ArrayList<Player> sortArray = new ArrayList<>();	//昇順完成後のリスト
+		for(Player player : hashMap.keySet()){				//プレイヤーをhashMapから取り出し
+			if(sortArray.isEmpty()){						//用意したリストが空なら先頭に配置
 				sortArray.add(player);
 				continue;
 			}
 			for(int i=0; i<sortArray.size(); i++){
-				if(hashMap.get(sortArray.get(i)) < hashMap.get(player)){
-					sortArray.add(0, player);
+				if(hashMap.get(player) > hashMap.get(sortArray.get(i))){	//用意したリストに入っているプレイヤーの値と比較
+					sortArray.add(i, player);
 					break;
 				}
-				if(i == sortArray.size()-1){
-					sortArray.add(player);
-					break;
-				}
+			}
+			if(!sortArray.contains(player)){
+				sortArray.add(player);						//最後まで低ければ最後に配置
 			}
 		}
 		
