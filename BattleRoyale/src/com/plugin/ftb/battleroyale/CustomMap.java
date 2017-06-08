@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.map.MapCanvas;
@@ -29,14 +28,14 @@ public class CustomMap extends MapRenderer {
 	public static int edgeZ;
 
 	public static String prefix = BattleRoyale.prefix;
-	
+
 	//描画済みの座標を記憶
 	public static HashMap<Player, ArrayList<Location>> pastLoc = new HashMap<>();
 	public static HashMap<Player, ArrayList<Location>> pastLocP = new HashMap<>();
 
 	@Override
 	public void render(MapView map, MapCanvas canvas, Player player) {
-		
+
 		if(PlusThreadClass.deathRanCount.isEmpty() || PlusThreadClass.deathRan.isEmpty()){
 			return;
 		}
@@ -49,7 +48,7 @@ public class CustomMap extends MapRenderer {
 
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);
-			
+
 			/*
 			 * 過去に描画した座標ならスキップ
 			 */
@@ -60,7 +59,7 @@ public class CustomMap extends MapRenderer {
 				continue;
 			}
 			pastLoc.get(player).add(loc);
-			
+
 			if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
 				for(int x=0; x<locPerPix; x++){
 					for(int z=0; z<locPerPix; z++){
@@ -88,7 +87,7 @@ public class CustomMap extends MapRenderer {
 				}
 			}
 		}
-		
+
 		for(int i:PlusThreadClass.deathRanCountPast){
 
 			int r = PlusThreadClass.deathRan.get(i);
@@ -139,7 +138,7 @@ public class CustomMap extends MapRenderer {
 				continue;
 			}
 			pastLocP.get(player).add(loc);
-			
+
 			if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
 				for(int x=0; x<locPerPix; x++){
 					for(int z=0; z<locPerPix; z++){

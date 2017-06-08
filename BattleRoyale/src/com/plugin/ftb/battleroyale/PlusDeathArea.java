@@ -48,10 +48,10 @@ public class PlusDeathArea {
 					if(betaLx>=(int)locR.get(0)){
 						plusDeathX.add(betaLx);
 						plusDeathZ.add(betaLz);
-						betaLx-=16;
+						betaLx-=64;
 					}else{
 						betaLx = (int)locL.get(0);
-						betaLz-=16;
+						betaLz-=64;
 					}
 				}else{
 					break;
@@ -71,10 +71,10 @@ public class PlusDeathArea {
 					if(betaLx<=(int)locR.get(0)){
 						plusDeathX.add(betaLx);
 						plusDeathZ.add(betaLz);
-						betaLx+=16;
+						betaLx+=64;
 					}else{
 						betaLx = (int)locL.get(0);
-						betaLz+=16;
+						betaLz+=64;
 					}
 				}else{
 					break;
@@ -95,10 +95,10 @@ public class PlusDeathArea {
 					if(betaLx>=(int)locR.get(0)){
 						plusDeathX.add(betaLx);
 						plusDeathZ.add(betaLz);
-						betaLx-=16;
+						betaLx-=64;
 					}else{
 						betaLx = (int)locL.get(0);
-						betaLz+=16;
+						betaLz+=64;
 					}
 				}else{
 					break;
@@ -119,10 +119,10 @@ public class PlusDeathArea {
 					if(betaLx<=(int)locR.get(0)){
 						plusDeathX.add(betaLx);
 						plusDeathZ.add(betaLz);
-						betaLx+=16;
+						betaLx+=64;
 					}else{
 						betaLx = (int)locL.get(0);
-						betaLz-=16;
+						betaLz-=64;
 					}
 				}else{
 					break;

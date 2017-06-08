@@ -46,9 +46,7 @@ public class MainCommandExecutor implements CommandExecutor {
 
 			/*
 			 * 対角線でステージの登録を行うためのL、Rの登録
-			 * 引数の0と1は、LとRの識別子でMainConfigクラスで関数が増えるのを防ぐため
-			 * とか言ってるけど結局文の数は対して変わってないのでわざわざswitch文使わなくてよかったかもです><
-			 * 解読する際はみにくいかと思いますが頑張ってください・・・笑
+			 * 引数の0と1は、LとRの識別子
 			 */
 			switch(args[0]){
 			case "setStageL":

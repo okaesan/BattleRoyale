@@ -39,8 +39,6 @@ public class SignJoin implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void joinSign(PlayerInteractEvent e){
-		//自動でゲームスタートの機能(廃止)
-		//StartCommand start = new StartCommand();
 		if (e.getAction()==Action.RIGHT_CLICK_BLOCK){
             if (e.getClickedBlock().getType()==Material.WALL_SIGN || e.getClickedBlock().getType()==Material.SIGN_POST){
             	Sign s = ((Sign) e.getClickedBlock().getState());
@@ -79,8 +77,6 @@ public class SignJoin implements Listener {
 		Random md = new Random();
 		player.getEquipment().clear();
 		player.getInventory().clear();
-		// ItemStack h = new ItemStack(Material.MAGMA_CREAM, 64);
-		// player.getInventory().addItem(h);
 		int itemran = md.nextInt(4);
 		if (itemran == 0) {
 			ItemStack item = new ItemStack(Material.WOOD_SWORD);
