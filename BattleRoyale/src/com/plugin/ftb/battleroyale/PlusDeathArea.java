@@ -168,6 +168,7 @@ class PlusThreadClass extends BukkitRunnable{
 		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
 
 		if(!(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size()>1)){
+			Bukkit.broadcastMessage("test");
         	this.cancel();
         	return;
         }
@@ -190,6 +191,11 @@ class PlusThreadClass extends BukkitRunnable{
 		new BukkitRunnable() {
             @Override
             public void run() {
+        		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
+        		if(!(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size()>1)){
+                	this.cancel();
+                	return;
+                }
             	deathRanCountPast.add(countPast);
         		Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "禁止区域が追加されました。");
             	countPast++;

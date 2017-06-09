@@ -44,6 +44,9 @@ public class CustomMap extends MapRenderer {
 		 * 追加されたときのみ描画する。
 		 */
 		for(int i:PlusThreadClass.deathRanCount){
+			if(i >= PlusThreadClass.deathRan.size()){
+				break;
+			}
 			int r = PlusThreadClass.deathRan.get(i);
 
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
@@ -61,27 +64,27 @@ public class CustomMap extends MapRenderer {
 			pastLoc.get(player).add(loc);
 
 			if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
-				for(int x=0; x<locPerPix; x++){
-					for(int z=0; z<locPerPix; z++){
+				for(int x=0; x<locPerPix*4; x++){
+					for(int z=0; z<locPerPix*4; z++){
 						canvas.setPixel((int)((pdaX - edgeX)/pixPerLoc) - x, (int)((pdaZ - edgeZ)/pixPerLoc) - z, (byte)122);
 					}
 				}
 			}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
-				for(int x=0; x<locPerPix; x++){
-					for(int z=0; z<locPerPix; z++){
+				for(int x=0; x<locPerPix*4; x++){
+					for(int z=0; z<locPerPix*4; z++){
 						canvas.setPixel((int)((pdaX - edgeX)/pixPerLoc) + x, (int)((pdaZ - edgeZ)/pixPerLoc) + z, (byte)122);
 					}
 				}
 			}else if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
-				for(int x=0; x<locPerPix; x++){
-					for(int z=0; z<locPerPix; z++){
+				for(int x=0; x<locPerPix*4; x++){
+					for(int z=0; z<locPerPix*4; z++){
 						canvas.setPixel((int)((pdaX - edgeX)/pixPerLoc)- x, (int)((pdaZ - edgeZ)/pixPerLoc) + z, (byte)122);
 					}
 				}
 
 			}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
-				for(int x=0; x<locPerPix; x++){
-					for(int z=0; z<locPerPix; z++){
+				for(int x=0; x<locPerPix*4; x++){
+					for(int z=0; z<locPerPix*4; z++){
 						canvas.setPixel((int)((pdaX - edgeX)/pixPerLoc) + x, (int)((pdaZ - edgeZ)/pixPerLoc) - z, (byte)122);
 					}
 				}
@@ -95,27 +98,27 @@ public class CustomMap extends MapRenderer {
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);
 			if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
-				for(int x=0; x<locPerPix; x++){
-					for(int z=0; z<locPerPix; z++){
+				for(int x=0; x<locPerPix*4; x++){
+					for(int z=0; z<locPerPix*4; z++){
 						canvas.setPixel((int)((pdaX - edgeX)/pixPerLoc) - x, (int)((pdaZ - edgeZ)/pixPerLoc) - z, (byte)18);
 					}
 				}
 			}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
-				for(int x=0; x<locPerPix; x++){
-					for(int z=0; z<locPerPix; z++){
+				for(int x=0; x<locPerPix*4; x++){
+					for(int z=0; z<locPerPix*4; z++){
 						canvas.setPixel((int)((pdaX - edgeX)/pixPerLoc) + x, (int)((pdaZ - edgeZ)/pixPerLoc) + z, (byte)18);
 					}
 				}
 			}else if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
-				for(int x=0; x<locPerPix; x++){
-					for(int z=0; z<locPerPix; z++){
+				for(int x=0; x<locPerPix*4; x++){
+					for(int z=0; z<locPerPix*4; z++){
 						canvas.setPixel((int)((pdaX - edgeX)/pixPerLoc)- x, (int)((pdaZ - edgeZ)/pixPerLoc) + z, (byte)18);
 					}
 				}
 
 			}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
-				for(int x=0; x<locPerPix; x++){
-					for(int z=0; z<locPerPix; z++){
+				for(int x=0; x<locPerPix*4; x++){
+					for(int z=0; z<locPerPix*4; z++){
 						canvas.setPixel((int)((pdaX - edgeX)/pixPerLoc) + x, (int)((pdaZ - edgeZ)/pixPerLoc) - z, (byte)18);
 					}
 				}
@@ -140,27 +143,27 @@ public class CustomMap extends MapRenderer {
 			pastLocP.get(player).add(loc);
 
 			if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
-				for(int x=0; x<locPerPix; x++){
-					for(int z=0; z<locPerPix; z++){
+				for(int x=0; x<locPerPix*4; x++){
+					for(int z=0; z<locPerPix*4; z++){
 						canvas.setPixel((int)((pdaX - edgeX)/pixPerLoc) - x, (int)((pdaZ - edgeZ)/pixPerLoc) - z, (byte)18);
 					}
 				}
 			}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
-				for(int x=0; x<locPerPix; x++){
-					for(int z=0; z<locPerPix; z++){
+				for(int x=0; x<locPerPix*4; x++){
+					for(int z=0; z<locPerPix*4; z++){
 						canvas.setPixel((int)((pdaX - edgeX)/pixPerLoc) + x, (int)((pdaZ - edgeZ)/pixPerLoc) + z, (byte)18);
 					}
 				}
 			}else if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
-				for(int x=0; x<locPerPix; x++){
-					for(int z=0; z<locPerPix; z++){
+				for(int x=0; x<locPerPix*4; x++){
+					for(int z=0; z<locPerPix*4; z++){
 						canvas.setPixel((int)((pdaX - edgeX)/pixPerLoc)- x, (int)((pdaZ - edgeZ)/pixPerLoc) + z, (byte)18);
 					}
 				}
 
 			}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
-				for(int x=0; x<locPerPix; x++){
-					for(int z=0; z<locPerPix; z++){
+				for(int x=0; x<locPerPix*4; x++){
+					for(int z=0; z<locPerPix*4; z++){
 						canvas.setPixel((int)((pdaX - edgeX)/pixPerLoc) + x, (int)((pdaZ - edgeZ)/pixPerLoc) - z, (byte)18);
 					}
 				}
