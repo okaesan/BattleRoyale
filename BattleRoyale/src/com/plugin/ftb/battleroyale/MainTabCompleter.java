@@ -19,16 +19,16 @@ public class MainTabCompleter implements TabCompleter{
 				tab.add("setLobbypoint");
 				tab.add("setStartpoint");
 				tab.add("setDeathpoint");
+				tab.add("setMap");
+				tab.add("setTimer");
+				tab.add("setNATimer");
 				tab.add("setChest");
 				tab.add("comChest");
 				tab.add("setMap");
-			}if(label.equalsIgnoreCase("startpoint")){
-				tab.add("add");
-				tab.add("remove");
 			}
 			return tab;//タブ補完
 		}
-		
+
 		return tab;
 	}
 }

@@ -182,6 +182,7 @@ public class MainConfig extends BattleRoyale {
 		plugin.saveConfig();
 	}
 
+	//禁止区域追加までの時間の設定
 	public static void setTimer(int a, int b){
 		loadConfig();
 
@@ -191,6 +192,17 @@ public class MainConfig extends BattleRoyale {
 		plugin.getConfig().set("Timer", null);
 
 		plugin.getConfig().set("Timer", _Timer);
+		plugin.saveConfig();
+	}
+
+	//最初の攻撃不可の時間の設定
+	public static void setNATimer(int parseInt) {
+		// TODO 自動生成されたメソッド・スタブ
+		loadConfig();
+
+		plugin.getConfig().set("NATimer", null);
+
+		plugin.getConfig().set("NATimer", parseInt);
 		plugin.saveConfig();
 	}
 

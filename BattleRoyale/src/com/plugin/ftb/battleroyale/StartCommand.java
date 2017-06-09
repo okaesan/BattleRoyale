@@ -77,64 +77,6 @@ class countDown extends BukkitRunnable{
 	}
 }
 
-//自動でゲームスタートの機能(廃止)
-/*class autoStartGame extends BukkitRunnable{
-
-	public static BattleRoyale plugin = BattleRoyale.plugin;
-
-	// チーム名
-	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
-	public static final String TEAM_DEAD_NAME = BattleRoyale.TEAM_DEAD_NAME;
-
-	int _startCounter = 100;
-
-	public void run(){
-
-		if(_startCounter == 0){
-			this.cancel();
-		}
-
-		switch(_startCounter){
-		case 100:
-			chat();
-			break;
-		case 70:
-			chat();
-			break;
-		case 50:
-			chat();
-			break;
-		case 40:
-			chat();
-			break;
-		case 30:
-			chat();
-			break;
-		case 20:
-			chat();
-			break;
-		default:
-			break;
-		}
-		if(_startCounter <=10){
-			chat();
-		}
-		_startCounter--;
-	}
-
-	@SuppressWarnings("deprecation")
-	public void chat(){
-		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
-
-		for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
-
-			if(p.isOnline()){
-				p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "ゲーム開始まで後" + _startCounter + "秒");
-			}
-		}
-	}
-}*/
-
 public class StartCommand extends BattleRoyale {
 
 	public static BattleRoyale plugin = BattleRoyale.plugin;
@@ -174,14 +116,6 @@ public class StartCommand extends BattleRoyale {
 		countDown cd = new countDown();
 		cd.runTaskTimer(plugin, 0, 20);
 	}
-
-	//自動でゲームスタートの機能(廃止)
-	/*
-	public void autoStart(){
-		autoStartGame aSG = new autoStartGame();
-		aSG.runTaskTimer(plugin, 0, 20);
-	}
-	 */
 
 	public static void setChest(){
 

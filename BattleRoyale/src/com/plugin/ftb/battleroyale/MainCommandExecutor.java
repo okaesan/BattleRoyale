@@ -10,6 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class MainCommandExecutor implements CommandExecutor {
 
@@ -43,6 +44,13 @@ public class MainCommandExecutor implements CommandExecutor {
 			}
 
 			Player _player = (Player) sender;
+			ItemStack i = _player.getInventory().getItemInMainHand();
+
+			if(i.getType() != Material.AIR){
+				ItemMeta im = i.getItemMeta();
+				im.setUnbreakable(true);
+				i.setItemMeta(im);
+			}
 
 			/*
 			 * 対角線でステージの登録を行うためのL、Rの登録
@@ -116,6 +124,15 @@ public class MainCommandExecutor implements CommandExecutor {
 
 				return true;
 
+			case "setNATimer":
+				if(args.length == 2){
+					MainConfig.setNATimer(Integer.parseInt(args[1]));
+					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "攻撃不可の時間を設定しました");
+				}else{
+					_player.sendMessage(BattleRoyale.prefix + "/battleroyale setNATimer" + ChatColor.RED + "t1\n"
+							+ ChatColor.GRAY + "t1にはゲームを開始してから攻撃を不可能にする時間");
+				}
+
 			case "setChest":
 				judEdit = 2;
 				_player.sendMessage(BattleRoyale.prefix + ChatColor.AQUA + "骨を持って左クリックでチェストの位置を編集してください");
@@ -143,12 +160,12 @@ public class MainCommandExecutor implements CommandExecutor {
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setDeathpoint\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setMap\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setTimer t1 t2\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setNATimer t1\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setChest\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "comChest");
 				return true;
 			}
 		}
-
 		return false;
 	}
 }

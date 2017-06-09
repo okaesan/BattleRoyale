@@ -15,14 +15,14 @@ public class StartingInventory extends BattleRoyale {
 	public static BattleRoyale plugin = BattleRoyale.plugin;
 
 	@SuppressWarnings("deprecation")
-	public static void StartingInventoryFunc(Player p) {//関数名がクラス名と被っていたので変更しました。
+	public static void StartingInventoryFunc(Player p) {////関数名がクラス名と被っていたので変更しました。
 
-		File items = new File("plugins/BattleRoyale/items.ini");
+		File items = new File("plugins/BattleRoyale/items.yml");
 		try {
 			items.createNewFile();
 		} catch (IOException e) {}
 
-		 String filename = "plugins/StartTheGame/items.ini";
+		 String filename = "plugins/BattleRoyale/items.yml";
 		 Properties conf = new Properties();
 		 try {
 			 conf.load(new FileInputStream(filename));

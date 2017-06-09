@@ -12,10 +12,12 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.block.Skull;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -89,7 +91,7 @@ class RunTP extends BukkitRunnable{
 		PlusDeathArea.plusDeathZ.clear();
 		CustomMap.pastLoc.clear();
 		CustomMap.pastLocP.clear();
-		
+
 		Bukkit.getScheduler().cancelAllTasks();
 
 		return;
@@ -304,107 +306,36 @@ public class MainListener implements Listener {
 			}
 		}
 	}
-/*
-	@SuppressWarnings("deprecation")
-	@EventHandler(ignoreCancelled = true)
-	public void onCick(PlayerInteractEvent event) {
-		Player player = event.getPlayer();
-		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
 
-		 // 音符ブロックをクリックしたとき、装備を付与し、ゲームに参加させる
+	private static boolean Attack = true;
 
-		if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-			Block block = event.getClickedBlock();
-			Material material = block.getType();
-			if (material.equals(Material.NOTE_BLOCK)) {
-				if (StartPointCommand.adders.contains(player)) {
-					MainConfig.addButton(block.getLocation(), player);
-					StartPointCommand.adders.remove(player);
-					return;
-				}
-				if (StartPointCommand.removers.contains(player)) {
-					MainConfig.removeButton(block.getLocation(), player);
-					StartPointCommand.removers.remove(player);
-					return;
-				}
+	public static void dontAttack() {
 
-				 // PlayerをAliveチームに登録して参加
+		 int time = plugin.getConfig().getInt("NATimer");
+		 Attack = false;
 
-				if (!board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
-					board.getTeam(TEAM_ALIVE_NAME).addPlayer(player);
-				}
+		 ////DeleterとなっていたのでBukkitRunnableに差し替えました
+		 new BukkitRunnable(){
+			@Override
+			public void run(){
+				Attack = true;
+			}
+		}.runTaskLater(plugin, time * 20);
 
-				 // ランダムで装備品を付与
+	}
 
-				MainConfig.loadConfig();
-				if (MainConfig.locations != null && MainConfig.locations.contains(block.getLocation())) {
-					Random md = new Random();
-					player.getEquipment().clear();
-					player.getInventory().clear();
-					// ItemStack h = new ItemStack(Material.MAGMA_CREAM, 64);
-					// player.getInventory().addItem(h);
-					int itemran = md.nextInt(4);
-					if (itemran == 0) {
-						ItemStack item = new ItemStack(Material.WOOD_SWORD);
-						player.getInventory().addItem(item);
-					} else if (itemran == 1) {
-						ItemStack item = new ItemStack(Material.STONE_SWORD);
-						player.getInventory().addItem(item);
-					} else if (itemran == 2) {
-						ItemStack item = new ItemStack(Material.GOLD_SWORD);
-						player.getInventory().addItem(item);
-					} else if (itemran == 3) {
-						ItemStack item = new ItemStack(Material.IRON_SWORD);
-						player.getInventory().addItem(item);
-					} else {
-						ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
-						player.getInventory().addItem(item);
-					}
-					itemran = md.nextInt(4);
-					if (itemran == 0) {
-						ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE);
-						player.getInventory().addItem(item);
-					} else if (itemran == 1) {
-						ItemStack item = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
-						player.getInventory().addItem(item);
-					} else if (itemran == 2) {
-						ItemStack item = new ItemStack(Material.GOLD_CHESTPLATE);
-						player.getInventory().addItem(item);
-					} else if (itemran == 3) {
-						ItemStack item = new ItemStack(Material.DIAMOND_CHESTPLATE);
-						player.getInventory().addItem(item);
-					} else {
-						ItemStack item = new ItemStack(Material.IRON_CHESTPLATE);
-						player.getInventory().addItem(item);
-					}
-				}
+	@EventHandler
+	public void EntityDamage(EntityDamageByEntityEvent e){
+		Entity en = e.getDamager();
+
+		if(en instanceof Player){
+
+			if(!Attack){
+				e.setCancelled(true);
 			}
 		}
+
 	}
-
-	@EventHandler
-	public void BeforeGame(PlayerMoveEvent event) {
-		Player player = event.getPlayer();
-
-		 // if (c == 1){ itemhas = new ItemStack(Material.MAGMA_CREAM);
-		 // player.getInventory().remove(itemhas); } else if(h == true){ Location
-		 // l = player.getLocation(); player.teleport(l);
-
-		Boolean t = player.hasPotionEffect(PotionEffectType.SLOW);
-		if (t == true) {
-			Location l = player.getLocation();
-			player.teleport(l);
-		}
-	}
-
-	@SuppressWarnings("deprecation")
-	@EventHandler
-	public void onMap(MapInitializeEvent event){
-		MapView map = event.getMap();
-		map.addRenderer(new CustomMap());
-		}
-		*/
-
 	// ブロードキャスト
 	public void broadcast(String message) {
 		BattleRoyale.broadcast(message);

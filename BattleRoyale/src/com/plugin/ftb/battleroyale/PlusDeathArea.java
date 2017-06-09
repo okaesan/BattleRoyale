@@ -143,7 +143,7 @@ public class PlusDeathArea {
 
 		Timer = (ArrayList<Integer>) plugin.getConfig().getIntegerList("Timer");
 
-		pth.runTaskTimer(plugin,Timer.get(0),Timer.get(1));
+		pth.runTaskTimer(plugin,Timer.get(0)*20,Timer.get(1)*20);
 		pdth.runTaskTimer(plugin, 0, 100);
 	}
 }
@@ -233,8 +233,8 @@ class PlusDeathThreadClass extends BukkitRunnable{
 						//p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
 
 						if(p.isOnline()){
-							if(pdaX-16<=(int)p.getPlayer().getLocation().getX()&&pdaX>=(int)p.getPlayer().getLocation().getX()
-									&&pdaZ-16<=(int)p.getPlayer().getLocation().getZ()&&pdaZ>=(int)p.getPlayer().getLocation().getZ()){
+							if(pdaX-64<=(int)p.getPlayer().getLocation().getX()&&pdaX>=(int)p.getPlayer().getLocation().getX()
+									&&pdaZ-64<=(int)p.getPlayer().getLocation().getZ()&&pdaZ>=(int)p.getPlayer().getLocation().getZ()){
 
 								p.getPlayer().setHealth(0.0D);
 
@@ -247,8 +247,8 @@ class PlusDeathThreadClass extends BukkitRunnable{
 						//p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
 
 						if(p.isOnline()){
-							if(pdaX+16>=(int)p.getPlayer().getLocation().getX()&&pdaX<=(int)p.getPlayer().getLocation().getX()
-									&&pdaZ+16>=(int)p.getPlayer().getLocation().getZ()&&pdaZ<=(int)p.getPlayer().getLocation().getZ()){
+							if(pdaX+64>=(int)p.getPlayer().getLocation().getX()&&pdaX<=(int)p.getPlayer().getLocation().getX()
+									&&pdaZ+64>=(int)p.getPlayer().getLocation().getZ()&&pdaZ<=(int)p.getPlayer().getLocation().getZ()){
 
 								p.getPlayer().setHealth(0.0D);
 
@@ -262,8 +262,8 @@ class PlusDeathThreadClass extends BukkitRunnable{
 						//p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
 
 						if(p.isOnline()){
-							if(pdaX-16<=(int)p.getPlayer().getLocation().getX()&&pdaX>=(int)p.getPlayer().getLocation().getX()
-									&&pdaZ+16>=(int)p.getPlayer().getLocation().getZ()&&pdaZ<=(int)p.getPlayer().getLocation().getZ()){
+							if(pdaX-64<=(int)p.getPlayer().getLocation().getX()&&pdaX>=(int)p.getPlayer().getLocation().getX()
+									&&pdaZ+64>=(int)p.getPlayer().getLocation().getZ()&&pdaZ<=(int)p.getPlayer().getLocation().getZ()){
 
 								p.getPlayer().setHealth(0.0D);
 
@@ -277,8 +277,8 @@ class PlusDeathThreadClass extends BukkitRunnable{
 						//p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
 
 						if(p.isOnline()){
-							if(pdaX+16>=(int)p.getPlayer().getLocation().getX()&&pdaX<=(int)p.getPlayer().getLocation().getX()
-									&&pdaZ-16<=(int)p.getPlayer().getLocation().getZ()&&pdaZ>=(int)p.getPlayer().getLocation().getZ()){
+							if(pdaX+64>=(int)p.getPlayer().getLocation().getX()&&pdaX<=(int)p.getPlayer().getLocation().getX()
+									&&pdaZ-64<=(int)p.getPlayer().getLocation().getZ()&&pdaZ>=(int)p.getPlayer().getLocation().getZ()){
 
 								p.getPlayer().setHealth(0.0D);
 
