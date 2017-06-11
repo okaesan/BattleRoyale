@@ -10,7 +10,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class MainCommandExecutor implements CommandExecutor {
 
@@ -44,13 +43,6 @@ public class MainCommandExecutor implements CommandExecutor {
 			}
 
 			Player _player = (Player) sender;
-			ItemStack i = _player.getInventory().getItemInMainHand();
-
-			if(i.getType() != Material.AIR){
-				ItemMeta im = i.getItemMeta();
-				im.setUnbreakable(true);
-				i.setItemMeta(im);
-			}
 
 			/*
 			 * 対角線でステージの登録を行うためのL、Rの登録
@@ -134,14 +126,12 @@ public class MainCommandExecutor implements CommandExecutor {
 				}
 
 			case "setChest":
-				judEdit = 2;
 				_player.sendMessage(BattleRoyale.prefix + ChatColor.AQUA + "骨を持って左クリックでチェストの位置を編集してください");
 				setChestPlayer.add(_player);
 
 				return true;
 
 			case "comChest":
-				judEdit = 0;
 				_player.sendMessage(BattleRoyale.prefix + ChatColor.AQUA + "チェストの位置を確定しました");
 				if(setChestPlayer.contains(_player)){
 					setChestPlayer.remove(_player);

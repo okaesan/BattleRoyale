@@ -74,16 +74,24 @@ class RunTP extends BukkitRunnable{
 
 		}
 
+		//ゲーム中に破壊されたブロックの復元
+		for(int i=0;i<MainListener.bBLOCK.size();i++){
+			MainListener.bBLOCK.get(i).setType(MainListener.bMAT.get(i));
+			MainListener.bBLOCK.get(i).setData(MainListener.bDATA.get(i));
+		}
+
 		resetVar();
 
 		this.cancel();
 	}
 
+	//毎試合の変数の初期化
 	public void resetVar(){
 
 		PlusThreadClass.count=0;
     	PlusThreadClass.countPast=0;
     	PlusDeathArea.beta=0;
+    	StartCommand.start=0;
 		PlusThreadClass.deathRan.clear();
 		PlusThreadClass.deathRanCount.clear();
 		PlusThreadClass.deathRanCountPast.clear();
@@ -91,6 +99,9 @@ class RunTP extends BukkitRunnable{
 		PlusDeathArea.plusDeathZ.clear();
 		CustomMap.pastLoc.clear();
 		CustomMap.pastLocP.clear();
+		MainListener.bBLOCK.clear();
+		MainListener.bDATA.clear();
+		MainListener.bMAT.clear();
 
 		Bukkit.getScheduler().cancelAllTasks();
 
@@ -102,8 +113,6 @@ class RunTP extends BukkitRunnable{
 public class MainListener implements Listener {
 
 	public static BattleRoyale plugin = BattleRoyale.plugin;
-
-	static int c = 0;
 
 	// チーム名
 	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
@@ -117,15 +126,48 @@ public class MainListener implements Listener {
 	public static ArrayList<Integer> loc = new ArrayList<>();
 	public static ArrayList<Integer> locB = new ArrayList<>();
 
+	/*
+	 * ゲーム中に破壊されたブロックの値保存用のリスト
+	 * Javaでの構造体の書き方を理解できたら構造体に変更しますm(_ _)m
+	 */
+	public static ArrayList<Block> bBLOCK = new ArrayList<>();
+	public static ArrayList<Byte> bDATA = new ArrayList<>();
+	public static ArrayList<Material> bMAT = new ArrayList<>();
+
 	@SuppressWarnings("deprecation")
 	@EventHandler
-	public static void subChest(BlockBreakEvent e){
+	public static void onBlockBreak(BlockBreakEvent e){
 		Player _player = (Player)e.getPlayer();
+		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
 
-		if(MainCommandExecutor.judEdit == 2&&_player.getInventory().getItemInHand().getType()==Material.BONE
-				&&MainCommandExecutor.setChestPlayer.contains(_player)){
+		/*
+		 * ゲーム中にアイテムが入るチェストの登録
+		 * setChestPlayerはチェストを編集する人のデータが入ったリスト
+		 */
+		if(_player.getInventory().getItemInHand().getType()==Material.BONE
+				&& MainCommandExecutor.setChestPlayer.contains(_player)){
+
 			MainConfig.subChestConfig(e.getBlock().getLocation(), _player);
 
+		}
+
+		/*
+		 * ゲーム中に破壊されたブロックの情報を取得して保存
+		 */
+		//ゲーム中で、かつブロックを破壊した人がゲームに参加していて、生存者だった場合
+		if(StartCommand.start==1 && board.getTeam(TEAM_ALIVE_NAME).hasPlayer(_player)){
+			//破壊されたブロックがガラス、ガラス板、色付きガラス、色付きガラス板だった場合はその場所の値と壊されたブロックの種類、データ値を保存しておく。
+			if(e.getBlock().getType()==Material.GLASS
+					|| e.getBlock().getType()==Material.STAINED_GLASS
+					|| e.getBlock().getType()==Material.STAINED_GLASS_PANE
+					|| e.getBlock().getType()==Material.THIN_GLASS){
+
+				//値保存
+				bBLOCK.add(Bukkit.getWorld("world").getBlockAt(e.getBlock().getX(), e.getBlock().getY()+1, e.getBlock().getZ()));
+				bDATA.add(e.getBlock().getData());
+				bMAT.add(e.getBlock().getType());
+
+			}
 		}
 	}
 
@@ -171,8 +213,12 @@ public class MainListener implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
+
+		//////Location型の変数locを設定したのでgetBlockの前など少し変更しました。//////
+
 		Player player = event.getEntity();
 		Player killer = player.getKiller();
+		Location loc = player.getLocation();
 		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
 
 		// 死亡後、DEADチームへ移行
@@ -180,8 +226,18 @@ public class MainListener implements Listener {
 			board.getTeam(TEAM_ALIVE_NAME).removePlayer(player);
 			board.getTeam(TEAM_DEAD_NAME).addPlayer(player);
 
+			//チェストとプレイヤーの頭に置き換わる前に存在していたブロックの値の保存
+			//チェスト
+			bBLOCK.add(player.getLocation().getBlock());
+			bDATA.add(player.getLocation().getBlock().getData());
+			bMAT.add(player.getLocation().getBlock().getType());
+			//頭
+			bBLOCK.add(loc.add(0, 1, 0).getBlock());
+			bDATA.add(loc.add(0, 1, 0).getBlock().getData());
+			bMAT.add(loc.add(0, 1, 0).getBlock().getType());
+
 			//死亡後、ドロップアイテムをチェストに保管
-			Block block = player.getLocation().getBlock();
+			Block block = loc.getBlock();
 			block.setType(Material.CHEST);
 			Chest chest = (Chest)block.getState();
 			for(ItemStack itemStack : event.getDrops()){
@@ -190,7 +246,7 @@ public class MainListener implements Listener {
 			event.getDrops().clear();
 
 			//プレイヤーの頭を置く
-			block = player.getLocation().add(0, 1, 0).getBlock();
+			block = loc.add(0, 1, 0).getBlock();
 			block.setTypeIdAndData(Material.SKULL.getId(), (byte)1, true);
 			Skull skull = (Skull)block.getState();
 			skull.setSkullType(SkullType.PLAYER);

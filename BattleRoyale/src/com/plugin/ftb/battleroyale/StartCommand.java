@@ -93,8 +93,8 @@ public class StartCommand extends BattleRoyale {
 	DeathArea deathA = new DeathArea();
 	PlusDeathArea PdeathA = new PlusDeathArea();
 
-	public static int locX,locY,locZ;
-	static int r, c = 0, item;
+	public static int locX, locY, locZ, start=0;
+	static int c, r, item;
 	public static ArrayList<Integer> loc = new ArrayList<>();
 
 	/*
@@ -102,7 +102,8 @@ public class StartCommand extends BattleRoyale {
 	 */
 	public static void startGame() {
 
-		MainListener.c = 1;
+		//ゲーム中は1、ゲーム中以外は0
+		start = 1;
 
 		//SLOWエフェクトを削除
 		/*for (Player p : SignJoin.join) {
