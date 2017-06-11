@@ -109,8 +109,8 @@ public class MainCommandExecutor implements CommandExecutor {
 					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "時間を設定しました");
 				}else{
 					_player.sendMessage(BattleRoyale.prefix + "/battleroyale setTimer" + ChatColor.RED + " t1 t2\n"
-							+ ChatColor.GRAY + "t1には最初の禁止区域が追加されるまでの時間(20で1秒)\n"
-									+ "t2にはそれ以降何秒おきに禁止区域を追加するかの時間(20で1秒)\n"
+							+ ChatColor.GRAY + "t1には最初の禁止区域が追加されるまでの時間\n"
+									+ "t2にはそれ以降何秒おきに禁止区域を追加するかの時間\n"
 									+ "例:/battleroyale setTimer 1500 1000");
 				}
 
