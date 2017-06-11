@@ -125,6 +125,8 @@ public class MainCommandExecutor implements CommandExecutor {
 							+ ChatColor.GRAY + "t1にはゲームを開始してから攻撃を不可能にする時間");
 				}
 
+				return true;
+
 			case "setChest":
 				_player.sendMessage(BattleRoyale.prefix + ChatColor.AQUA + "骨を持って左クリックでチェストの位置を編集してください");
 				setChestPlayer.add(_player);

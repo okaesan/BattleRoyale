@@ -144,7 +144,7 @@ public class PlusDeathArea {
 		Timer = (ArrayList<Integer>) plugin.getConfig().getIntegerList("Timer");
 
 		pth.runTaskTimer(plugin,Timer.get(0)*20,Timer.get(1)*20);
-		pdth.runTaskTimer(plugin, 0, 100);
+		pdth.runTaskTimer(plugin, 0, 20);
 	}
 }
 

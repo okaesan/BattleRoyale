@@ -51,7 +51,6 @@ public class BattleRoyale extends JavaPlugin {
 
 		//タブ補完登録
 		getCommand("battleroyale").setTabCompleter(new MainTabCompleter());
-		getCommand("startpoint").setTabCompleter(new MainTabCompleter());
 
 		// config書き出し
 		this.saveDefaultConfig();

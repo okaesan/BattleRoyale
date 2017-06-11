@@ -12,7 +12,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.block.Skull;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -34,6 +33,7 @@ class RunTP extends BukkitRunnable{
 	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
 	public static final String TEAM_DEAD_NAME = BattleRoyale.TEAM_DEAD_NAME;
 
+	//ロビーへテレポート用
 	public static ArrayList<Integer> locB = new ArrayList<>();
 
 	int locX = plugin.getConfig().getInt("SignValue.x");
@@ -123,8 +123,11 @@ public class MainListener implements Listener {
 	// ポイントカウント
 	public static HashMap<Player, Integer> pointCount = BattleRoyale.pointCount;
 
+	//リスポーン地点へテレポート用
 	public static ArrayList<Integer> loc = new ArrayList<>();
-	public static ArrayList<Integer> locB = new ArrayList<>();
+
+	//ダメージ無効かの判定用
+	public static boolean Attack = false;
 
 	/*
 	 * ゲーム中に破壊されたブロックの値保存用のリスト
@@ -163,10 +166,12 @@ public class MainListener implements Listener {
 					|| e.getBlock().getType()==Material.THIN_GLASS){
 
 				//値保存
-				bBLOCK.add(Bukkit.getWorld("world").getBlockAt(e.getBlock().getX(), e.getBlock().getY()+1, e.getBlock().getZ()));
+				bBLOCK.add(Bukkit.getWorld("world").getBlockAt(e.getBlock().getX(), e.getBlock().getY(), e.getBlock().getZ()));
 				bDATA.add(e.getBlock().getData());
 				bMAT.add(e.getBlock().getType());
 
+			}else{
+				e.setCancelled(true);
 			}
 		}
 	}
@@ -232,9 +237,11 @@ public class MainListener implements Listener {
 			bDATA.add(player.getLocation().getBlock().getData());
 			bMAT.add(player.getLocation().getBlock().getType());
 			//頭
-			bBLOCK.add(loc.add(0, 1, 0).getBlock());
-			bDATA.add(loc.add(0, 1, 0).getBlock().getData());
-			bMAT.add(loc.add(0, 1, 0).getBlock().getType());
+			loc.add(0, 1, 0);
+			bBLOCK.add(loc.getBlock());
+			bDATA.add(loc.getBlock().getData());
+			bMAT.add(loc.getBlock().getType());
+			loc.add(0, -1, 0);
 
 			//死亡後、ドロップアイテムをチェストに保管
 			Block block = loc.getBlock();
@@ -360,37 +367,22 @@ public class MainListener implements Listener {
 			if (board.getTeam(TEAM_DEAD_NAME).hasPlayer(player)) {
 				event.setCancelled(true);
 			}
+
 		}
 	}
 
-	private static boolean Attack = true;
-
-	public static void dontAttack() {
-
-		 int time = plugin.getConfig().getInt("NATimer");
-		 Attack = false;
-
-		 ////DeleterとなっていたのでBukkitRunnableに差し替えました
-		 new BukkitRunnable(){
-			@Override
-			public void run(){
-				Attack = true;
-			}
-		}.runTaskLater(plugin, time * 20);
-
-	}
-
+	@SuppressWarnings("deprecation")
 	@EventHandler
-	public void EntityDamage(EntityDamageByEntityEvent e){
-		Entity en = e.getDamager();
+	public void EntityDamage(EntityDamageByEntityEvent event){
+		if (event.getEntity() instanceof Player) {
+			Player player = (Player) event.getEntity();
+			Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
 
-		if(en instanceof Player){
-
-			if(!Attack){
-				e.setCancelled(true);
+			//ダメージ無効時間中はダメージを受けないようにする。
+			if(!Attack&&board.getTeam(TEAM_DEAD_NAME).hasPlayer(player)){
+				event.setCancelled(true);
 			}
 		}
-
 	}
 	// ブロードキャスト
 	public void broadcast(String message) {

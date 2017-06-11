@@ -16,6 +16,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
+class attack extends BukkitRunnable{
+
+	@Override
+	public void run(){
+		MainListener.Attack = true;
+	}
+}
+
 class countDown extends BukkitRunnable{
 
 	public static BattleRoyale plugin = BattleRoyale.plugin;
@@ -54,6 +62,7 @@ class countDown extends BukkitRunnable{
 			PdeathA.setPlusDeath();
 			PdeathA.plus();
 			MainConfig.giveMap();
+			new attack().runTaskLater(plugin, plugin.getConfig().getInt("NATimer")*20);
 
 		}
 
