@@ -33,7 +33,7 @@ public class MainCommandExecutor implements CommandExecutor {
 	 *
 	 * @param args コマンドの引数
 	 */
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation" })
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
@@ -142,6 +142,17 @@ public class MainCommandExecutor implements CommandExecutor {
 
 			case "startgame":
 				StartCommand.startGame();
+				return true;
+
+			case "checkConf":
+				_player.sendMessage("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "BattleRoyale" + ChatColor.GRAY + " 設定一覧\n"
+						+ ChatColor.DARK_GREEN + ChatColor.BOLD + "- ステージ範囲 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("stagelocationsL") + "\n" + _plugin.getConfig().getString("stagelocationsR")
+						+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- ロビー -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("Lobbypoint")
+						+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- スタート地点 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("Startpoint")
+						+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- 死者の集い -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("Deathpoint")
+						+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- 禁止区域追加までの時間 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("Timer")
+						+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- 攻撃不可能時間 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("NATimer")
+						+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- 設定されたチェストの数 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("chestCounter"));
 				return true;
 
 			default:

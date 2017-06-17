@@ -27,8 +27,11 @@ public class StartingInventory extends BattleRoyale {
 		 try {
 			 conf.load(new FileInputStream(filename));
 		 } catch (IOException e) {}
+		 //[items.yml]のアイテムがいくつあるかの値
 		 int a = Integer.parseInt(conf.getProperty("setItemCounter"));
+		 //while文を何回繰り返しているか
 		 int b = 1;
+		 //プレイヤーにアイテムをいくつ与えたか
 		 int d = 0;
 		 int f = Integer.parseInt(conf.getProperty("Items"));
 

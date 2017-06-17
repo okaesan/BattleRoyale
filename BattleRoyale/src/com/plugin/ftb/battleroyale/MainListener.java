@@ -16,7 +16,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -159,6 +158,7 @@ public class MainListener implements Listener {
 		 */
 		//ゲーム中で、かつブロックを破壊した人がゲームに参加していて、生存者だった場合
 		if(StartCommand.start==1 && board.getTeam(TEAM_ALIVE_NAME).hasPlayer(_player)){
+
 			//破壊されたブロックがガラス、ガラス板、色付きガラス、色付きガラス板だった場合はその場所の値と壊されたブロックの種類、データ値を保存しておく。
 			if(e.getBlock().getType()==Material.GLASS
 					|| e.getBlock().getType()==Material.STAINED_GLASS
@@ -170,9 +170,25 @@ public class MainListener implements Listener {
 				bDATA.add(e.getBlock().getData());
 				bMAT.add(e.getBlock().getType());
 
-			}else{
+			}
+			//破壊されたブロックが背の高い草花だった場合、setCancelledではデータ値が変わって違うものに置き換わるので、データ値の設定をする。
+			else if(e.getBlock().getType() == Material.DOUBLE_PLANT){
+				if(e.getBlock().getData() == 0 ||e.getBlock().getData() == 1||e.getBlock().getData() == 2
+						||e.getBlock().getData() == 3||e.getBlock().getData() == 4||e.getBlock().getData() == 5){
+					Location l = e.getBlock().getLocation().add(0,1,0);
+					l.getBlock().setType(Material.DOUBLE_PLANT);
+					l.getBlock().setData((byte) 10);
+				}
+			}
+			//その他のブロックは破壊不可
+			else{
 				e.setCancelled(true);
 			}
+		}
+
+		//死者は全ブロックを破壊不可能にする。
+		if (board.getTeam(TEAM_DEAD_NAME).hasPlayer(_player)) {
+			e.setCancelled(true);
 		}
 	}
 
@@ -368,22 +384,14 @@ public class MainListener implements Listener {
 				event.setCancelled(true);
 			}
 
-		}
-	}
-
-	@SuppressWarnings("deprecation")
-	@EventHandler
-	public void EntityDamage(EntityDamageByEntityEvent event){
-		if (event.getEntity() instanceof Player) {
-			Player player = (Player) event.getEntity();
-			Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
-
 			//ダメージ無効時間中はダメージを受けないようにする。
-			if(!Attack&&board.getTeam(TEAM_DEAD_NAME).hasPlayer(player)){
+			if(!Attack&&board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)){
 				event.setCancelled(true);
 			}
+
 		}
 	}
+
 	// ブロードキャスト
 	public void broadcast(String message) {
 		BattleRoyale.broadcast(message);
