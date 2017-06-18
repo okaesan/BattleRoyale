@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -59,7 +60,9 @@ public class SignJoin implements Listener {
             		s.update();
 
             		MainListener.killCount.put(_player, 0);
-            		new ScoreBoard().onBoard(_player);
+            		for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+            			new ScoreBoard().onBoard((Player) p);
+            		}
 
             		giveItems(_player);
 

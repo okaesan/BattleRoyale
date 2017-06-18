@@ -6,6 +6,7 @@ import java.util.Collections;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -136,14 +137,10 @@ public class PlusDeathArea {
 
 	public void plus(){
 
-		ArrayList<Integer> Timer = new ArrayList<Integer>();
-
 		PlusThreadClass pth = new PlusThreadClass();
 		PlusDeathThreadClass pdth = new PlusDeathThreadClass();
 
-		Timer = (ArrayList<Integer>) plugin.getConfig().getIntegerList("Timer");
-
-		pth.runTaskTimer(plugin,Timer.get(0)*20,Timer.get(1)*20);
+		pth.runTaskTimer(plugin, 0, 20);
 		pdth.runTaskTimer(plugin, 0, 20);
 	}
 }
@@ -160,47 +157,60 @@ class PlusThreadClass extends BukkitRunnable{
 	//猶予後のエリア
 	public static ArrayList<Integer> deathRanCountPast = new ArrayList<Integer>();
 
+	public static ArrayList<Integer> Timer = new ArrayList<Integer>();
+
 	public static int count=0;
 	public static int countPast=0;
+	//禁止区域が追加されるまでのカウンター
+	public static int loopC=plugin.getConfig().getIntegerList("Timer").get(0);
 
+	/*
+	 *スコアボードに禁止区域追加までの時間を表示させるため、追加方法の処理を変更しました
+	 */
 	@SuppressWarnings("deprecation")
 	public void run(){
 		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
 
-		if(!(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size()>1)){
-			Bukkit.broadcastMessage("test");
-        	this.cancel();
-        	return;
-        }
-
-		if(PlusDeathArea.beta==0){
-			for(int i=0; i<PlusDeathArea.plusDeathX.size(); i++){
-				deathRan.add(PlusDeathArea.beta);
-
-				PlusDeathArea.beta++;
-				Collections.shuffle(deathRan);
+		//禁止区域追加30秒前
+		if(loopC==30){
+			if(!(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size()>1)){
+				Bukkit.broadcastMessage("test");
+				this.cancel();
+				return;
 			}
-		}
-		deathRanCount.add(count);
-		Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "30秒後" + ChatColor.GRAY + "に禁止区域が追加されます。");
-		count++;
 
-		/*
-		 * 30秒後に追加
-		 */
-		new BukkitRunnable() {
-            @Override
-            public void run() {
-        		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
-        		if(!(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size()>1)){
-                	this.cancel();
-                	return;
-                }
-            	deathRanCountPast.add(countPast);
-        		Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "禁止区域が追加されました。");
-            	countPast++;
-            }
-        }.runTaskLater(plugin, 600);
+			if(PlusDeathArea.beta==0){
+				for(int i=0; i<PlusDeathArea.plusDeathX.size(); i++){
+					deathRan.add(PlusDeathArea.beta);
+
+					PlusDeathArea.beta++;
+					Collections.shuffle(deathRan);
+				}
+			}
+			deathRanCount.add(count);
+			Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "30秒後" + ChatColor.GRAY + "に禁止区域が追加されます。");
+			count++;
+
+		}
+
+		//禁止区域追加
+		if(loopC==0){
+			if(!(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size()>1)){
+				this.cancel();
+				return;
+			}
+			deathRanCountPast.add(countPast);
+			Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "禁止区域が追加されました。");
+			countPast++;
+			//二週目からはずっと同じ一定時間
+			loopC=plugin.getConfig().getIntegerList("Timer").get(1);
+		}
+		//１秒ごとにカウントを減らしていく。
+		loopC--;
+
+		for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+			new ScoreBoard().onBoard((Player) p);
+		}
 	}
 }
 

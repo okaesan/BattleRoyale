@@ -15,10 +15,14 @@ import org.bukkit.block.Skull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -395,6 +399,39 @@ public class MainListener implements Listener {
 				event.setCancelled(true);
 			}
 
+		}
+	}
+
+	//畑が荒らし防止------
+	@EventHandler(ignoreCancelled=true)
+	public void onEntityInteractEvent(EntityInteractEvent event){
+		if (event.getBlock().getType().equals(Material.SOIL)) {
+			event.setCancelled(true);
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	@EventHandler(ignoreCancelled=true)
+	public void onPlayerInteractEvent(PlayerInteractEvent event) {
+		Player player = (Player) event.getPlayer();
+		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
+
+		if (event.getAction().equals(Action.PHYSICAL) && event.hasBlock()
+			&& event.getClickedBlock().getType().equals(Material.SOIL) && board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
+			event.setCancelled(true);
+		}
+	}
+	//ここまで-------
+
+	@SuppressWarnings("deprecation")
+	//壁紙、手綱、額縁を破壊不可にする
+	@EventHandler
+	public void onBreak(HangingBreakByEntityEvent e){
+		Player player = (Player) e.getRemover();
+		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
+
+		if(board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)){
+			e.setCancelled(true);
 		}
 	}
 
