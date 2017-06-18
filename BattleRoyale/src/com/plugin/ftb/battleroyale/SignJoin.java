@@ -58,14 +58,11 @@ public class SignJoin implements Listener {
             		s.setLine(1, ChatColor.BOLD + String.valueOf(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50));
             		s.update();
 
+            		MainListener.killCount.put(_player, 0);
+            		new ScoreBoard().onBoard(_player);
+
             		giveItems(_player);
 
-            		//自動でゲームスタートの機能(廃止)
-            		/*
-            		if(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size()>2){
-            			start.autoStart();
-            		}
-            		*/
             		return;
             	}
             }

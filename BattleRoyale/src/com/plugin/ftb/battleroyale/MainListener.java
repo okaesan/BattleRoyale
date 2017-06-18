@@ -281,9 +281,15 @@ public class MainListener implements Listener {
 			// キル数をカウント
 			if (killCount.containsKey(killer)) {
 				killCount.put(killer, killCount.get(killer) + 1);
-			} else {
-				killCount.put(killer, 1);
+				//スコアボードのキル数表示の変更
+				new ScoreBoard().onBoard(killer);
 			}
+			//スコアボードにキル数を表示させるため、SignJoinクラスの61行目で参加するプレイヤーに0を与えました。
+			//そのため、elseには行かなくなると思うのでコメント化しました。
+			/*else {
+				killCount.put(killer, 1);
+			}*/
+
 			//ポイントをカウント
 			if (pointCount.containsKey(killer)) {
 				pointCount.put(killer, pointCount.get(killer) + 1);
