@@ -2,6 +2,7 @@ package com.plugin.ftb.battleroyale;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -35,11 +36,9 @@ class countDown extends BukkitRunnable{
 	DeathArea deathA = new DeathArea();
 	PlusDeathArea PdeathA = new PlusDeathArea();
 
-	public static ArrayList<Integer> loc = new ArrayList<>();
-
 	int _countdown = 10;
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	public void run(){
 
 		if(_countdown == 0){
@@ -48,12 +47,20 @@ class countDown extends BukkitRunnable{
 
 			Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
 
-			loc = (ArrayList<Integer>) plugin.getConfig().getIntegerList("Startpoint");
-			Location wor = new Location(Bukkit.getWorld("world"),loc.get(0),loc.get(1),loc.get(2));
-
+			ArrayList<Location> locs = new ArrayList<>();
+			for(ArrayList<Integer> point : (ArrayList<ArrayList<Integer>>) plugin.getConfig().get("Startpoints")){
+				locs.add(new Location(Bukkit.getWorld("world"), point.get(0), point.get(1), point.get(2)));
+			}
+			
 			for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
 				if(p.isOnline()){
-					p.getPlayer().teleport(wor);
+					int ran = 0;
+					if(plugin.getConfig().getBoolean("isRandom")){
+						Random rnd = new Random();
+			        	ran = rnd.nextInt(locs.size());
+					}
+			        
+					p.getPlayer().teleport(locs.get(ran));
 					p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GOLD + "ゲームスタート");
 				}
 			}

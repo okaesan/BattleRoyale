@@ -80,7 +80,12 @@ public class MainCommandExecutor implements CommandExecutor {
 			case "setStartpoint":
 				MainConfig.setStartpoint(_player.getLocation(), _player);
 
-				_player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "Startpointを設定しました");
+				_player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "Startpointを追加しました");
+
+				return true;
+				
+			case "setStartpointRandom":
+				MainConfig.setStartpointRandom(_player);
 
 				return true;
 

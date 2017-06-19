@@ -20,12 +20,14 @@ public class MainConfig extends BattleRoyale {
 	public static ArrayList<Integer> _stagelocationsR = new ArrayList<>();
 	public static ArrayList<Integer> _chestlocations = new ArrayList<>();
 	public static ArrayList<Integer> _lobbypoint = new ArrayList<>();
-	public static ArrayList<Integer> _startpoint = new ArrayList<>();
+	public static ArrayList<ArrayList<Integer>> _startpoints = new ArrayList<>();
 	public static ArrayList<Integer> _deathpoint = new ArrayList<>();
 	public static ArrayList<Integer> _Timer = new ArrayList<>();
 	public static ArrayList<Integer> check = new ArrayList<>();
 
 	public static int chestCount;
+	
+	public static boolean isRandom = false;
 
 	/*
 	 * configからlocationsを取得
@@ -57,12 +59,14 @@ public class MainConfig extends BattleRoyale {
 		if (_chestlocations == null) {
 			_chestlocations = new ArrayList<>();
 		}
-
-		_startpoint = new ArrayList<>();
-		_startpoint = (ArrayList<Integer>) plugin.getConfig().get("Startpoint");
-		if (_startpoint == null) {
-			_startpoint = new ArrayList<>();
+		
+		_startpoints = new ArrayList<>();
+		_startpoints = (ArrayList<ArrayList<Integer>>) plugin.getConfig().get("Startpoints");
+		if (_startpoints == null) {
+			_startpoints = new ArrayList<>();
 		}
+		
+		isRandom = plugin.getConfig().getBoolean("isRandom");
 
 		_deathpoint = new ArrayList<>();
 		_deathpoint = (ArrayList<Integer>) plugin.getConfig().get("Deathpoint");
@@ -158,13 +162,29 @@ public class MainConfig extends BattleRoyale {
 	public static void setStartpoint(Location loc, Player player){
 		loadConfig();
 
-		_startpoint.add((int)loc.getX());
-		_startpoint.add((int)loc.getY());
-		_startpoint.add((int)loc.getZ());
+		ArrayList<Integer> point = new ArrayList<>();
+		
+		point.add((int)loc.getX());
+		point.add((int)loc.getY());
+		point.add((int)loc.getZ());
+		
+		_startpoints.add(point);
 
-		plugin.getConfig().set("Startpoint", null);
+		plugin.getConfig().set("Startpoints", null);
 
-		plugin.getConfig().set("Startpoint", _startpoint);
+		plugin.getConfig().set("Startpoints", _startpoints);
+		plugin.saveConfig();
+	}
+	
+	public static void setStartpointRandom(Player player){
+		loadConfig();
+		
+		plugin.getConfig().set("isRandom", null);
+		plugin.getConfig().set("isRandom", !isRandom);
+		isRandom = !isRandom;
+		
+		player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "ランダムを" + isRandom + "にしました");
+		
 		plugin.saveConfig();
 	}
 
