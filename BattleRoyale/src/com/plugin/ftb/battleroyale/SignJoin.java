@@ -61,7 +61,7 @@ public class SignJoin implements Listener {
 
             		MainListener.killCount.put(_player, 0);
             		for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
-            			new ScoreBoard().onBoard((Player) p);
+            			new ScoreBoard().onBoard((Player) p, 1);
             		}
 
             		giveItems(_player);

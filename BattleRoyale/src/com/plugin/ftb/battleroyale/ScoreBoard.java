@@ -13,7 +13,8 @@ public class ScoreBoard {
 	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
 
 	@SuppressWarnings("deprecation")
-	public void onBoard(Player p){
+	//intのokはゲームが終了しているかどうかの変数、0=ゲーム終了時、1=ゲーム中
+	public void onBoard(Player p, int ok){
 
 		ScoreboardManager manager = Bukkit.getScoreboardManager();
 		Scoreboard board = manager.getMainScoreboard();
@@ -47,6 +48,10 @@ public class ScoreBoard {
 		o.getScoreboard().resetScores("" + ChatColor.RED + "Kills " + ChatColor.RESET + ": " + String.valueOf(MainListener.killCount.get(p)-1));
 		o.getScoreboard().resetScores("" + ChatColor.YELLOW + "Players left " + ChatColor.RESET + ": " + String.valueOf(tboard.getTeam(TEAM_ALIVE_NAME).getPlayers().size()-1));
 		o.getScoreboard().resetScores("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "Next DArea " + ChatColor.RESET + ": " + String.valueOf(PlusThreadClass.loopC+1));
+
+		if(ok==0){
+			p.setScoreboard(manager.getNewScoreboard());
+		}
 
 		p.setScoreboard(board);
 	}

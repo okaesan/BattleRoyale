@@ -209,7 +209,7 @@ class PlusThreadClass extends BukkitRunnable{
 		loopC--;
 
 		for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
-			new ScoreBoard().onBoard((Player) p);
+			new ScoreBoard().onBoard((Player) p, 1);
 		}
 	}
 }

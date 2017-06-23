@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.SkullType;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -89,7 +90,9 @@ class RunTP extends BukkitRunnable{
 	}
 
 	//毎試合の変数の初期化
+	@SuppressWarnings("deprecation")
 	public void resetVar(){
+		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
 
 		PlusThreadClass.count=0;
     	PlusThreadClass.countPast=0;
@@ -107,6 +110,10 @@ class RunTP extends BukkitRunnable{
 		MainListener.bMAT.clear();
 
 		Bukkit.getScheduler().cancelAllTasks();
+
+		for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+			new ScoreBoard().onBoard((Player) p, 0);
+		}
 
 		return;
 	}
@@ -286,7 +293,7 @@ public class MainListener implements Listener {
 			if (killCount.containsKey(killer)) {
 				killCount.put(killer, killCount.get(killer) + 1);
 				//スコアボードのキル数表示の変更
-				new ScoreBoard().onBoard(killer);
+				new ScoreBoard().onBoard(killer, 1);
 			}
 			//スコアボードにキル数を表示させるため、SignJoinクラスの61行目で参加するプレイヤーに0を与えました。
 			//そのため、elseには行かなくなると思うのでコメント化しました。
