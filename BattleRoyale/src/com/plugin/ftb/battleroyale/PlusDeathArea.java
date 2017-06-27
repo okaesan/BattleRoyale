@@ -237,7 +237,11 @@ class PlusDeathThreadClass extends BukkitRunnable{
         }
 
 		for(int i:PlusThreadClass.deathRanCountPast){
-
+			Bukkit.broadcastMessage(PlusThreadClass.deathRanCount.size() + ", " + PlusThreadClass.deathRan.size());
+			if(PlusThreadClass.deathRanCount.isEmpty() || PlusThreadClass.deathRan.isEmpty()){
+				return;
+			}
+			
 			int r = PlusThreadClass.deathRan.get(i);
 
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
