@@ -206,6 +206,8 @@ public class MainConfig extends BattleRoyale {
 	public static void setTimer(int a, int b){
 		loadConfig();
 
+		//追加する前に配列の要素をリセット
+		_Timer = new ArrayList<>();
 		_Timer.add(a);
 		_Timer.add(b);
 
