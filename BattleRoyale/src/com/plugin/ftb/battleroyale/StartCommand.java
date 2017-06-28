@@ -21,7 +21,7 @@ class attack extends BukkitRunnable{
 
 	@Override
 	public void run(){
-		MainListener.Attack = true;
+		MainListener.Attack = false;
 	}
 }
 
@@ -51,7 +51,7 @@ class countDown extends BukkitRunnable{
 			for(ArrayList<Integer> point : (ArrayList<ArrayList<Integer>>) plugin.getConfig().get("Startpoints")){
 				locs.add(new Location(Bukkit.getWorld("world"), point.get(0), point.get(1), point.get(2)));
 			}
-			
+
 			for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
 				if(p.isOnline()){
 					int ran = 0;
@@ -59,7 +59,7 @@ class countDown extends BukkitRunnable{
 						Random rnd = new Random();
 			        	ran = rnd.nextInt(locs.size());
 					}
-			        
+
 					p.getPlayer().teleport(locs.get(ran));
 					p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GOLD + "ゲームスタート");
 				}

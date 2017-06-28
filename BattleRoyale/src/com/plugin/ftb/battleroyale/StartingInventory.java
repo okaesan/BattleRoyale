@@ -14,7 +14,6 @@ public class StartingInventory extends BattleRoyale {
 
 	public static BattleRoyale plugin = BattleRoyale.plugin;
 
-	@SuppressWarnings("deprecation")
 	public static void StartingInventoryFunc(Player p) {////関数名がクラス名と被っていたので変更しました。
 
 		File items = new File("plugins/BattleRoyale/items.yml");
@@ -29,31 +28,15 @@ public class StartingInventory extends BattleRoyale {
 		 } catch (IOException e) {}
 		 //[items.yml]のアイテムがいくつあるかの値
 		 int a = Integer.parseInt(conf.getProperty("setItemCounter"));
-		 //while文を何回繰り返しているか
-		 int b = 1;
-		 //プレイヤーにアイテムをいくつ与えたか
-		 int d = 0;
-		 int f = Integer.parseInt(conf.getProperty("Items"));
 
-		 while(b <= a){
+		 Random r = new Random();
 
-			 int item = Integer.parseInt(conf.getProperty("item" + b));
-			 int chance = Integer.parseInt(conf.getProperty("chance" + b));
+		 int ran = r.nextInt(a) + 1;
 
-			 Random r = new Random();
+		 //p.getEquipment().clear();
+		 p.getInventory().clear();
 
-			 int ran = r.nextInt(10) + 1;
-			 if(ran <= chance){
-				 p.getInventory().addItem(new ItemStack(Material.getMaterial(item)));
-				 d = d + 1;
-			 }
-			 if(d == f){
-				 break;
-			 }
-			 b = b + 1;
-			 if(b != a){
-				 b = 1;
-			 }
-		 }
+		 p.getInventory().addItem(new ItemStack(Material.getMaterial(conf.getProperty("items"+ran))));
+		 p.sendMessage("item"+ran);
 	}
 }

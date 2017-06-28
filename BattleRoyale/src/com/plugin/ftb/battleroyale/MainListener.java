@@ -137,7 +137,7 @@ public class MainListener implements Listener {
 	public static ArrayList<Integer> loc = new ArrayList<>();
 
 	//ダメージ無効かの判定用
-	public static boolean Attack = false;
+	public static boolean Attack = true;
 
 	/*
 	 * ゲーム中に破壊されたブロックの値保存用のリスト
@@ -402,7 +402,7 @@ public class MainListener implements Listener {
 			}
 
 			//ダメージ無効時間中はダメージを受けないようにする。
-			if(!Attack&&board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)){
+			if(Attack&&board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)){
 				event.setCancelled(true);
 			}
 

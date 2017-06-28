@@ -1,7 +1,5 @@
 package com.plugin.ftb.battleroyale;
 
-import java.util.Random;
-
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -12,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Scoreboard;
 
 public class SignJoin implements Listener {
@@ -64,52 +61,12 @@ public class SignJoin implements Listener {
             			new ScoreBoard().onBoard((Player) p, 1);
             		}
 
-            		giveItems(_player);
+            		StartingInventory.StartingInventoryFunc(_player);
 
             		return;
             	}
             }
         }
 
-	}
-
-	public void giveItems(Player player){
-		Random md = new Random();
-		player.getEquipment().clear();
-		player.getInventory().clear();
-		int itemran = md.nextInt(4);
-		if (itemran == 0) {
-			ItemStack item = new ItemStack(Material.WOOD_SWORD);
-			player.getInventory().addItem(item);
-		} else if (itemran == 1) {
-			ItemStack item = new ItemStack(Material.STONE_SWORD);
-			player.getInventory().addItem(item);
-		} else if (itemran == 2) {
-			ItemStack item = new ItemStack(Material.GOLD_SWORD);
-			player.getInventory().addItem(item);
-		} else if (itemran == 3) {
-			ItemStack item = new ItemStack(Material.IRON_SWORD);
-			player.getInventory().addItem(item);
-		} else {
-			ItemStack item = new ItemStack(Material.DIAMOND_SWORD);
-			player.getInventory().addItem(item);
-		}
-		itemran = md.nextInt(4);
-		if (itemran == 0) {
-			ItemStack item = new ItemStack(Material.LEATHER_CHESTPLATE);
-			player.getInventory().addItem(item);
-		} else if (itemran == 1) {
-			ItemStack item = new ItemStack(Material.CHAINMAIL_CHESTPLATE);
-			player.getInventory().addItem(item);
-		} else if (itemran == 2) {
-			ItemStack item = new ItemStack(Material.GOLD_CHESTPLATE);
-			player.getInventory().addItem(item);
-		} else if (itemran == 3) {
-			ItemStack item = new ItemStack(Material.DIAMOND_CHESTPLATE);
-			player.getInventory().addItem(item);
-		} else {
-			ItemStack item = new ItemStack(Material.IRON_CHESTPLATE);
-			player.getInventory().addItem(item);
-		}
 	}
 }
