@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.SkullType;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -20,6 +19,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityInteractEvent;
+import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -68,14 +68,11 @@ class RunTP extends BukkitRunnable{
 
 		Block b = Bukkit.getWorld("world").getBlockAt(locX, locY, locZ);
 
+		//参加用の看板の値の更新 (参加人数0に戻す)
 		if (b.getType()==Material.WALL_SIGN || b.getType()==Material.SIGN_POST) {
-
 			Sign ee = (Sign) b.getState();
-
-        	ee.setLine(1, ChatColor.BOLD + String.valueOf(plugin.getServer().getScoreboardManager().getMainScoreboard().getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50));
-
-        	ee.update();
-
+			ee.setLine(1, ChatColor.BOLD + String.valueOf(plugin.getServer().getScoreboardManager().getMainScoreboard().getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50));
+			ee.update();
 		}
 
 		//ゲーム中に破壊されたブロックの復元
@@ -90,17 +87,15 @@ class RunTP extends BukkitRunnable{
 	}
 
 	//毎試合の変数の初期化
-	@SuppressWarnings("deprecation")
 	public void resetVar(){
-		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
-
 		PlusThreadClass.count=0;
-    	PlusThreadClass.countPast=0;
-    	PlusDeathArea.beta=0;
-    	StartCommand.start=0;
-		PlusThreadClass.deathRan.clear();
-		PlusThreadClass.deathRanCount.clear();
-		PlusThreadClass.deathRanCountPast.clear();
+		PlusThreadClass.countPast=0;
+		PlusDeathArea.beta=0;
+		StartCommand.start=0;
+		PlusThreadClass.loopC=plugin.getConfig().getIntegerList("Timer").get(0);
+		PlusThreadClass.deathRandom.clear();
+		PlusThreadClass.deathRandomCount.clear();
+		PlusThreadClass.deathRandomCountPast.clear();
 		PlusDeathArea.plusDeathX.clear();
 		PlusDeathArea.plusDeathZ.clear();
 		CustomMap.pastLoc.clear();
@@ -108,12 +103,12 @@ class RunTP extends BukkitRunnable{
 		MainListener.bBLOCK.clear();
 		MainListener.bDATA.clear();
 		MainListener.bMAT.clear();
+		MainListener.killCount.clear();
+
+		ScoreBoard.scoreSide(false);
+		ScoreBoard.scoreList(null, false);
 
 		Bukkit.getScheduler().cancelAllTasks();
-
-		for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
-			new ScoreBoard().onBoard((Player) p, 0);
-		}
 
 		return;
 	}
@@ -133,9 +128,6 @@ public class MainListener implements Listener {
 	// ポイントカウント
 	public static HashMap<Player, Integer> pointCount = BattleRoyale.pointCount;
 
-	//リスポーン地点へテレポート用
-	public static ArrayList<Integer> loc = new ArrayList<>();
-
 	//ダメージ無効かの判定用
 	public static boolean Attack = true;
 
@@ -146,6 +138,8 @@ public class MainListener implements Listener {
 	public static ArrayList<Block> bBLOCK = new ArrayList<>();
 	public static ArrayList<Byte> bDATA = new ArrayList<>();
 	public static ArrayList<Material> bMAT = new ArrayList<>();
+	//死亡後、リスポーン地点へテレポート用
+	public static ArrayList<Integer> locDeath = new ArrayList<>();
 
 	@SuppressWarnings("deprecation")
 	@EventHandler
@@ -157,11 +151,8 @@ public class MainListener implements Listener {
 		 * ゲーム中にアイテムが入るチェストの登録
 		 * setChestPlayerはチェストを編集する人のデータが入ったリスト
 		 */
-		if(_player.getInventory().getItemInHand().getType()==Material.BONE
-				&& MainCommandExecutor.setChestPlayer.contains(_player)){
-
+		if(_player.getInventory().getItemInHand().getType()==Material.BONE && MainCommandExecutor.setChestPlayer.contains(_player)){
 			MainConfig.subChestConfig(e.getBlock().getLocation(), _player);
-
 		}
 
 		/*
@@ -234,19 +225,17 @@ public class MainListener implements Listener {
 	@EventHandler
 	public void onRespawn(PlayerRespawnEvent e){
 		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
-		loc = (ArrayList<Integer>) plugin.getConfig().getIntegerList("Deathpoint");
-		Location wor = new Location(Bukkit.getWorld("world"),loc.get(0),loc.get(1),loc.get(2));
+		locDeath = (ArrayList<Integer>) plugin.getConfig().getIntegerList("Deathpoint");
+		Location worDeath = new Location(Bukkit.getWorld("world"),locDeath.get(0),locDeath.get(1),locDeath.get(2));
 
 		if(board.getTeam(TEAM_DEAD_NAME).hasPlayer(e.getPlayer())||board.getTeam(TEAM_ALIVE_NAME).hasPlayer(e.getPlayer())){
-			e.setRespawnLocation(wor);
+			e.setRespawnLocation(worDeath);
 		}
 	}
 
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onDeath(PlayerDeathEvent event) {
-
-		//////Location型の変数locを設定したのでgetBlockの前など少し変更しました。//////
 
 		Player player = event.getEntity();
 		Player killer = player.getKiller();
@@ -293,13 +282,8 @@ public class MainListener implements Listener {
 			if (killCount.containsKey(killer)) {
 				killCount.put(killer, killCount.get(killer) + 1);
 				//スコアボードのキル数表示の変更
-				new ScoreBoard().onBoard(killer, 1);
+				ScoreBoard.scoreList(killer, true);
 			}
-			//スコアボードにキル数を表示させるため、SignJoinクラスの61行目で参加するプレイヤーに0を与えました。
-			//そのため、elseには行かなくなると思うのでコメント化しました。
-			/*else {
-				killCount.put(killer, 1);
-			}*/
 
 			//ポイントをカウント
 			if (pointCount.containsKey(killer)) {
@@ -310,7 +294,7 @@ public class MainListener implements Listener {
 		}
 
 		// 最後の1人だった場合5ポイントを加算
-		if (board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() == 1) {
+		if (board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() == 1 && StartCommand.start == 1) {
 			if(killer != null){
 				if (pointCount.containsKey(killer)) {
 					pointCount.put(killer, pointCount.get(killer) + 5);
@@ -363,26 +347,14 @@ public class MainListener implements Listener {
 			}
 			broadcast(ChatColor.DARK_AQUA + "-----------------------------");
 
-			/*
-			 * ゲーム終了後、全員をロビーに戻す
-			 * 看板の値をリセット
-			 */
-
 			for(Player p : Bukkit.getOnlinePlayers()){
 				if(board.getTeam(TEAM_ALIVE_NAME).hasPlayer(p)){
-
 					p.sendMessage(BattleRoyale.prefix+"10秒後にロビーへ戻ります");
-
 				}else if(board.getTeam(TEAM_DEAD_NAME).hasPlayer(p)){
-
 					p.sendMessage(BattleRoyale.prefix+"10秒後にロビーへ戻ります");
-
 				}
 			}
-
-			RunTP rtp = new RunTP();
-			rtp.runTaskTimer(plugin, 200, 100);
-
+			new RunTP().runTaskLater(plugin, 200);
 		}
 	}
 
@@ -405,18 +377,16 @@ public class MainListener implements Listener {
 			if(Attack&&board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)){
 				event.setCancelled(true);
 			}
-
 		}
 	}
 
-	//畑が荒らし防止------
+	//畑荒らし防止
 	@EventHandler(ignoreCancelled=true)
 	public void onEntityInteractEvent(EntityInteractEvent event){
 		if (event.getBlock().getType().equals(Material.SOIL)) {
 			event.setCancelled(true);
 		}
 	}
-
 	@SuppressWarnings("deprecation")
 	@EventHandler(ignoreCancelled=true)
 	public void onPlayerInteractEvent(PlayerInteractEvent event) {
@@ -428,10 +398,15 @@ public class MainListener implements Listener {
 			event.setCancelled(true);
 		}
 	}
-	//ここまで-------
 
-	@SuppressWarnings("deprecation")
+	//チェストの初期化が行われたときドロップしたアイテムを削除する
+	@EventHandler
+	public void onDrop(ItemSpawnEvent e){
+		e.getEntity().remove();
+	}
+
 	//壁紙、手綱、額縁を破壊不可にする
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onBreak(HangingBreakByEntityEvent e){
 		Player player = (Player) e.getRemover();
@@ -446,5 +421,4 @@ public class MainListener implements Listener {
 	public void broadcast(String message) {
 		BattleRoyale.broadcast(message);
 	}
-
 }

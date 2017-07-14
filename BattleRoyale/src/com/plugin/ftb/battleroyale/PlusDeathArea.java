@@ -6,7 +6,6 @@ import java.util.Collections;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -129,9 +128,6 @@ public class PlusDeathArea {
 					break;
 				}
 			}while(true);
-
-		}else{
-
 		}
 	}
 
@@ -149,13 +145,14 @@ class PlusThreadClass extends BukkitRunnable{
 
 	public static BattleRoyale plugin = BattleRoyale.plugin;
 	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
+	public static final String TEAM_DEAD_NAME = BattleRoyale.TEAM_DEAD_NAME;
 
-	public static ArrayList<Integer> deathRan = new ArrayList<Integer>();
+	public static ArrayList<Integer> deathRandom = new ArrayList<Integer>();
 
 	//猶予段階のエリア
-	public static ArrayList<Integer> deathRanCount = new ArrayList<Integer>();
+	public static ArrayList<Integer> deathRandomCount = new ArrayList<Integer>();
 	//猶予後のエリア
-	public static ArrayList<Integer> deathRanCountPast = new ArrayList<Integer>();
+	public static ArrayList<Integer> deathRandomCountPast = new ArrayList<Integer>();
 
 	public static ArrayList<Integer> Timer = new ArrayList<Integer>();
 
@@ -174,20 +171,20 @@ class PlusThreadClass extends BukkitRunnable{
 		//禁止区域追加30秒前
 		if(loopC==30){
 			if(!(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size()>1)){
-				Bukkit.broadcastMessage("test");
+				//Bukkit.broadcastMessage("test");
 				this.cancel();
 				return;
 			}
 
 			if(PlusDeathArea.beta==0){
 				for(int i=0; i<PlusDeathArea.plusDeathX.size(); i++){
-					deathRan.add(PlusDeathArea.beta);
+					deathRandom.add(PlusDeathArea.beta);
 
 					PlusDeathArea.beta++;
-					Collections.shuffle(deathRan);
+					Collections.shuffle(deathRandom);
 				}
 			}
-			deathRanCount.add(count);
+			deathRandomCount.add(count);
 			Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "30秒後" + ChatColor.GRAY + "に禁止区域が追加されます。");
 			count++;
 
@@ -199,7 +196,7 @@ class PlusThreadClass extends BukkitRunnable{
 				this.cancel();
 				return;
 			}
-			deathRanCountPast.add(countPast);
+			deathRandomCountPast.add(countPast);
 			Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "禁止区域が追加されました。");
 			countPast++;
 			//二週目からはずっと同じ一定時間
@@ -208,9 +205,8 @@ class PlusThreadClass extends BukkitRunnable{
 		//１秒ごとにカウントを減らしていく。
 		loopC--;
 
-		for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
-			new ScoreBoard().onBoard((Player) p, 1);
-		}
+		//スコアボードの設定
+		ScoreBoard.scoreSide(true);
 	}
 }
 
@@ -236,78 +232,67 @@ class PlusDeathThreadClass extends BukkitRunnable{
         	this.cancel();
         }
 
-		for(int i:PlusThreadClass.deathRanCountPast){
-			Bukkit.broadcastMessage(PlusThreadClass.deathRanCount.size() + ", " + PlusThreadClass.deathRan.size());
-			if(PlusThreadClass.deathRanCount.isEmpty() || PlusThreadClass.deathRan.isEmpty()){
+		for(int i:PlusThreadClass.deathRandomCountPast){
+			//Bukkit.broadcastMessage(PlusThreadClass.deathRanCount.size() + ", " + PlusThreadClass.deathRan.size());
+			if(PlusThreadClass.deathRandomCount.isEmpty() || PlusThreadClass.deathRandom.isEmpty()){
 				return;
 			}
 
-			int r = PlusThreadClass.deathRan.get(i);
-
+			int r = PlusThreadClass.deathRandom.get(i);
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);
 
-				if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
-					for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+			if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
+				for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+					//p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
+					if(p.isOnline()){
+						if(pdaX-64<=(int)p.getPlayer().getLocation().getX()&&pdaX>=(int)p.getPlayer().getLocation().getX()
+								&&pdaZ-64<=(int)p.getPlayer().getLocation().getZ()&&pdaZ>=(int)p.getPlayer().getLocation().getZ()){
 
-						//p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
+							p.getPlayer().setHealth(0.0D);
 
-						if(p.isOnline()){
-							if(pdaX-64<=(int)p.getPlayer().getLocation().getX()&&pdaX>=(int)p.getPlayer().getLocation().getX()
-									&&pdaZ-64<=(int)p.getPlayer().getLocation().getZ()&&pdaZ>=(int)p.getPlayer().getLocation().getZ()){
-
-								p.getPlayer().setHealth(0.0D);
-
-							}
 						}
 					}
-				}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
-					for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
-
-						//p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
-
-						if(p.isOnline()){
-							if(pdaX+64>=(int)p.getPlayer().getLocation().getX()&&pdaX<=(int)p.getPlayer().getLocation().getX()
-									&&pdaZ+64>=(int)p.getPlayer().getLocation().getZ()&&pdaZ<=(int)p.getPlayer().getLocation().getZ()){
-
-								p.getPlayer().setHealth(0.0D);
-
-							}
-						}
-					}
-
-				}else if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
-					for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
-
-						//p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
-
-						if(p.isOnline()){
-							if(pdaX-64<=(int)p.getPlayer().getLocation().getX()&&pdaX>=(int)p.getPlayer().getLocation().getX()
-									&&pdaZ+64>=(int)p.getPlayer().getLocation().getZ()&&pdaZ<=(int)p.getPlayer().getLocation().getZ()){
-
-								p.getPlayer().setHealth(0.0D);
-
-							}
-						}
-					}
-
-				}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
-					for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
-
-						//p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
-
-						if(p.isOnline()){
-							if(pdaX+64>=(int)p.getPlayer().getLocation().getX()&&pdaX<=(int)p.getPlayer().getLocation().getX()
-									&&pdaZ-64<=(int)p.getPlayer().getLocation().getZ()&&pdaZ>=(int)p.getPlayer().getLocation().getZ()){
-
-								p.getPlayer().setHealth(0.0D);
-
-							}
-						}
-					}
-				}else{
-
 				}
+			}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
+				for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+					//p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
+					if(p.isOnline()){
+						if(pdaX+64>=(int)p.getPlayer().getLocation().getX()&&pdaX<=(int)p.getPlayer().getLocation().getX()
+								&&pdaZ+64>=(int)p.getPlayer().getLocation().getZ()&&pdaZ<=(int)p.getPlayer().getLocation().getZ()){
+
+							p.getPlayer().setHealth(0.0D);
+
+						}
+					}
+				}
+
+			}else if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
+				for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+					//p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
+					if(p.isOnline()){
+						if(pdaX-64<=(int)p.getPlayer().getLocation().getX()&&pdaX>=(int)p.getPlayer().getLocation().getX()
+								&&pdaZ+64>=(int)p.getPlayer().getLocation().getZ()&&pdaZ<=(int)p.getPlayer().getLocation().getZ()){
+
+							p.getPlayer().setHealth(0.0D);
+
+						}
+					}
+				}
+
+			}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
+				for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+					//p.getPlayer().sendMessage(String.valueOf(PlusThreadClass.deathRan));
+					if(p.isOnline()){
+						if(pdaX+64>=(int)p.getPlayer().getLocation().getX()&&pdaX<=(int)p.getPlayer().getLocation().getX()
+								&&pdaZ-64<=(int)p.getPlayer().getLocation().getZ()&&pdaZ>=(int)p.getPlayer().getLocation().getZ()){
+
+							p.getPlayer().setHealth(0.0D);
+
+						}
+					}
+				}
+			}
 		}
 	}
 }

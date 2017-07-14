@@ -120,15 +120,11 @@ public class StartCommand extends BattleRoyale {
 
 		//ゲーム中は1、ゲーム中以外は0
 		start = 1;
-
-		//SLOWエフェクトを削除
-		/*for (Player p : SignJoin.join) {
-			p.sendMessage("wa-i");
-			p.removePotionEffect(PotionEffectType.SLOW);
-		}*/
+		PlusThreadClass.loopC=plugin.getConfig().getIntegerList("Timer").get(0);
 		plugin.reloadConfig();
 
 		setChest();
+		ScoreBoard.scoreSide(true);
 
 		countDown cd = new countDown();
 		cd.runTaskTimer(plugin, 0, 20);
@@ -157,10 +153,7 @@ public class StartCommand extends BattleRoyale {
 
 				c++;
 				r = (int)(Math.random() * 1000 + 22) % 22 - c;
-
 			}while(r>0);
-
 		}
-		return;
 	}
 }

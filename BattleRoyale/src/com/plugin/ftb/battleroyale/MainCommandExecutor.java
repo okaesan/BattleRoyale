@@ -50,59 +50,88 @@ public class MainCommandExecutor implements CommandExecutor {
 			 */
 			switch(args[0]){
 			case "setStageL":
-				Location _locL = _player.getLocation();
-
-				MainConfig.makeStage(_locL,_player,0);
+				if(args.length == 1){
+					Location _locL = _player.getLocation();
+					MainConfig.makeStage(_locL,_player,0);
+				}
 
 				return true;
 
 			case "setStageR":
-				if(_plugin.getConfig().get("stagelocationsL")!=null){
-					Location _locR = _player.getLocation();
-
-					MainConfig.makeStage(_locR,_player,1);
-
-					return true;
-
-				}else{
-					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "stageLから設定してください");
-
-					return true;
+				if(args.length == 1){
+					if(_plugin.getConfig().get("stagelocationsL")!=null){
+						Location _locR = _player.getLocation();
+						MainConfig.makeStage(_locR,_player,1);
+					}else{
+						_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "stageLから設定してください");
+					}
 				}
 
-			case "setLobbypoint":
-				MainConfig.setLobbypoint(_player.getLocation(), _player);
+				return true;
 
-				_player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "Lobbypointを設定しました");
+			case "setJoinGameL":
+				if(args.length == 1){
+					Location _locR = _player.getLocation();
+					MainConfig.makeJoinGame(_locR,_player,0);
+				}
+
+				return true;
+
+			case "setJoinGameR":
+				if(args.length == 1){
+					Location _locR = _player.getLocation();
+					MainConfig.makeJoinGame(_locR,_player,1);
+				}
+
+				return true;
+
+			case "inJoinGame":
+				if(args.length == 1){
+
+				}
+
+				return true;
+
+			case "setLobbypoint":
+				if(args.length == 1){
+					MainConfig.setLobbypoint(_player.getLocation(), _player);
+					_player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "Lobbypointを設定しました");
+				}
 
 				return true;
 
 			case "setStartpoint":
-				MainConfig.setStartpoint(_player.getLocation(), _player);
-
-				_player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "Startpointを追加しました");
+				if(args.length == 1){
+					MainConfig.setStartpoint(_player.getLocation(), _player);
+					_player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "Startpointを追加しました");
+				}
 
 				return true;
-				
+
 			case "setStartpointRandom":
-				MainConfig.setStartpointRandom(_player);
+				if(args.length == 1){
+					MainConfig.setStartpointRandom(_player);
+				}
 
 				return true;
 
 			case "setDeathpoint":
-				MainConfig.setDeathpoint(_player.getLocation(), _player);
-
+				if(args.length == 1){
+					MainConfig.setDeathpoint(_player.getLocation(), _player);
 				_player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "Deathpointを設定しました");
+				}
 
 				return true;
 
 			case "setMap":
 				ItemStack item = _player.getItemInHand();
-				if(item.getType().equals(Material.MAP)){
-					MainConfig.setMap(item);
-					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "マップを設定しました。");
-				}else{
-					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "マップを持ってコマンドを実行してください。");
+				if(args.length == 1){
+					if(item.getType().equals(Material.MAP)){
+						MainConfig.setMap(item);
+						_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "マップを設定しました。");
+					}else{
+						_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "マップを持ってコマンドを実行してください。");
+					}
 				}
 
 				return true;
@@ -133,31 +162,41 @@ public class MainCommandExecutor implements CommandExecutor {
 				return true;
 
 			case "setChest":
-				_player.sendMessage(BattleRoyale.prefix + ChatColor.AQUA + "骨を持って左クリックでチェストの位置を編集してください");
-				setChestPlayer.add(_player);
+				if(args.length == 1){
+					_player.sendMessage(BattleRoyale.prefix + ChatColor.AQUA + "骨を持って左クリックでチェストの位置を編集してください");
+					setChestPlayer.add(_player);
+				}
 
 				return true;
 
 			case "comChest":
-				_player.sendMessage(BattleRoyale.prefix + ChatColor.AQUA + "チェストの位置を確定しました");
-				if(setChestPlayer.contains(_player)){
+				if(args.length == 1){
+					_player.sendMessage(BattleRoyale.prefix + ChatColor.AQUA + "チェストの位置を確定しました");
+					if(setChestPlayer.contains(_player)){
 					setChestPlayer.remove(_player);
+					}
 				}
+
 				return true;
 
 			case "startgame":
-				StartCommand.startGame();
+				if(args.length == 1){
+					StartCommand.startGame();
+				}
 				return true;
 
 			case "checkConf":
-				_player.sendMessage("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "BattleRoyale" + ChatColor.GRAY + " 設定一覧\n"
-						+ ChatColor.DARK_GREEN + ChatColor.BOLD + "- ステージ範囲 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("stagelocationsL") + "\n" + _plugin.getConfig().getString("stagelocationsR")
-						+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- ロビー -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("Lobbypoint")
-						+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- スタート地点 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("Startpoint")
-						+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- 死者の集い -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("Deathpoint")
-						+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- 禁止区域追加までの時間 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("Timer")
-						+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- 攻撃不可能時間 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("NATimer")
-						+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- 設定されたチェストの数 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("chestCounter"));
+				if(args.length == 1){
+					_player.sendMessage("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "BattleRoyale" + ChatColor.GRAY + " 設定一覧\n"
+							+ ChatColor.DARK_GREEN + ChatColor.BOLD + "- ステージ範囲 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("stagelocationsL") + "\n" + _plugin.getConfig().getString("stagelocationsR")
+							+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- ロビー -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("Lobbypoint")
+							+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- スタート地点 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("Startpoints")
+							+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- 死者の集い -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("Deathpoint")
+							+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- 禁止区域追加までの時間 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("Timer")
+							+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- 攻撃不可能時間 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("NATimer")
+							+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- 設定されたチェストの数 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("chestCounter"));
+				}
+
 				return true;
 
 			default:

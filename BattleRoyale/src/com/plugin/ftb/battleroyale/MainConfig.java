@@ -18,6 +18,8 @@ public class MainConfig extends BattleRoyale {
 	public static ArrayList<Location> locations = new ArrayList<>();
 	public static ArrayList<Integer> _stagelocationsL = new ArrayList<>();
 	public static ArrayList<Integer> _stagelocationsR = new ArrayList<>();
+	public static ArrayList<Integer> _joinGameL = new ArrayList<>();
+	public static ArrayList<Integer> _joinGameR = new ArrayList<>();
 	public static ArrayList<Integer> _chestlocations = new ArrayList<>();
 	public static ArrayList<Integer> _lobbypoint = new ArrayList<>();
 	public static ArrayList<ArrayList<Integer>> _startpoints = new ArrayList<>();
@@ -26,7 +28,7 @@ public class MainConfig extends BattleRoyale {
 	public static ArrayList<Integer> check = new ArrayList<>();
 
 	public static int chestCount;
-	
+
 	public static boolean isRandom = false;
 
 	/*
@@ -54,18 +56,30 @@ public class MainConfig extends BattleRoyale {
 			_stagelocationsR = new ArrayList<>();
 		}
 
+		_joinGameL = new ArrayList<>();
+		_joinGameL = (ArrayList<Integer>) plugin.getConfig().get("joinGameL");
+		if (_joinGameL == null) {
+			_joinGameL = new ArrayList<>();
+		}
+
+		_joinGameR = new ArrayList<>();
+		_joinGameR = (ArrayList<Integer>) plugin.getConfig().get("joinGameR");
+		if (_joinGameR == null) {
+			_joinGameR = new ArrayList<>();
+		}
+
 		_chestlocations = new ArrayList<>();
 		_chestlocations = (ArrayList<Integer>) plugin.getConfig().get("chestlocations");
 		if (_chestlocations == null) {
 			_chestlocations = new ArrayList<>();
 		}
-		
+
 		_startpoints = new ArrayList<>();
 		_startpoints = (ArrayList<ArrayList<Integer>>) plugin.getConfig().get("Startpoints");
 		if (_startpoints == null) {
 			_startpoints = new ArrayList<>();
 		}
-		
+
 		isRandom = plugin.getConfig().getBoolean("isRandom");
 
 		_deathpoint = new ArrayList<>();
@@ -108,14 +122,12 @@ public class MainConfig extends BattleRoyale {
 	 *
 	 * @param jud stageLとstageRのどちらがコマンドとして入力されたかの識別子
 	 */
-	public static void makeStage(Location loc, Player player, int jud){
+	public static void makeStage(Location loc, Player player, int judge){
 		loadConfig();
 
-		switch(jud){
+		switch(judge){
 		case 0:
-
 			_stagelocationsL.add(loc.getBlockX());
-
 			_stagelocationsL.add(loc.getBlockZ());
 
 			plugin.getConfig().set("stagelocationsL", null);
@@ -127,11 +139,7 @@ public class MainConfig extends BattleRoyale {
 			return;
 
 		case 1:
-
-			plugin.getConfig().set("stagelocationsR", null);
-
 			_stagelocationsR.add(loc.getBlockX());
-
 			_stagelocationsR.add(loc.getBlockZ());
 
 			plugin.getConfig().set("stagelocationsR", null);
@@ -139,6 +147,36 @@ public class MainConfig extends BattleRoyale {
 			plugin.saveConfig();
 
 			player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "StageRを設定しました");
+
+			return;
+		}
+	}
+
+	public static void makeJoinGame(Location loc, Player player, int judge){
+		loadConfig();
+
+		switch(judge){
+		case 0:
+			_joinGameL.add(loc.getBlockX());
+			_joinGameL.add(loc.getBlockZ());
+
+			plugin.getConfig().set("joinGameL", null);
+			plugin.getConfig().set("joinGameL", _joinGameL);
+			plugin.saveConfig();
+
+			player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "joinGameLを設定しました");
+
+			return;
+
+		case 1:
+			_stagelocationsR.add(loc.getBlockX());
+			_stagelocationsR.add(loc.getBlockZ());
+
+			plugin.getConfig().set("joinGameR", null);
+			plugin.getConfig().set("joinGameR", _joinGameR);
+			plugin.saveConfig();
+
+			player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "joinGameRを設定しました");
 
 			return;
 		}
@@ -163,11 +201,11 @@ public class MainConfig extends BattleRoyale {
 		loadConfig();
 
 		ArrayList<Integer> point = new ArrayList<>();
-		
+
 		point.add((int)loc.getX());
 		point.add((int)loc.getY());
 		point.add((int)loc.getZ());
-		
+
 		_startpoints.add(point);
 
 		plugin.getConfig().set("Startpoints", null);
@@ -175,16 +213,16 @@ public class MainConfig extends BattleRoyale {
 		plugin.getConfig().set("Startpoints", _startpoints);
 		plugin.saveConfig();
 	}
-	
+
 	public static void setStartpointRandom(Player player){
 		loadConfig();
-		
+
 		plugin.getConfig().set("isRandom", null);
 		plugin.getConfig().set("isRandom", !isRandom);
 		isRandom = !isRandom;
-		
+
 		player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "ランダムを" + isRandom + "にしました");
-		
+
 		plugin.saveConfig();
 	}
 
@@ -197,7 +235,6 @@ public class MainConfig extends BattleRoyale {
 		_deathpoint.add((int)loc.getZ());
 
 		plugin.getConfig().set("Deathpoint", null);
-
 		plugin.getConfig().set("Deathpoint", _deathpoint);
 		plugin.saveConfig();
 	}
@@ -212,18 +249,15 @@ public class MainConfig extends BattleRoyale {
 		_Timer.add(b);
 
 		plugin.getConfig().set("Timer", null);
-
 		plugin.getConfig().set("Timer", _Timer);
 		plugin.saveConfig();
 	}
 
 	//最初の攻撃不可の時間の設定
 	public static void setNATimer(int parseInt) {
-		// TODO 自動生成されたメソッド・スタブ
 		loadConfig();
 
 		plugin.getConfig().set("NATimer", null);
-
 		plugin.getConfig().set("NATimer", parseInt);
 		plugin.saveConfig();
 	}
@@ -245,7 +279,6 @@ public class MainConfig extends BattleRoyale {
 		_chestlocations.add(loc.getBlockZ());
 
 		plugin.getConfig().set("chestlocations", null);
-
 		plugin.getConfig().set("chestCounter", chestCount);
 		plugin.getConfig().set("chestlocations"+chestCount+".x", _chestlocations.get(0));
 		plugin.getConfig().set("chestlocations"+chestCount+".y", _chestlocations.get(1));
@@ -254,53 +287,6 @@ public class MainConfig extends BattleRoyale {
 
 		player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "このチェストを追加しました");
 	}
-
-	/*
-	 * 新しい音符ブロックをconfigに保存
-	 *
-	 * @param loc 音符ブロックのロケーション
-	 *
-	 * @param player コマンド発信者
-	 *
-	public static void addButton(Location loc, Player player) {
-		loadConfig();
-
-		if (locations.contains(loc)) {
-			player.sendMessage(BattleRoyale.prefix + ChatColor.RED + "既に追加されています");
-			return;
-		}
-
-		locations.add(loc);
-		plugin.getConfig().set("locations", null);
-		plugin.getConfig().set("locations", locations);
-		plugin.saveConfig();
-
-		player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "音符ブロックを設定しました。");
-	}
-
-	*
-	 * 登録していた音符ブロックを削除
-	 *
-	 * @param loc 音符ブロックのロケーション
-	 *
-	 * @param player コマンド発信者
-	 *
-	public static void removeButton(Location loc, Player player) {
-		loadConfig();
-
-		if (!locations.contains(loc)) {
-			player.sendMessage(BattleRoyale.prefix + ChatColor.RED + "登録されていません");
-			return;
-		}
-
-		locations.remove(loc);
-		plugin.getConfig().set("locations", null);
-		plugin.getConfig().set("locations", locations);
-		plugin.saveConfig();
-
-		player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "音符ブロックを削除しました。");
-	}
-	*/
 
 	/*
 	 * マップを保存する

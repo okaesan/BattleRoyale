@@ -17,7 +17,7 @@ public class CustomMap extends MapRenderer {
 
 	public static ArrayList<Integer> plusDeathX = PlusDeathArea.plusDeathX;
 	public static ArrayList<Integer> plusDeathZ = PlusDeathArea.plusDeathZ;
-	public static ArrayList<Integer> deathRan = PlusThreadClass.deathRan;
+	public static ArrayList<Integer> deathRandom = PlusThreadClass.deathRandom;
 	public static ArrayList<Integer> locL = PlusDeathArea.locL;
 	public static ArrayList<Integer> locR = PlusDeathArea.locR;
 	public static String scaleString;
@@ -36,18 +36,18 @@ public class CustomMap extends MapRenderer {
 	@Override
 	public void render(MapView map, MapCanvas canvas, Player player) {
 
-		if(PlusThreadClass.deathRanCount.isEmpty() || PlusThreadClass.deathRan.isEmpty()){
+		if(PlusThreadClass.deathRandomCount.isEmpty() || PlusThreadClass.deathRandom.isEmpty()){
 			return;
 		}
 
 		/* 猶予エリアの描画
 		 * 追加されたときのみ描画する。
 		 */
-		for(int i:PlusThreadClass.deathRanCount){
-			if(i >= PlusThreadClass.deathRan.size()){
+		for(int i:PlusThreadClass.deathRandomCount){
+			if(i >= PlusThreadClass.deathRandom.size()){
 				break;
 			}
-			int r = PlusThreadClass.deathRan.get(i);
+			int r = PlusThreadClass.deathRandom.get(i);
 
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);
@@ -81,7 +81,6 @@ public class CustomMap extends MapRenderer {
 						canvas.setPixel((int)((pdaX - edgeX)/pixPerLoc)- x, (int)((pdaZ - edgeZ)/pixPerLoc) + z, (byte)122);
 					}
 				}
-
 			}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
 				for(int x=0; x<locPerPix*4; x++){
 					for(int z=0; z<locPerPix*4; z++){
@@ -91,9 +90,9 @@ public class CustomMap extends MapRenderer {
 			}
 		}
 
-		for(int i:PlusThreadClass.deathRanCountPast){
+		for(int i:PlusThreadClass.deathRandomCountPast){
 
-			int r = PlusThreadClass.deathRan.get(i);
+			int r = PlusThreadClass.deathRandom.get(i);
 
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);
@@ -115,7 +114,6 @@ public class CustomMap extends MapRenderer {
 						canvas.setPixel((int)((pdaX - edgeX)/pixPerLoc)- x, (int)((pdaZ - edgeZ)/pixPerLoc) + z, (byte)18);
 					}
 				}
-
 			}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
 				for(int x=0; x<locPerPix*4; x++){
 					for(int z=0; z<locPerPix*4; z++){
@@ -125,9 +123,9 @@ public class CustomMap extends MapRenderer {
 			}
 		}
 
-		for(int i:PlusThreadClass.deathRanCountPast){
+		for(int i:PlusThreadClass.deathRandomCountPast){
 
-			int r = PlusThreadClass.deathRan.get(i);
+			int r = PlusThreadClass.deathRandom.get(i);
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);
 
@@ -160,7 +158,6 @@ public class CustomMap extends MapRenderer {
 						canvas.setPixel((int)((pdaX - edgeX)/pixPerLoc)- x, (int)((pdaZ - edgeZ)/pixPerLoc) + z, (byte)18);
 					}
 				}
-
 			}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
 				for(int x=0; x<locPerPix*4; x++){
 					for(int z=0; z<locPerPix*4; z++){
