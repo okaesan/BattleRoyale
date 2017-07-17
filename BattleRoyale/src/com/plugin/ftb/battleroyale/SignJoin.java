@@ -47,23 +47,8 @@ public class SignJoin implements Listener {
 				if(s.getLine(0).equals(ChatColor.DARK_AQUA + "[BattleRoyale]")
 						&&s.getLine(1).equals(ChatColor.BOLD + String.valueOf(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50))
 						&&s.getLine(2).equals(ChatColor.GREEN + "Join to Click")&&s.getLine(3).equals("-------------")){
-					if(board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)){
-						player.sendMessage(ChatColor.GREEN + "既に参加しています！");
-						return;
-					}
 
-					board.getTeam(TEAM_ALIVE_NAME).addPlayer(player);
-
-					s.setLine(1, ChatColor.BOLD + String.valueOf(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50));
-					s.update();
-
-					MainListener.killCount.put(player, 0);
-
-					//スコアボードの設定
-					ScoreBoard.scoreSide(true);
-					ScoreBoard.scoreList(player, true);
-
-					StartingInventory.StartingInventoryFunc(player);
+					JoinSystem.onJoin(player);
 				}
 			}
 		}

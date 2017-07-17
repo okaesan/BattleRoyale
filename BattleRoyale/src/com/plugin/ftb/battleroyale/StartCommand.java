@@ -61,6 +61,7 @@ class countDown extends BukkitRunnable{
 					}
 
 					p.getPlayer().teleport(locs.get(ran));
+					StartingInventory.StartingInventoryFunc((Player)p);
 					p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GOLD + "ゲームスタート");
 				}
 			}
@@ -84,7 +85,6 @@ class countDown extends BukkitRunnable{
 
 		if(_countdown!=0){
 			for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
-
 				if(p.isOnline()){
 					p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "" + _countdown + "");
 				}
@@ -120,6 +120,7 @@ public class StartCommand extends BattleRoyale {
 
 		//ゲーム中は1、ゲーム中以外は0
 		start = 1;
+
 		PlusThreadClass.loopC=plugin.getConfig().getIntegerList("Timer").get(0);
 		plugin.reloadConfig();
 

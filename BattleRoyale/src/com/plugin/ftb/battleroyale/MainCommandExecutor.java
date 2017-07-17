@@ -85,9 +85,9 @@ public class MainCommandExecutor implements CommandExecutor {
 
 				return true;
 
-			case "inJoinGame":
+			case "areaJoinGame":
 				if(args.length == 1){
-
+					AreaJoin.joinArea();
 				}
 
 				return true;

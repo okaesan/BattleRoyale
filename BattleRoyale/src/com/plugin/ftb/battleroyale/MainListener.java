@@ -66,13 +66,13 @@ class RunTP extends BukkitRunnable{
 			}
 		}
 
-		Block b = Bukkit.getWorld("world").getBlockAt(locX, locY, locZ);
+		Block block = Bukkit.getWorld("world").getBlockAt(locX, locY, locZ);
 
 		//参加用の看板の値の更新 (参加人数0に戻す)
-		if (b.getType()==Material.WALL_SIGN || b.getType()==Material.SIGN_POST) {
-			Sign ee = (Sign) b.getState();
-			ee.setLine(1, ChatColor.BOLD + String.valueOf(plugin.getServer().getScoreboardManager().getMainScoreboard().getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50));
-			ee.update();
+		if (block.getType()==Material.WALL_SIGN || block.getType()==Material.SIGN_POST) {
+			Sign joinSign = (Sign) block.getState();
+			joinSign.setLine(1, ChatColor.BOLD + String.valueOf(plugin.getServer().getScoreboardManager().getMainScoreboard().getTeam(TEAM_ALIVE_NAME).getPlayers().size() + "/" + 50));
+			joinSign.update();
 		}
 
 		//ゲーム中に破壊されたブロックの復元

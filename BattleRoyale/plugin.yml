@@ -1,19 +1,7 @@
 name: BattleRoyale
 main: com.plugin.ftb.battleroyale.BattleRoyale
-version: 1.0.0
+version: 1.1.41
 commands:
-  startgame:
-    description:  Command no setsumeibun.
-    usage:  /<command>
-    default: true
-  startpoint:
-    description:  Command no setsumeibun.
-    usage:  /<command>
-    default: true
-  resetgame:
-    description:  Command no setsumeibun.
-    usage:  /<command>
-    default: true
   battleroyale:
     usage:  /<command>
     default: true

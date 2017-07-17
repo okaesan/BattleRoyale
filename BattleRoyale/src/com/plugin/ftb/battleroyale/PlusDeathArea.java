@@ -25,6 +25,11 @@ public class PlusDeathArea {
 		locL = (ArrayList<Integer>) plugin.getConfig().getIntegerList("stagelocationsL");
 		locR = (ArrayList<Integer>) plugin.getConfig().getIntegerList("stagelocationsR");
 
+		betaLx = (int)locL.get(0);
+		betaLz = (int)locL.get(1);
+		betaRx = (int)locR.get(0);
+		betaRz = (int)locR.get(1);
+
 		/*         z軸
 		 *          |
 		 *          |
@@ -38,11 +43,6 @@ public class PlusDeathArea {
 		if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
 
 			//Lがx座標、z座標共にRより大きい場合
-			betaLx = (int)locL.get(0);
-			betaLz = (int)locL.get(1);
-			betaRx = (int)locR.get(0);
-			betaRz = (int)locR.get(1);
-
 			do{
 				if(betaLz>=(int)locR.get(1)){
 					if(betaLx>=(int)locR.get(0)){
@@ -61,11 +61,6 @@ public class PlusDeathArea {
 		}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
 
 			//Lがx座標、z座標共にRより小さい場合
-			betaLx = (int)locL.get(0);
-			betaLz = (int)locL.get(1);
-			betaRx = (int)locR.get(0);
-			betaRz = (int)locR.get(1);
-
 			do{
 				if(betaLz<=(int)locR.get(1)){
 					if(betaLx<=(int)locR.get(0)){
@@ -85,11 +80,6 @@ public class PlusDeathArea {
 		}else if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
 
 			//x座標はLが大きく、z座標はRが大きい場合
-			betaLx = (int)locL.get(0);
-			betaLz = (int)locL.get(1);
-			betaRx = (int)locR.get(0);
-			betaRz = (int)locR.get(1);
-
 			do{
 				if(betaLz<=(int)locR.get(1)){
 					if(betaLx>=(int)locR.get(0)){
@@ -109,11 +99,6 @@ public class PlusDeathArea {
 		}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
 
 			//x座標はRが大きく、z座標はLが大きい場合
-			betaLx = (int)locL.get(0);
-			betaLz = (int)locL.get(1);
-			betaRx = (int)locR.get(0);
-			betaRz = (int)locR.get(1);
-
 			do{
 				if(betaLz>=(int)locR.get(1)){
 					if(betaLx<=(int)locR.get(0)){

@@ -169,8 +169,8 @@ public class MainConfig extends BattleRoyale {
 			return;
 
 		case 1:
-			_stagelocationsR.add(loc.getBlockX());
-			_stagelocationsR.add(loc.getBlockZ());
+			_joinGameR.add(loc.getBlockX());
+			_joinGameR.add(loc.getBlockZ());
 
 			plugin.getConfig().set("joinGameR", null);
 			plugin.getConfig().set("joinGameR", _joinGameR);
