@@ -104,6 +104,7 @@ class RunTP extends BukkitRunnable{
 		MainListener.bDATA.clear();
 		MainListener.bMAT.clear();
 		MainListener.killCount.clear();
+		MainListener.rankList.clear();
 
 		ScoreBoard.scoreSide(false);
 		ScoreBoard.scoreList(null, false);
@@ -125,8 +126,7 @@ public class MainListener implements Listener {
 
 	// キル数カウント
 	public static HashMap<Player, Integer> killCount = BattleRoyale.killCount;
-	// ポイントカウント
-	public static HashMap<Player, Integer> pointCount = BattleRoyale.pointCount;
+	public static HashMap<Integer, Player> rankList = BattleRoyale.rankList;
 
 	//ダメージ無効かの判定用
 	public static boolean Attack = true;
@@ -207,7 +207,6 @@ public class MainListener implements Listener {
 		// デバッグ用。
 		if (message.equalsIgnoreCase("showCounts")) {
 			broadcast(killCount + "");
-			broadcast(pointCount + "");
 		}
 
 		// DEADチームのみに送信
@@ -244,6 +243,8 @@ public class MainListener implements Listener {
 
 		// 死亡後、DEADチームへ移行
 		if (board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
+			rankList.put(board.getTeam(TEAM_ALIVE_NAME).getSize(), player);
+
 			board.getTeam(TEAM_ALIVE_NAME).removePlayer(player);
 			board.getTeam(TEAM_DEAD_NAME).addPlayer(player);
 
@@ -284,53 +285,22 @@ public class MainListener implements Listener {
 				//スコアボードのキル数表示の変更
 				ScoreBoard.scoreList(killer, true);
 			}
-
-			//ポイントをカウント
-			if (pointCount.containsKey(killer)) {
-				pointCount.put(killer, pointCount.get(killer) + 1);
-			} else {
-				pointCount.put(killer, 1);
-			}
 		}
 
-		// 最後の1人だった場合5ポイントを加算
+		//最後の一人の場合はゲームを終了させる
 		if (board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() == 1 && StartCommand.start == 1) {
-			if(killer != null){
-				if (pointCount.containsKey(killer)) {
-					pointCount.put(killer, pointCount.get(killer) + 5);
-				} else {
-					pointCount.put(killer, 1);
-				}
-			}
-
+			//一位は一度も死なないため、ここでランキングを設定する
+			rankList.put(board.getTeam(TEAM_ALIVE_NAME).getSize(), player);
 			/*
 			 * 終了時統計を表示
 			 */
-			//0ポイントのプレイヤーはデータがないので追加する
-			for(Player p : Bukkit.getServer().getOnlinePlayers()){
-				if(!pointCount.containsKey(p)){
-					pointCount.put(p, 0);
-					broadcast(pointCount.size() + "");
-				}
-				if(!killCount.containsKey(p)){
-					killCount.put(p, 0);
-				}
-			}
-			ArrayList<Player> pointRank = MainUtils.scoreSort(pointCount);
 			broadcast(ChatColor.DARK_AQUA + "------------終了------------");
 			int same = 0;//同率のプレイヤー用
-			for(int i=0; i<pointRank.size(); i++){
-				if(i >= 5)
+			for(int i=0; i<3; i++){
+				if(i >= 3)
 					break;
 
-				//前の順位と同じポイントだった場合同じ順位にする
-				if(i >= 1){
-					if(pointCount.get(pointRank.get(i-1)) == pointCount.get(pointRank.get(i))){
-						same -= 1;
-					}else{
-						same = 0;
-					}
-				}
+
 				int rank = i+1 + same;
 
 				ChatColor color = ChatColor.WHITE;
@@ -341,9 +311,8 @@ public class MainListener implements Listener {
 				if(rank == 3)
 					color = ChatColor.GREEN;
 
-				broadcast(" " + color + String.valueOf(rank) + "位 : " + pointRank.get(i).getName());
-				broadcast(" " + ChatColor.RED + pointCount.get(pointRank.get(i)) + ChatColor.GRAY + " point, " +
-						ChatColor.RED + killCount.get(pointRank.get(i)) + ChatColor.GRAY + " kill");
+				broadcast(" " + color + String.valueOf(rank) + "位 : " + rankList.get(i));
+				broadcast(" " + ChatColor.RED + killCount.get(rankList.get(i)) + ChatColor.GRAY + " kill");
 			}
 			broadcast(ChatColor.DARK_AQUA + "-----------------------------");
 

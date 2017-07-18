@@ -100,8 +100,6 @@ public class StartCommand extends BattleRoyale {
 
 	// キル数カウント
 	public static HashMap<Player, Integer> killCount = BattleRoyale.killCount;
-	// ポイントカウント
-	public static HashMap<Player, Integer> pointCount = BattleRoyale.pointCount;
 
 	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
 	public static final String TEAM_DEAD_NAME = BattleRoyale.TEAM_DEAD_NAME;
