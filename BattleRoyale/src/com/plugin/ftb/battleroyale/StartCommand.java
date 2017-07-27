@@ -11,10 +11,10 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -48,7 +48,7 @@ class countDown extends BukkitRunnable{
 
 			Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
 
-			ArrayList<Location> locs = new ArrayList<>();
+			ArrayList<Location> locs = new ArrayList<Location>();
 			for(ArrayList<Integer> point : (ArrayList<ArrayList<Integer>>) plugin.getConfig().get("Startpoints")){
 				locs.add(new Location(Bukkit.getWorld("world"), point.get(0), point.get(1), point.get(2)));
 			}
@@ -110,7 +110,7 @@ public class StartCommand extends BattleRoyale {
 
 	public static int locX, locY, locZ, start=0;
 	static int c, r, item;
-	public static ArrayList<Integer> loc = new ArrayList<>();
+	public static ArrayList<Integer> loc = new ArrayList<Integer>();
 
 	/*
 	 * ゲーム開始コマンド
@@ -131,28 +131,39 @@ public class StartCommand extends BattleRoyale {
 	}
 
 	public static void setChest(){
-		FileConfiguration chestItemsConfig = MainConfig.getChestItemsConfig();
 
 		for(int i = 1; i <= plugin.getConfig().getInt("chestCounter"); i++){
 
-			//チェストのロケーションを取得
 			locX = plugin.getConfig().getInt("chestlocations"+i+".x");
 			locY = plugin.getConfig().getInt("chestlocations"+i+".y");
 			locZ = plugin.getConfig().getInt("chestlocations"+i+".z");
 
-			//チェストのインベントリを取得
 			Block block = Bukkit.getWorld("world").getBlockAt(locX, locY, locZ);
 			block.setType(Material.CHEST);
 			Chest chest = (Chest)block.getState();
 			Inventory inv = chest.getInventory();
 
-			//チェストにアイテムを配置
 			c = 0;
-			do{
-				item = chestItemsConfig.getInt("chestItem.setItemCounter");
-				Material material = Material.getMaterial(chestItemsConfig.getString("chestItem.item"+(int)((Math.random()*1000)%item+1)));
 
-				inv.setItem((int)(Math.random()*729)/27, new ItemStack(material,1));
+			do{
+				item = plugin.getConfig().getInt("chestItem.setItemCounter");
+				
+				int id = (int)((Math.random()*1000)%item+1);
+				
+				Material material = Material.getMaterial(plugin.getConfig().getString("chestItem.item"+id));
+				
+				ItemStack itemStack = new ItemStack(material,1);
+				
+				if(plugin.getConfig().getString("chestItem.item"+id + "_name") != null && plugin.getConfig().getString("chestItem.item"+id + "_amount") != null) {
+					ItemMeta im = itemStack.getItemMeta();
+					
+					String name = "§e" + plugin.getConfig().getString("chestItem.item"+id + "_name") + "§e ▪ «" + plugin.getConfig().getString("chestItem.item"+id + "_amount") + "»";
+					
+					im.setDisplayName(name);
+					itemStack.setItemMeta(im);
+				 }
+				
+				inv.setItem((int)(Math.random()*729)/27, itemStack);
 
 				c++;
 				r = (int)(Math.random() * 1000 + 22) % 22 - c;

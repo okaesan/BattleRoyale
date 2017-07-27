@@ -9,6 +9,7 @@ import java.util.Random;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class StartingInventory extends BattleRoyale {
 
@@ -35,8 +36,19 @@ public class StartingInventory extends BattleRoyale {
 
 		 //p.getEquipment().clear();
 		 p.getInventory().clear();
-
-		 p.getInventory().addItem(new ItemStack(Material.getMaterial(conf.getProperty("items"+ran))));
-		 p.sendMessage("item"+ran);
+		 
+		 ItemStack itemStack = new ItemStack(Material.getMaterial(Integer.parseInt(conf.getProperty("item" + ran))));
+		 
+		 if(conf.getProperty("item" + ran + "_name") != null && conf.getProperty("item" + ran + "_amount") != null) {
+			ItemMeta im = itemStack.getItemMeta();
+			
+			String name = "§e" + conf.getProperty("item" + ran + "_name") + "§e ▪ «" + conf.getProperty("item" + ran + "_amount") + "»";
+			
+			im.setDisplayName(name);
+			itemStack.setItemMeta(im);
+			
+		 }
+		p.getInventory().addItem(itemStack);
+		p.sendMessage("item"+ran);
 	}
 }
