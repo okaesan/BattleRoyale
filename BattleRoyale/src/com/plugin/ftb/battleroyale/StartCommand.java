@@ -11,6 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -130,23 +131,26 @@ public class StartCommand extends BattleRoyale {
 	}
 
 	public static void setChest(){
+		FileConfiguration chestItemsConfig = MainConfig.getChestItemsConfig();
 
 		for(int i = 1; i <= plugin.getConfig().getInt("chestCounter"); i++){
 
+			//チェストのロケーションを取得
 			locX = plugin.getConfig().getInt("chestlocations"+i+".x");
 			locY = plugin.getConfig().getInt("chestlocations"+i+".y");
 			locZ = plugin.getConfig().getInt("chestlocations"+i+".z");
 
+			//チェストのインベントリを取得
 			Block block = Bukkit.getWorld("world").getBlockAt(locX, locY, locZ);
 			block.setType(Material.CHEST);
 			Chest chest = (Chest)block.getState();
 			Inventory inv = chest.getInventory();
 
+			//チェストにアイテムを配置
 			c = 0;
-
 			do{
-				item = plugin.getConfig().getInt("chestItem.setItemCounter");
-				Material material = Material.getMaterial(plugin.getConfig().getString("chestItem.item"+(int)((Math.random()*1000)%item+1)));
+				item = chestItemsConfig.getInt("chestItem.setItemCounter");
+				Material material = Material.getMaterial(chestItemsConfig.getString("chestItem.item"+(int)((Math.random()*1000)%item+1)));
 
 				inv.setItem((int)(Math.random()*729)/27, new ItemStack(material,1));
 

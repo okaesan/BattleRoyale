@@ -1,11 +1,15 @@
 package com.plugin.ftb.battleroyale;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.map.MapRenderer;
@@ -420,6 +424,26 @@ public class MainConfig extends BattleRoyale {
 		CursorRenderer.edgeZ = edgeZ;
 		CursorRenderer.locPerPix = locPerPix;
 		CursorRenderer.pixPerLoc = pixPerLoc;
+	}
+	
+	/* 
+	 * チェストアイテム用コンフィグがなければ作成
+	 */
+	public static void saveChestItemsConfig(){
+		File file = new File(plugin.getDataFolder(), "chestItemsConfig.yml");
+		if(!file.exists()){
+			YamlConfiguration config = new YamlConfiguration();
+			try{
+				config.save(file);
+			}catch(IOException e){}
+		}
+	}
+	
+	/*
+	 * チェストアイテム用Configをリロードし、最新のファイル情報を渡す
+	 */
+	public static FileConfiguration getChestItemsConfig(){
+		return YamlConfiguration.loadConfiguration( new File(plugin.getDataFolder(), "chestItemsConfig.yml"));
 	}
 
 	// デバッグ用
