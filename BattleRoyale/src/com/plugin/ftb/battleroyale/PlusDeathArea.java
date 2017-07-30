@@ -191,11 +191,12 @@ class PlusThreadClass extends BukkitRunnable{
 		//攻撃可能になるまでの時間が0になったら攻撃を可能にする
 		if(attackCountDown == 0){
 			MainListener.Attack = false;
+		}else{
+			attackCountDown--;
 		}
 
 		//１秒ごとにカウントを減らしていく。
 		loopC--;
-		attackCountDown--;
 
 		//スコアボードの設定
 		ScoreBoard.scoreSide(true);

@@ -61,7 +61,7 @@ public class ScoreBoard {
 		o.getScoreboard().resetScores("" + ChatColor.YELLOW + "残り人数 " + ChatColor.RESET + ": " + String.valueOf(teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size()-1));
 		o.getScoreboard().resetScores("" + ChatColor.YELLOW + "残り人数 " + ChatColor.RESET + ": " + String.valueOf(teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size()+1));
 		o.getScoreboard().resetScores("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "禁止エリア追加まで " + ChatColor.RESET + ": " + String.valueOf(PlusThreadClass.loopC+1));
-		o.getScoreboard().resetScores("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "禁止エリア追加まで " + ChatColor.RESET + ": " + "0");
+		o.getScoreboard().resetScores("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "禁止エリア追加まで " + ChatColor.RESET + ": 0");
 		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "攻撃可能になるまで" + ChatColor.RESET + ": " + String.valueOf(PlusThreadClass.attackCountDown+1));
 
 		for(OfflinePlayer p : teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers()){

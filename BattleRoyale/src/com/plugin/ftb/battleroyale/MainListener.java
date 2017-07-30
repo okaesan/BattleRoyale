@@ -295,16 +295,16 @@ public class MainListener implements Listener {
 		//最後の一人の場合はゲームを終了させる
 		if (board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() == 1 && StartCommand.start == 1) {
 			//一位は一度も死なないため、ここでランキングを設定する
-			rankList.put(board.getTeam(TEAM_ALIVE_NAME).getSize(), player);
+			rankList.put(board.getTeam(TEAM_ALIVE_NAME).getSize(), killer);
 			/*
 			 * 終了時統計を表示
 			 */
 			broadcast(ChatColor.DARK_AQUA + "------------終了------------");
 			int same = 0;//同率のプレイヤー用
 			for(int i=0; i<3; i++){
-				if(i >= 3)
+				if(i >= 3){
 					break;
-
+				}
 
 				int rank = i+1 + same;
 
@@ -316,8 +316,8 @@ public class MainListener implements Listener {
 				if(rank == 3)
 					color = ChatColor.GREEN;
 
-				broadcast(" " + color + String.valueOf(rank) + "位 : " + rankList.get(i));
-				broadcast(" " + ChatColor.RED + killCount.get(rankList.get(i)) + ChatColor.GRAY + " kill");
+				broadcast(" " + color + String.valueOf(rank) + "位 : " + rankList.get(rank).getName());
+				broadcast(" " + ChatColor.RED + killCount.get(rankList.get(rank)) + ChatColor.GRAY + " kill");
 			}
 			broadcast(ChatColor.DARK_AQUA + "-----------------------------");
 
