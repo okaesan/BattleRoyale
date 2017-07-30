@@ -204,10 +204,14 @@ public class MainCommandExecutor implements CommandExecutor {
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setStageR\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setLobbypoint\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setStartpoint\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setStartpointRandom\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setDeathpoint\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setMap\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setTimer t1 t2\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setNATimer t1\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setJoinGameL\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setJoinGameR\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "areaJoinGame\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setChest\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "comChest");
 				return true;

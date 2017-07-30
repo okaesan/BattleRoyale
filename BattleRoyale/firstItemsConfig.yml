@@ -1,0 +1,20 @@
+firstItem:
+  setItemCounter: 9
+  item1: WOOD_SWORD
+  item2: WOOD_SWORD
+  item3: IRON_SWORD
+  item4: IRON_SWORD
+  item5: APPLE
+  item5_amount: 5
+  item6: POTION
+  item6_amount: 3
+  item6_damage: 16385
+  item7: POTION
+  item7_amount: 3
+  item7_damage: 16386
+  item8: POTION
+  item8_amount: 3
+  item8_damage: 16387
+  item9: POTION
+  item9_amount: 3
+  item9_damage: 16388

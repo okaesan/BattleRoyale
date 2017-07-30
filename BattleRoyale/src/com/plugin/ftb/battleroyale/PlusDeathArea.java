@@ -145,6 +145,8 @@ class PlusThreadClass extends BukkitRunnable{
 	public static int countPast=0;
 	//禁止区域が追加されるまでのカウンター
 	public static int loopC=plugin.getConfig().getIntegerList("Timer").get(0);
+	//攻撃が可能になるまでの時間
+	public static int attackCountDown=plugin.getConfig().getInt("NATimer");
 
 	/*
 	 *スコアボードに禁止区域追加までの時間を表示させるため、追加方法の処理を変更しました
@@ -160,7 +162,6 @@ class PlusThreadClass extends BukkitRunnable{
 				this.cancel();
 				return;
 			}
-
 			if(PlusDeathArea.beta==0){
 				for(int i=0; i<PlusDeathArea.plusDeathX.size(); i++){
 					deathRandom.add(PlusDeathArea.beta);
@@ -172,7 +173,6 @@ class PlusThreadClass extends BukkitRunnable{
 			deathRandomCount.add(count);
 			Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "30秒後" + ChatColor.GRAY + "に禁止区域が追加されます。");
 			count++;
-
 		}
 
 		//禁止区域追加
@@ -187,8 +187,15 @@ class PlusThreadClass extends BukkitRunnable{
 			//二週目からはずっと同じ一定時間
 			loopC=plugin.getConfig().getIntegerList("Timer").get(1);
 		}
+
+		//攻撃可能になるまでの時間が0になったら攻撃を可能にする
+		if(attackCountDown == 0){
+			MainListener.Attack = false;
+		}
+
 		//１秒ごとにカウントを減らしていく。
 		loopC--;
+		attackCountDown--;
 
 		//スコアボードの設定
 		ScoreBoard.scoreSide(true);

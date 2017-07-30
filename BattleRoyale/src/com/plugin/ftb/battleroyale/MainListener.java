@@ -76,10 +76,12 @@ class RunTP extends BukkitRunnable{
 		}
 
 		//ゲーム中に破壊されたブロックの復元
+		MainListener.blockReset=true;
 		for(int i=0;i<MainListener.bBLOCK.size();i++){
 			MainListener.bBLOCK.get(i).setType(MainListener.bMAT.get(i));
 			MainListener.bBLOCK.get(i).setData(MainListener.bDATA.get(i));
 		}
+		MainListener.blockReset=false;
 
 		resetVar();
 
@@ -92,6 +94,7 @@ class RunTP extends BukkitRunnable{
 		PlusThreadClass.countPast=0;
 		PlusDeathArea.beta=0;
 		StartCommand.start=0;
+		PlusThreadClass.attackCountDown=plugin.getConfig().getInt("NATimer");
 		PlusThreadClass.loopC=plugin.getConfig().getIntegerList("Timer").get(0);
 		PlusThreadClass.deathRandom.clear();
 		PlusThreadClass.deathRandomCount.clear();
@@ -130,6 +133,8 @@ public class MainListener implements Listener {
 
 	//ダメージ無効かの判定用
 	public static boolean Attack = true;
+	//ブロックを復元している時はtrue(resetVar関数にて変更し、onDrop関数にて使用される)
+	public static boolean blockReset = false;
 
 	/*
 	 * ゲーム中に破壊されたブロックの値保存用のリスト
@@ -371,7 +376,9 @@ public class MainListener implements Listener {
 	//チェストの初期化が行われたときドロップしたアイテムを削除する
 	@EventHandler
 	public void onDrop(ItemSpawnEvent e){
-		e.getEntity().remove();
+		if(blockReset==true){
+			e.getEntity().remove();
+		}
 	}
 
 	//壁紙、手綱、額縁を破壊不可にする

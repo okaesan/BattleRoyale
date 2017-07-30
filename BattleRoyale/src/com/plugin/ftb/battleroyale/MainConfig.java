@@ -425,10 +425,11 @@ public class MainConfig extends BattleRoyale {
 		CursorRenderer.locPerPix = locPerPix;
 		CursorRenderer.pixPerLoc = pixPerLoc;
 	}
-	
-	/* 
-	 * チェストアイテム用コンフィグがなければ作成
+
+	/*
+	 * コンフィグファイル生成
 	 */
+	//チェストアイテム
 	public static void saveChestItemsConfig(){
 		File file = new File(plugin.getDataFolder(), "chestItemsConfig.yml");
 		if(!file.exists()){
@@ -438,12 +439,25 @@ public class MainConfig extends BattleRoyale {
 			}catch(IOException e){}
 		}
 	}
-	
+	//初期アイテム
+	public static void saveFirstItemsConfig(){
+		File file = new File(plugin.getDataFolder(), "firstItemsConfig.yml");
+		if(!file.exists()){
+			YamlConfiguration config = new YamlConfiguration();
+			try{
+				config.save(file);
+			}catch(IOException e){}
+		}
+	}
+
 	/*
 	 * チェストアイテム用Configをリロードし、最新のファイル情報を渡す
 	 */
 	public static FileConfiguration getChestItemsConfig(){
 		return YamlConfiguration.loadConfiguration( new File(plugin.getDataFolder(), "chestItemsConfig.yml"));
+	}
+	public static FileConfiguration getFirstItemsConfig(){
+		return YamlConfiguration.loadConfiguration( new File(plugin.getDataFolder(), "firstItemsConfig.yml"));
 	}
 
 	// デバッグ用

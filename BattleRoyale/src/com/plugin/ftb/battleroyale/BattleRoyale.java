@@ -1,13 +1,10 @@
 package com.plugin.ftb.battleroyale;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
@@ -58,6 +55,7 @@ public class BattleRoyale extends JavaPlugin {
 		// config書き出し
 		this.saveDefaultConfig();
 		MainConfig.saveChestItemsConfig();
+		MainConfig.saveFirstItemsConfig();
 
 		// イベントリスナ登録
 		getServer().getPluginManager().registerEvents(new MainListener(), this);

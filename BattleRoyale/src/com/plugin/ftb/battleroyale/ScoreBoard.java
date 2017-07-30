@@ -43,12 +43,16 @@ public class ScoreBoard {
 		}
 
 		//スコアボードの中身
-		o.getScore("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "禁止エリア追加まで " + ChatColor.RESET + ": ").setScore(PlusThreadClass.loopC);
-		//o.getScore("" + ChatColor.RED + "倒した数 " + ChatColor.RESET + ": " + p.getStatistic(Statistic.JUMP)).setScore(-1);;
+		o.getScore("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "禁止エリア追加まで " + ChatColor.RESET + ": " + PlusThreadClass.loopC).setScore(2);
+		if(PlusThreadClass.attackCountDown!=0){
+			o.getScore("" + ChatColor.RED + ChatColor.BOLD + "攻撃可能になるまで" + ChatColor.RESET + ": " + PlusThreadClass.attackCountDown).setScore(1);
+		}else{
+			o.getScore("" + ChatColor.RED + ChatColor.BOLD + "攻撃可能").setScore(1);
+		}
 		//o.getScore("" + ChatColor.AQUA + "部活 " + ChatColor.RESET + ": " + "test部").setScore(-2);
 		//o.getScore("" + ChatColor.GREEN + "チーム " + ChatColor.RESET + ": " + "test").setScore(-3);
-		o.getScore("").setScore(-1);
-		o.getScore("" + ChatColor.YELLOW + "残り人数 " + ChatColor.RESET + ": " + teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size()).setScore(-2);
+		o.getScore("").setScore(0);
+		o.getScore("" + ChatColor.YELLOW + "残り人数 " + ChatColor.RESET + ": " + teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size()).setScore(-1);
 
 		/*
 		 * 変数の中身が変わった状態で再セットされると、変数の部分だけが変わらずに全部がコピーされたのが何個も複製されるため、変数変更前の部分は削除する。
@@ -56,6 +60,9 @@ public class ScoreBoard {
 		 */
 		o.getScoreboard().resetScores("" + ChatColor.YELLOW + "残り人数 " + ChatColor.RESET + ": " + String.valueOf(teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size()-1));
 		o.getScoreboard().resetScores("" + ChatColor.YELLOW + "残り人数 " + ChatColor.RESET + ": " + String.valueOf(teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size()+1));
+		o.getScoreboard().resetScores("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "禁止エリア追加まで " + ChatColor.RESET + ": " + String.valueOf(PlusThreadClass.loopC+1));
+		o.getScoreboard().resetScores("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "禁止エリア追加まで " + ChatColor.RESET + ": " + "0");
+		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "攻撃可能になるまで" + ChatColor.RESET + ": " + String.valueOf(PlusThreadClass.attackCountDown+1));
 
 		for(OfflinePlayer p : teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers()){
 			if(p.isOnline()==true){
