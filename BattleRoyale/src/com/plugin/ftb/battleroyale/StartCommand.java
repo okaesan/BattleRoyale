@@ -100,8 +100,12 @@ public class StartCommand extends BattleRoyale {
 	DeathArea deathA = new DeathArea();
 	PlusDeathArea PdeathA = new PlusDeathArea();
 
+	//ゲームが開始してからの秒数
+	public static int gameTimer = 0;
+
 	public static int locX, locY, locZ, start=0;
 	static int inChestCounter, nextChance, itemCounter;
+
 	public static ArrayList<Integer> loc = new ArrayList<Integer>();
 
 	/*

@@ -2,6 +2,7 @@ package com.plugin.ftb.battleroyale;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -94,6 +95,7 @@ class RunTP extends BukkitRunnable{
 		PlusThreadClass.countPast=0;
 		PlusDeathArea.beta=0;
 		StartCommand.start=0;
+		StartCommand.gameTimer=0;
 		PlusThreadClass.attackCountDown=plugin.getConfig().getInt("NATimer");
 		PlusThreadClass.loopC=plugin.getConfig().getIntegerList("Timer").get(0);
 		PlusThreadClass.deathRandom.clear();
@@ -107,7 +109,8 @@ class RunTP extends BukkitRunnable{
 		MainListener.bDATA.clear();
 		MainListener.bMAT.clear();
 		MainListener.killCount.clear();
-		MainListener.rankList.clear();
+		MainListener.deathPlayer.clear();
+		MainListener.deathTime.clear();
 
 		ScoreBoard.scoreSide(false);
 		ScoreBoard.scoreList(null, false);
@@ -129,7 +132,9 @@ public class MainListener implements Listener {
 
 	// キル数カウント
 	public static HashMap<Player, Integer> killCount = BattleRoyale.killCount;
-	public static HashMap<Integer, Player> rankList = BattleRoyale.rankList;
+
+	//ランクがソートされた値を受け取る
+	public static Map<Integer, Integer> rankSort = BattleRoyale.rankSort;
 
 	//ダメージ無効かの判定用
 	public static boolean Attack = true;
@@ -145,6 +150,9 @@ public class MainListener implements Listener {
 	public static ArrayList<Material> bMAT = new ArrayList<>();
 	//死亡後、リスポーン地点へテレポート用
 	public static ArrayList<Integer> locDeath = new ArrayList<>();
+	//死亡順に並べる用
+	public static ArrayList<Integer> deathTime = new ArrayList<>();
+	public static ArrayList<Player> deathPlayer = new ArrayList<>();
 
 	@SuppressWarnings("deprecation")
 	@EventHandler
@@ -248,13 +256,14 @@ public class MainListener implements Listener {
 
 		// 死亡後、DEADチームへ移行
 		if (board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
-			rankList.put(board.getTeam(TEAM_ALIVE_NAME).getSize(), player);
+			//死亡した場合、死亡時の時刻と死亡者を保存する
+			deathTime.add(StartCommand.gameTimer);
+			deathPlayer.add(player);
 
 			board.getTeam(TEAM_ALIVE_NAME).removePlayer(player);
 			board.getTeam(TEAM_DEAD_NAME).addPlayer(player);
 
 			//チェストとプレイヤーの頭に置き換わる前に存在していたブロックの値の保存
-			//チェスト
 			bBLOCK.add(player.getLocation().getBlock());
 			bDATA.add(player.getLocation().getBlock().getData());
 			bMAT.add(player.getLocation().getBlock().getType());
@@ -295,29 +304,38 @@ public class MainListener implements Listener {
 		//最後の一人の場合はゲームを終了させる
 		if (board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() == 1 && StartCommand.start == 1) {
 			//一位は一度も死なないため、ここでランキングを設定する
-			rankList.put(board.getTeam(TEAM_ALIVE_NAME).getSize(), killer);
+			if(killer!=null){
+				//死亡した場合、死亡時の時刻と死亡者を保存する
+				//処理的に死亡者と同じ時間になるため、gameTimerに+1し、重複をなくす。
+				deathTime.add(StartCommand.gameTimer+1);
+				deathPlayer.add(killer);
+			}
+			//禁止区域などで同時に死亡し、ゲームがフィニッシュした場合(キルした人が存在しない場合)
+			else{
+				//死亡した場合、死亡時の時刻と死亡者を保存する
+				deathTime.add(StartCommand.gameTimer);
+				deathPlayer.add(player);
+			}
+
+			//ランク上位3位までを抽出
+			rankSort = MainUtils.rankSort(deathTime);
+
 			/*
 			 * 終了時統計を表示
 			 */
 			broadcast(ChatColor.DARK_AQUA + "------------終了------------");
-			int same = 0;//同率のプレイヤー用
-			for(int i=0; i<3; i++){
-				if(i >= 3){
-					break;
-				}
 
-				int rank = i+1 + same;
-
+			for(int i : rankSort.keySet()){
 				ChatColor color = ChatColor.WHITE;
-				if(rank == 1)
+				if(rankSort.get(i) == 1)
 					color = ChatColor.GOLD;
-				if(rank == 2)
+				if(rankSort.get(i) == 2)
 					color = ChatColor.YELLOW;
-				if(rank == 3)
+				if(rankSort.get(i) == 3)
 					color = ChatColor.GREEN;
 
-				broadcast(" " + color + String.valueOf(rank) + "位 : " + rankList.get(rank).getName());
-				broadcast(" " + ChatColor.RED + killCount.get(rankList.get(rank)) + ChatColor.GRAY + " kill");
+				broadcast(" " + color + String.valueOf(rankSort.get(i)) + "位 : " + deathPlayer.get(i).getName());
+				broadcast(" " + ChatColor.RED + killCount.get(deathPlayer.get(i)) + ChatColor.GRAY + " kill");
 			}
 			broadcast(ChatColor.DARK_AQUA + "-----------------------------");
 

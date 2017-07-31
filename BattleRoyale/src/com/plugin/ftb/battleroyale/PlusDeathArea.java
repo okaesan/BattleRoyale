@@ -197,6 +197,8 @@ class PlusThreadClass extends BukkitRunnable{
 
 		//１秒ごとにカウントを減らしていく。
 		loopC--;
+		//ゲームがスタートしてからの秒数を毎秒増やしていく
+		StartCommand.gameTimer++;
 
 		//スコアボードの設定
 		ScoreBoard.scoreSide(true);
