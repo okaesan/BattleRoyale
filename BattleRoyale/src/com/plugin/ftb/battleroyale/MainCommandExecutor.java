@@ -17,6 +17,7 @@ public class MainCommandExecutor implements CommandExecutor {
 	public static int judEdit;
 
 	public static ArrayList<Player> setChestPlayer = new ArrayList<>();
+	public static ArrayList<Player> setProtectionPlayer = new ArrayList<>();
 
 	public MainCommandExecutor(BattleRoyale plugin) {
 		MainCommandExecutor._plugin = plugin;
@@ -196,8 +197,22 @@ public class MainCommandExecutor implements CommandExecutor {
 							+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- 攻撃不可能時間 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("NATimer")
 							+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- 設定されたチェストの数 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("chestCounter"));
 				}
-
 				return true;
+			
+			case "setProtection":
+				//破壊できないガラスを設定
+				if(args.length == 1) {
+					if(setProtectionPlayer.contains(_player)) {
+						_player.sendMessage(BattleRoyale.prefix + ChatColor.WHITE + "設定を終わりました。");
+						setProtectionPlayer.remove(_player);
+						return true;
+					}else {
+						_player.getInventory().addItem(new ItemStack(Material.STICK));
+						_player.sendMessage(BattleRoyale.prefix + ChatColor.WHITE + "棒を持って、破壊されたくないブロックを左クリックしてください。");
+						setProtectionPlayer.add(_player);
+						return true;
+					}
+				}
 
 			default:
 				_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "\n/battleroyale " + ChatColor.RED + "setStageL\n"
@@ -213,7 +228,8 @@ public class MainCommandExecutor implements CommandExecutor {
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setJoinGameR\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "areaJoinGame\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setChest\n"
-						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "comChest");
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "comChest\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setProtection");
 				return true;
 			}
 		}

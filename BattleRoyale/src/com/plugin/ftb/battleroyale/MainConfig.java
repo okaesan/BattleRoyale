@@ -1,8 +1,11 @@
-package com.plugin.ftb.battleroyale;
+﻿package com.plugin.ftb.battleroyale;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,6 +15,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.map.MapRenderer;
 import org.bukkit.map.MapView;
 import org.bukkit.map.MapView.Scale;
@@ -30,6 +34,8 @@ public class MainConfig extends BattleRoyale {
 	public static ArrayList<Integer> _deathpoint = new ArrayList<>();
 	public static ArrayList<Integer> _Timer = new ArrayList<>();
 	public static ArrayList<Integer> check = new ArrayList<>();
+	public static Map<String, ArrayList<String>> _teams = new HashMap<>();
+	public static ArrayList<Location> _protectedBlocks = new ArrayList<>();
 
 	public static int chestCount;
 
@@ -103,12 +109,21 @@ public class MainConfig extends BattleRoyale {
 		if(_Timer == null){
 			_Timer = new ArrayList<>();
 		}
+
+		_teams = new HashMap<>();
+		if(!plugin.getConfig().getMapList("teams").isEmpty()) {
+			_teams = (Map<String, ArrayList<String>>) plugin.getConfig().getMapList("teams").get(0);
+		}
+		
+		 _protectedBlocks = new ArrayList<>();
+		_protectedBlocks = (ArrayList<Location>) getProtectedBrocksConfig().get("glasses");
+		if(_protectedBlocks == null){
+			_protectedBlocks = new ArrayList<>();
+		}
 	}
 
 	public static void setSign(Location loc){
 		loadConfig();
-
-		plugin.getConfig().set("SignValue", null);
 
 		plugin.getConfig().set("SignValue.x", loc.getBlockX());
 		plugin.getConfig().set("SignValue.y", loc.getBlockY());
@@ -425,13 +440,41 @@ public class MainConfig extends BattleRoyale {
 		CursorRenderer.locPerPix = locPerPix;
 		CursorRenderer.pixPerLoc = pixPerLoc;
 	}
+	
+	//破壊できないブロックを追加する
+	public static void addProtectedBlocks(Location loc, Player player) {
+		loadConfig();
+		
+		if(_protectedBlocks.isEmpty() || !_protectedBlocks.contains(loc)) {
+			_protectedBlocks.add(loc);
+			player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "このブロックを破壊できないようにしました。");
+		}else{
+			_protectedBlocks.remove(loc);
+			player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "このブロックを破壊できるようにしました。");
+		}
+		
+		FileConfiguration config = getProtectedBrocksConfig();
+		config.set("glasses", null);
+		config.set("glasses", _protectedBlocks);
+		saveProtectedBlocksConfig(config);
+	}
 
 	/*
 	 * コンフィグファイル生成
 	 */
 	//チェストアイテム
-	public static void saveChestItemsConfig(){
+	public static void saveDefaultChestItemsConfig(){
 		File file = new File(plugin.getDataFolder(), "chestItemsConfig.yml");
+		if(!file.exists()){
+			FileConfiguration config = new YamlConfiguration();
+			try{
+				config.save(file);
+			}catch(IOException e){}
+		}
+	}
+	//初期アイテム
+	public static void saveDefaultFirstItemsConfig(){
+		File file = new File(plugin.getDataFolder(), "firstItemsConfig.yml");
 		if(!file.exists()){
 			YamlConfiguration config = new YamlConfiguration();
 			try{
@@ -439,14 +482,17 @@ public class MainConfig extends BattleRoyale {
 			}catch(IOException e){}
 		}
 	}
-	//初期アイテム
-	public static void saveFirstItemsConfig(){
-		File file = new File(plugin.getDataFolder(), "firstItemsConfig.yml");
+	
+	//非破壊ブロック用
+	public static void saveDefaultProtectedBlocksConfig(){
+		File file = new File(plugin.getDataFolder(), "protectedBlocksConfig.yml");
 		if(!file.exists()){
 			YamlConfiguration config = new YamlConfiguration();
 			try{
 				config.save(file);
-			}catch(IOException e){}
+			}catch(IOException e){
+				Bukkit.broadcastMessage(e.toString());
+			}
 		}
 	}
 
@@ -459,7 +505,170 @@ public class MainConfig extends BattleRoyale {
 	public static FileConfiguration getFirstItemsConfig(){
 		return YamlConfiguration.loadConfiguration( new File(plugin.getDataFolder(), "firstItemsConfig.yml"));
 	}
+	//破壊できないガラス用Config
+	public static FileConfiguration getProtectedBrocksConfig(){
+		return YamlConfiguration.loadConfiguration( new File(plugin.getDataFolder(), "protectedBlocksConfig.yml"));
+	}
 
+	/*
+	 * configを上書き
+	 */
+	//チェストアイテム
+	public static void saveChestItemsConfig(FileConfiguration config){
+		File file = new File(plugin.getDataFolder(), "chestItemsConfig.yml");
+		try{
+			config.save(file);
+		}catch(IOException e){}
+	}
+	//初期アイテム
+	public static void saveFirstItemsConfig(FileConfiguration config){
+		File file = new File(plugin.getDataFolder(), "firstItemsConfig.yml");
+		try{
+			config.save(file);
+		}catch(IOException e){}
+	}
+	
+	//非破壊ブロック用
+	public static void saveProtectedBlocksConfig(FileConfiguration config){
+		File file = new File(plugin.getDataFolder(), "protectedBlocksConfig.yml");
+		try{
+			config.save(file);
+		}catch(IOException e){}
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	//チーム用に作ったんで置いといてください。kanaami
+	//////////////////////////////////////////////////////////////////////////
+	/*
+	 * チームが存在するか返す
+	 *
+	public static Boolean isTeamExist(String teamName) {
+		loadConfig();
+		if(!_teams.keySet().isEmpty() && _teams.keySet().contains(teamName)) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	/*
+	 *　プレイヤーがチームに参加しているか返す
+	 *
+	public static boolean teamHasPlayer(Player player) {
+		loadConfig();
+		//チームが1つもない場合
+		if(_teams.keySet().isEmpty()) {
+			return false;
+		}
+		//valuesにplayerが含まれているか検索
+		for(ArrayList<String> uuids : _teams.values()) {
+			if(uuids.contains(player.getUniqueId().toString())){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/*
+	 * プレイヤーが参加しているチームを返す
+	 *
+	public static String joiningTeamName(Player player) {
+		loadConfig();
+		for(String teamName : _teams.keySet()) {
+			if(_teams.get(teamName).contains(player.getUniqueId().toString())) {
+				return teamName;
+			}
+		}
+		return "";
+	}
+	
+	/*
+	 * チームをconfigに書き込み
+	 * 
+	public static void makeTeam(String name) {
+		loadConfig();
+		if(_teams.keySet() != null && _teams.keySet().size() == 45) {
+			//45個以上作れないようにする
+			return;
+		}
+		//configに書き込み
+		_teams.put(name, new ArrayList<>());
+		//一度List<Map<>()に変換する
+		List<Map<String,ArrayList<String>>> mapList = new ArrayList<Map<String,ArrayList<String>>>();
+		mapList.add(_teams);
+		plugin.getConfig().set("teams", null);
+		plugin.getConfig().set("teams", mapList);
+		plugin.saveConfig();
+	}
+	
+	/*
+	 * チームをすべて削除
+	 * 
+	public static void removeAllTeams() {
+		loadConfig();
+		_teams = new HashMap<>();
+		plugin.getConfig().set("teams", null);
+		plugin.saveConfig();
+	}
+	
+	/*
+	 * チームに参加
+	 *
+	public static void joinTeam(String teamName, Player player) {
+		loadConfig();
+		
+		//UUIDを追加、保存
+		ArrayList<String> uuids = _teams.get(teamName);
+		//既に同じチームに入っていないときのみ
+		if(!uuids.contains(player.getUniqueId().toString())) {
+			uuids.add(player.getUniqueId().toString());
+		}
+		
+		//一度List<Map<>()に変換する
+		List<Map<String,ArrayList<String>>> mapList = new ArrayList<Map<String,ArrayList<String>>>();
+		mapList.add(_teams);
+		
+		plugin.getConfig().set("teams", null);
+		plugin.getConfig().set("teams", mapList);
+		plugin.saveConfig();
+	}
+	
+	/*
+	 * チームから脱退
+	 *
+	public static void leaveTeam(Player player) {
+		loadConfig();
+		
+		String teamName = joiningTeamName(player);
+		
+		//uuidsからプレイヤーを削除
+		ArrayList<String> uuids = _teams.get(teamName);
+		uuids.remove(player.getUniqueId().toString());
+		_teams.put(teamName, uuids);
+		
+		//一度List<Map<>()に変換する
+		List<Map<String,ArrayList<String>>> mapList = new ArrayList<Map<String,ArrayList<String>>>();
+		mapList.add(_teams);
+		
+		plugin.getConfig().set("teams", null);
+		plugin.getConfig().set("teams", mapList);
+		plugin.saveConfig();
+	}
+	
+	/*
+	 * チーム用本を配る
+	 *
+	public static void giveBook() {
+		for(Player player : Bukkit.getOnlinePlayers()) {
+			ItemStack book = new ItemStack(Material.BOOK);
+			ItemMeta bookMeta = book.getItemMeta();
+			bookMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "右クリックでチームを見る");
+			book.setItemMeta(bookMeta);
+			player.getInventory().addItem(book);
+		}
+	}
+	*/
+	
 	// デバッグ用
 	public static void broadcast(String message) {
 		BattleRoyale.broadcast(message);
