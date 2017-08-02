@@ -213,10 +213,6 @@ class PlusDeathThreadClass extends BukkitRunnable{
 	public static ArrayList<Integer> locL = new ArrayList<Integer>();
 	public static ArrayList<Integer> locR = new ArrayList<Integer>();
 
-	public static int betaLx, betaLz, betaRx, betaRz;
-
-	//deathAreaCount++;
-
 	@SuppressWarnings("deprecation")
 	public void run(){
 		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();

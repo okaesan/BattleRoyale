@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.SkullType;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -23,8 +24,6 @@ import org.bukkit.event.entity.EntityInteractEvent;
 import org.bukkit.event.entity.ItemSpawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCreativeEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -46,7 +45,7 @@ class RunTP extends BukkitRunnable{
 	int locX = plugin.getConfig().getInt("SignValue.x");
 	int locY = plugin.getConfig().getInt("SignValue.y");
 	int locZ = plugin.getConfig().getInt("SignValue.z");
-	
+
 	//接頭語
 	public static String prefix = BattleRoyale.prefix;
 
@@ -137,7 +136,7 @@ public class MainListener implements Listener {
 
 	// キル数カウント
 	public static HashMap<Player, Integer> killCount = BattleRoyale.killCount;
-	
+
 	//ランクがソートされた値を受け取る
 	public static Map<Integer, Integer> rankSort = BattleRoyale.rankSort;
 
@@ -155,10 +154,9 @@ public class MainListener implements Listener {
 	public static ArrayList<Material> bMAT = new ArrayList<>();
 	//死亡後、リスポーン地点へテレポート用
 	public static ArrayList<Integer> locDeath = new ArrayList<>();
-	
 	//死亡順に並べる用
-	 public static ArrayList<Integer> deathTime = new ArrayList<>();
-	 public static ArrayList<Player> deathPlayer = new ArrayList<>();
+	public static ArrayList<Integer> deathTime = new ArrayList<>();
+	public static ArrayList<Player> deathPlayer = new ArrayList<>();
 
 	@SuppressWarnings("deprecation")
 	@EventHandler
@@ -173,7 +171,7 @@ public class MainListener implements Listener {
 		if(_player.getInventory().getItemInHand().getType()==Material.BONE && MainCommandExecutor.setChestPlayer.contains(_player)){
 			MainConfig.subChestConfig(e.getBlock().getLocation(), _player);
 		}
-		
+
 		/*
 		 * 破壊できないブロックの登録
 		 * 登録するコマンドを打ったプレイヤーがこのメソッドを通る
@@ -182,6 +180,7 @@ public class MainListener implements Listener {
 			MainConfig.addProtectedBlocks(e.getBlock().getLocation(), _player);
 			e.setCancelled(true);
 		}
+
 
 		/*
 		 * ゲーム中に破壊されたブロックの情報を取得して保存
@@ -203,6 +202,7 @@ public class MainListener implements Listener {
 				bBLOCK.add(Bukkit.getWorld("world").getBlockAt(e.getBlock().getX(), e.getBlock().getY(), e.getBlock().getZ()));
 				bDATA.add(e.getBlock().getData());
 				bMAT.add(e.getBlock().getType());
+
 			}
 			//破壊されたブロックが背の高い草花だった場合、setCancelledではデータ値が変わって違うものに置き換わるので、データ値の設定をする。
 			else if(e.getBlock().getType() == Material.DOUBLE_PLANT){
@@ -275,14 +275,13 @@ public class MainListener implements Listener {
 		// 死亡後、DEADチームへ移行
 		if (board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
 			//死亡した場合、死亡時の時刻と死亡者を保存する
-			 deathTime.add(StartCommand.gameTimer);
-			 deathPlayer.add(player);
+			deathTime.add(StartCommand.gameTimer);
+			deathPlayer.add(player);
 
 			board.getTeam(TEAM_ALIVE_NAME).removePlayer(player);
 			board.getTeam(TEAM_DEAD_NAME).addPlayer(player);
 
 			//チェストとプレイヤーの頭に置き換わる前に存在していたブロックの値の保存
-			//チェスト
 			bBLOCK.add(player.getLocation().getBlock());
 			bDATA.add(player.getLocation().getBlock().getData());
 			bMAT.add(player.getLocation().getBlock().getType());
@@ -324,26 +323,36 @@ public class MainListener implements Listener {
 		if (board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() == 1 && StartCommand.start == 1) {
 			//一位は一度も死なないため、ここでランキングを設定する
 			if(killer!=null){
-				//死亡した場合、死亡時の時刻と死亡者を保存する
 				//処理的に死亡者と同じ時間になるため、gameTimerに+1し、重複をなくす。
 				deathTime.add(StartCommand.gameTimer+1);
 				deathPlayer.add(killer);
 			}
 			//禁止区域などで同時に死亡し、ゲームがフィニッシュした場合(キルした人が存在しない場合)
- 			else{
- 				//死亡した場合、死亡時の時刻と死亡者を保存する
- 				deathTime.add(StartCommand.gameTimer);
- 				deathPlayer.add(player);
- 			}
-				 
- 			//ランク上位3位までを抽出
- 			rankSort = MainUtils.rankSort(deathTime);
-			
+			else{
+				for(OfflinePlayer checkPlayer : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+					if(checkPlayer.isOnline()){
+						if(MainUtils.lastPlayer((Player) checkPlayer)){
+							//処理的に死亡者と同じ時間になるため、gameTimerに+1し、重複をなくす。
+							deathTime.add(StartCommand.gameTimer+1);
+							deathPlayer.add((Player) checkPlayer);
+						}
+						else{
+							//死亡した場合、死亡時の時刻と死亡者を保存する
+							deathTime.add(StartCommand.gameTimer);
+							deathPlayer.add(player);
+						}
+					}
+				}
+			}
+
+			//ランク上位3位までを抽出
+			rankSort = MainUtils.rankSort(deathTime);
+
 			/*
 			 * 終了時統計を表示
 			 */
 			broadcast(ChatColor.DARK_AQUA + "------------終了------------");
-			
+
 			for(int i : rankSort.keySet()){
 				ChatColor color = ChatColor.WHITE;
 				if(rankSort.get(i) == 1)
@@ -365,7 +374,6 @@ public class MainListener implements Listener {
 					p.sendMessage(BattleRoyale.prefix+"10秒後にロビーへ戻ります");
 				}
 			}
-			
 			new RunTP().runTaskLater(plugin, 200);
 		}
 	}
@@ -399,9 +407,8 @@ public class MainListener implements Listener {
 			event.setCancelled(true);
 		}
 	}
-	
-	@EventHandler
 	@SuppressWarnings("deprecation")
+	@EventHandler(ignoreCancelled=true)
 	public void onPlayerInteractEvent(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
@@ -410,9 +417,9 @@ public class MainListener implements Listener {
 			&& event.getClickedBlock().getType().equals(Material.SOIL) && board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
 			event.setCancelled(true);
 		}
-		
+
 	}
-	
+
 	//チェストの初期化が行われたときドロップしたアイテムを削除する
 	@EventHandler
 	public void onDrop(ItemSpawnEvent e){
@@ -432,8 +439,7 @@ public class MainListener implements Listener {
 			e.setCancelled(true);
 		}
 	}
-	
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	//チーム用に作ったんで置いといてください。kanaami
 	//////////////////////////////////////////////////////////////////////////
@@ -445,14 +451,14 @@ public class MainListener implements Listener {
 		if(event.getClickedInventory() == null || event.getCurrentItem() == null || event.getCurrentItem().getItemMeta() == null) {
 			return;
 		}
-		
+
 		String inventoryName = event.getClickedInventory().getName();
-		
+
 		//Mainインベントリをクリックしたとき
 		if(inventoryName.equals("Main")){
 			//イベントをキャンセル(アイテムを持ち運べないように)
 			event.setCancelled(true);
-			
+
 			Player player = (Player) event.getWhoClicked();
 			String displayName = event.getCurrentItem().getItemMeta().getDisplayName();
 			//チームを作成をクリックしたとき
@@ -491,7 +497,7 @@ public class MainListener implements Listener {
 				TeamGUI.displayMainGUI(player);
 				return;
 			}
-			
+
 			//エメラルド(チーム一覧)をクリックしたとき
 			if(event.getCurrentItem().getType().equals(Material.EMERALD)) {
 				MainConfig.loadConfig();
@@ -503,7 +509,7 @@ public class MainListener implements Listener {
 				}
 				String teamName = ChatColor.stripColor(displayName);
 				ArrayList<String> uuids = MainConfig._teams.get(teamName);
-				
+
 				//既に同じチームに入っていないときのみ
 				if(uuids == null || !uuids.contains(player.getUniqueId().toString())) {
 					//チームに参加
@@ -519,6 +525,7 @@ public class MainListener implements Listener {
 		}
 	}
 	*/
+
 
 	// ブロードキャスト
 	public void broadcast(String message) {
