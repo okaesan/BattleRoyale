@@ -57,6 +57,7 @@ public class BattleRoyale extends JavaPlugin {
 		//configをロード
 		MainConfig.loadConfig();
 
+
 		// イベントリスナ登録
 		getServer().getPluginManager().registerEvents(new MainListener(), this);
 		getServer().getPluginManager().registerEvents(new SignJoin(), this);
