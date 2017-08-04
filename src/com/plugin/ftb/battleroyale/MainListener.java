@@ -3,6 +3,7 @@ package com.plugin.ftb.battleroyale;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -321,58 +322,58 @@ public class MainListener implements Listener {
 
 		//最後の一人の場合はゲームを終了させる
 		if (board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() == 1 && StartCommand.start == 1) {
-			
+
 			new BukkitRunnable() {
-				 
-	            @Override
-	            public void run() {
-	    			//一位は一度も死なないため、ここでランキングを設定する
-	    			if(killer!=null){
-	    				//処理的に死亡者と同じ時間になるため、gameTimerに+1し、重複をなくす。
-	    				deathTime.add(StartCommand.gameTimer+1);
-	    				deathPlayer.add(killer);
-	    			}
-	    			//禁止区域などで同時に死亡し、ゲームがフィニッシュした場合(キルした人が存在しない場合)
-	    			else{
-	    				for(OfflinePlayer checkPlayer : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
-	    					if(checkPlayer.isOnline()){
-	    						if(MainUtils.lastPlayer((Player) checkPlayer)){
-	    							//処理的に死亡者と同じ時間になるため、gameTimerに+1し、重複をなくす。
-	    							deathTime.add(StartCommand.gameTimer+1);
-	    							deathPlayer.add((Player) checkPlayer);
-	    						}
-	    						else{
-	    							//死亡した場合、死亡時の時刻と死亡者を保存する
-	    							deathTime.add(StartCommand.gameTimer);
-	    							deathPlayer.add(player);
-	    						}
-	    					}
-	    				}
-	    			}
-	    			
-	    			//ランク上位3位までを抽出
-	    			rankSort = MainUtils.rankSort(deathTime);
 
-	    			/*
-	    			 * 終了時統計を表示
-	    			 */
-	    			broadcast(ChatColor.DARK_AQUA + "------------終了------------");
+				@Override
+				public void run() {
+					//一位は一度も死なないため、ここでランキングを設定する
+					if(killer!=null){
+						//処理的に死亡者と同じ時間になるため、gameTimerに+1し、重複をなくす。
+						deathTime.add(StartCommand.gameTimer+1);
+						deathPlayer.add(killer);			}
+					//禁止区域などで同時に死亡し、ゲームがフィニッシュした場合(キルした人が存在しない場合)
+					else{
+						for(OfflinePlayer checkPlayer : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+							if(checkPlayer.isOnline()){
+								if(MainUtils.lastPlayer((Player) checkPlayer)){
+									//処理的に死亡者と同じ時間になるため、gameTimerに+1し、重複をなくす。
+									deathTime.add(StartCommand.gameTimer+1);
+									deathPlayer.add((Player) checkPlayer);
+								}
+								else{
+									//死亡した場合、死亡時の時刻と死亡者を保存する
+									deathTime.add(StartCommand.gameTimer);
+									deathPlayer.add((Player) checkPlayer);
+								}
+							}
+						}
+					}
 
-	    			for(int i : rankSort.keySet()){
-	    				ChatColor color = ChatColor.WHITE;
-	    				if(rankSort.get(i) == 1)
-	    					color = ChatColor.GOLD;
-	    				if(rankSort.get(i) == 2)
-	    					color = ChatColor.YELLOW;
-	    				if(rankSort.get(i) == 3)
-	    					color = ChatColor.GREEN;
+					//ランク上位3位までを抽出
+					rankSort = MainUtils.rankSort(deathTime);
+					rankSort.entrySet().stream().sorted(Entry.comparingByValue());
 
-	    				broadcast(" " + color + String.valueOf(rankSort.get(i)) + "位 : " + deathPlayer.get(i).getName());
-	    				broadcast(" " + ChatColor.RED + killCount.get(deathPlayer.get(i)) + ChatColor.GRAY + " kill");
-	    			}
-	    			broadcast(ChatColor.DARK_AQUA + "-----------------------------");
-	            }
-	        }.runTaskLater(plugin, 20);
+					/*
+					 * 終了時統計を表示
+					 */
+					broadcast(ChatColor.DARK_AQUA + "------------終了------------");
+
+					for(Map.Entry<Integer, Integer> entry : rankSort.entrySet()){
+						ChatColor color = ChatColor.WHITE;
+						if(entry.getValue() == 1)
+							color = ChatColor.GOLD;
+						if(entry.getValue() == 2)
+							color = ChatColor.YELLOW;
+						if(entry.getValue() == 3)
+							color = ChatColor.GREEN;
+
+						broadcast(" " + color + String.valueOf(entry.getValue()) + "位 : " + deathPlayer.get(entry.getKey()).getName());
+						broadcast(" " + ChatColor.RED + killCount.get(deathPlayer.get(entry.getKey())) + ChatColor.GRAY + " kill");
+					}
+					broadcast(ChatColor.DARK_AQUA + "-----------------------------");
+				}
+			}.runTaskLater(plugin, 20);
 
 			for(Player p : Bukkit.getOnlinePlayers()){
 				if(board.getTeam(TEAM_ALIVE_NAME).hasPlayer(p)){

@@ -26,9 +26,9 @@ public class BattleRoyale extends JavaPlugin {
 	 * ゲーム進行関連変数
 	 */
 	// キル数カウント
-	public static HashMap<Player, Integer> killCount = new HashMap<>();
+	public static HashMap<Player, Integer> killCount = new HashMap<Player, Integer>();
 	// ポイントカウント
-	public static HashMap<Integer, Integer> rankSort = new HashMap<>();
+	public static HashMap<Integer, Integer> rankSort = new HashMap<Integer, Integer>();
 
 	/*
 	 * その他

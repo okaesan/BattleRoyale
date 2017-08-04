@@ -57,8 +57,6 @@ public class MainUtils {
 			deathTimeRepeat.clear();
 		}
 
-		rankSort.entrySet().stream().sorted(java.util.Map.Entry.comparingByValue());
-
 		return rankSort;
 	}
 

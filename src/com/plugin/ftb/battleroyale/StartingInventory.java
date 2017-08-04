@@ -22,28 +22,32 @@ public class StartingInventory extends BattleRoyale {
 
 		int ran = r.nextInt(a) + 1;
 
-		//p.getEquipment().clear();
 		p.getInventory().clear();
 
 		Material material = Material.getMaterial(firstItemsConfig.getString("firstItem.item" + ran));
 		ItemStack itemStack = new ItemStack(material);
+		ItemMeta meta = itemStack.getItemMeta();
 
 		if(firstItemsConfig.getString("firstItem.item" + ran + "_name") != null && firstItemsConfig.getString("firstItem.item" + ran + "_amount") != null) {
-			ItemMeta im = itemStack.getItemMeta();
-
 			String name = "§e" + firstItemsConfig.getString("firstItem.item" + ran + "_name") + "§e ▪ «" + firstItemsConfig.getString("firstItem.item" + ran + "_amount") + "»";
 
-			im.setDisplayName(name);
-			itemStack.setItemMeta(im);
+			meta.setDisplayName(name);
+			itemStack.setItemMeta(meta);
 		}
 		if(material==Material.BOW){
 			p.getInventory().addItem(new ItemStack(Material.ARROW, firstItemsConfig.getInt("firstItem.item" + ran + "_amount")));
 		}
+
 		if(firstItemsConfig.getString("firstItem.item" + ran + "_amount") != null){
 			itemStack.setAmount(firstItemsConfig.getInt("firstItem.item" + ran + "_amount"));
 		}
+
 		itemStack.setDurability((short) firstItemsConfig.getInt("firstItem.item" + ran + "_damage"));
-		//itemStack.getItemMeta().spigot().setUnbreakable(firstItemsConfig.getBoolean("firstItem.item" + ran + "_unbreakable"));
+
+		if(firstItemsConfig.getString("firstItem.item" + ran + "_unbreakable") != null){
+			meta.setUnbreakable(firstItemsConfig.getBoolean("firstItem.item" + ran + "_unbreakable"));
+			itemStack.setItemMeta(meta);
+		}
 
 		p.getInventory().addItem(itemStack);
 		p.sendMessage("item"+ran);

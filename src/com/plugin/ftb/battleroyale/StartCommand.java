@@ -167,25 +167,30 @@ public class StartCommand extends BattleRoyale {
 				int id = (int)((Math.random()*1000)%itemCounter+1);
 
 				Material material = Material.getMaterial(chestItemsConfig.getString("chestItem.item"+id));
-
 				ItemStack itemStack = new ItemStack(material,1);
+				ItemMeta meta = itemStack.getItemMeta();
 
 				if(chestItemsConfig.getString("chestItem.item"+id + "_name") != null && chestItemsConfig.getString("chestItem.item"+id + "_amount") != null) {
-					ItemMeta im = itemStack.getItemMeta();
-
 					String name = "§e" + chestItemsConfig.getString("chestItem.item"+id + "_name") + "§e ▪ «" + chestItemsConfig.getString("chestItem.item"+id + "_amount") + "»";
 
-					im.setDisplayName(name);
-					itemStack.setItemMeta(im);
+					meta.setDisplayName(name);
+					itemStack.setItemMeta(meta);
 				}
 				if(material==Material.BOW){
 					inv.setItem(inChestLocation.get(inChestCounter), new ItemStack(Material.ARROW, chestItemsConfig.getInt("chestItem.item" + id + "_amount")));
 					inChestCounter++;
 				}
+
 				if(chestItemsConfig.getString("chestItem.item" + id + "_amount") != null){
 					itemStack.setAmount(chestItemsConfig.getInt("chestItem.item" + id + "_amount"));
 				}
+
 				itemStack.setDurability((short) chestItemsConfig.getInt("chestItem.item" + id + "_damage"));
+
+				if(chestItemsConfig.getString("chestItem.item" + id + "_unbreakable") != null){
+					meta.setUnbreakable(chestItemsConfig.getBoolean("chestItem.item" + id + "_unbreakable"));
+					itemStack.setItemMeta(meta);
+				}
 
 				inv.setItem(inChestLocation.get(inChestCounter), itemStack);
 
