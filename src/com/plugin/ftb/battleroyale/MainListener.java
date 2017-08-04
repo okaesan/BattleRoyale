@@ -64,6 +64,8 @@ class RunTP extends BukkitRunnable{
 				p.getPlayer().teleport(worB);
 				p.setHealth(20);
 				p.setFoodLevel(20);
+				p.getActivePotionEffects().clear();
+				p.getInventory().clear();
 				board.getTeam(TEAM_ALIVE_NAME).removePlayer(p);
 
 			}else if(board.getTeam(TEAM_DEAD_NAME).hasPlayer(p)){
@@ -71,6 +73,8 @@ class RunTP extends BukkitRunnable{
 				p.getPlayer().teleport(worB);
 				p.setHealth(20);
 				p.setFoodLevel(20);
+				p.getActivePotionEffects().clear();
+				p.getInventory().clear();
 				board.getTeam(TEAM_DEAD_NAME).removePlayer(p);
 
 			}
@@ -363,7 +367,7 @@ public class MainListener implements Listener {
 					 */
 					broadcast(ChatColor.DARK_AQUA + "------------終了------------");
 					String[] args = {"", "", ""};
-	    			
+
 					for(int i : rankSort.keySet()){
 						ChatColor color = ChatColor.WHITE;
 						if(rankSort.get(i) == 1)
