@@ -29,6 +29,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -62,21 +63,24 @@ class RunTP extends BukkitRunnable{
 			if(board.getTeam(TEAM_ALIVE_NAME).hasPlayer(p)){
 
 				p.getPlayer().teleport(worB);
-				p.setHealth(20);
-				p.setFoodLevel(20);
-				p.getActivePotionEffects().clear();
-				p.getInventory().clear();
-				board.getTeam(TEAM_ALIVE_NAME).removePlayer(p);
-
-			}else if(board.getTeam(TEAM_DEAD_NAME).hasPlayer(p)){
-
-				p.getPlayer().teleport(worB);
-				p.setHealth(20);
-				p.setFoodLevel(20);
-				p.getActivePotionEffects().clear();
-				p.getInventory().clear();
-				board.getTeam(TEAM_DEAD_NAME).removePlayer(p);
-
+  				p.setHealth(20);
+  				p.setFoodLevel(20);
+  				for (PotionEffect effect : p.getActivePotionEffects()) {
+  			        p.removePotionEffect(effect.getType());
+				}
+  				p.getInventory().clear();
+  				board.getTeam(TEAM_ALIVE_NAME).removePlayer(p);
+  
+  			}else if(board.getTeam(TEAM_DEAD_NAME).hasPlayer(p)){
+  
+  				p.getPlayer().teleport(worB);
+  				p.setHealth(20);
+  				p.setFoodLevel(20);
+  				for (PotionEffect effect : p.getActivePotionEffects()) {
+  			        p.removePotionEffect(effect.getType());
+				}
+ 				p.getInventory().clear();
+  				board.getTeam(TEAM_DEAD_NAME).removePlayer(p);
 			}
 		}
 
@@ -366,11 +370,15 @@ public class MainListener implements Listener {
 					 * 終了時統計を表示
 					 */
 					broadcast(ChatColor.DARK_AQUA + "------------終了------------");
-					ArrayList<String> args = new ArrayList<>();
+					ArrayList<ArrayList<String>> rankStrings = new ArrayList<>();
+					//仮の要素を挿入
+					rankStrings.add(new ArrayList<String>());
+					rankStrings.add(new ArrayList<String>());
+					rankStrings.add(new ArrayList<String>());
 	    			
 					for(int i : rankSort.keySet()){
 						ChatColor color = ChatColor.WHITE;
-						byte rank = 0;
+						int rank = 0;
 						if(rankSort.get(i) == 1) {
 							color = ChatColor.GOLD;
 							rank = 0;
@@ -384,13 +392,28 @@ public class MainListener implements Listener {
 							rank = 2;
 						}
 
-						//順位に応じた場所に入れる
-						args.add(rank, " " + color + String.valueOf(rankSort.get(i)) + "位 : " + deathPlayer.get(i).getName() + "\n" + " " + ChatColor.RED + killCount.get(deathPlayer.get(i)) + ChatColor.GRAY + " kill");
+						//順位に応じた場所に入れる。
+						ArrayList<String> value;
+						if(rankStrings.get(rank).isEmpty()) {
+							//同率プレイヤーがいない場合
+							value = new ArrayList<>();
+						}else{
+							//同率プレイヤーがいた場合
+							value = rankStrings.get(rank);
+						}
+						value.add((" " + color + String.valueOf(rankSort.get(i)) + "位 : " + deathPlayer.get(i).getName() + "\n" 
+								+ " " + ChatColor.RED + killCount.get(deathPlayer.get(i)) + ChatColor.GRAY + " kill"));
+						
+						rankStrings.set(rank, value);
 					}
-
-					for(String arg : args) {
-						broadcast(arg);
+					
+					//表示
+					for(ArrayList<String> values : rankStrings) {
+						for(String value : values) {
+							broadcast(value);
+						}
 					}
+					
 					broadcast(ChatColor.DARK_AQUA + "-----------------------------");
 				}
 			}.runTaskLater(plugin, 20);
