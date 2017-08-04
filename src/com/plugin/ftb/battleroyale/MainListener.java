@@ -366,23 +366,26 @@ public class MainListener implements Listener {
 					 * 終了時統計を表示
 					 */
 					broadcast(ChatColor.DARK_AQUA + "------------終了------------");
-					String[] args = {"", "", ""};
-
+					ArrayList<String> args = new ArrayList<>();
+	    			
 					for(int i : rankSort.keySet()){
 						ChatColor color = ChatColor.WHITE;
-						if(rankSort.get(i) == 1)
+						byte rank = 0;
+						if(rankSort.get(i) == 1) {
 							color = ChatColor.GOLD;
-						if(rankSort.get(i) == 2)
+							rank = 0;
+						}
+						if(rankSort.get(i) == 2) {
 							color = ChatColor.YELLOW;
-						if(rankSort.get(i) == 3)
+							rank = 1;
+						}
+						if(rankSort.get(i) == 3) {
 							color = ChatColor.GREEN;
+							rank = 2;
+						}
 
-						if(rankSort.get(i) == 1)
-							args[0] = " " + color + String.valueOf(rankSort.get(i)) + "位 : " + deathPlayer.get(i).getName() + "\n" + " " + ChatColor.RED + killCount.get(deathPlayer.get(i)) + ChatColor.GRAY + " kill";
-						if(rankSort.get(i) == 2)
-							args[1] = " " + color + String.valueOf(rankSort.get(i)) + "位 : " + deathPlayer.get(i).getName() + "\n" + " " + ChatColor.RED + killCount.get(deathPlayer.get(i)) + ChatColor.GRAY + " kill";
-						if(rankSort.get(i) == 3)
-							args[2] = " " + color + String.valueOf(rankSort.get(i)) + "位 : " + deathPlayer.get(i).getName() + "\n" + " " + ChatColor.RED + killCount.get(deathPlayer.get(i)) + ChatColor.GRAY + " kill";
+						//順位に応じた場所に入れる
+						args.add(rank, " " + color + String.valueOf(rankSort.get(i)) + "位 : " + deathPlayer.get(i).getName() + "\n" + " " + ChatColor.RED + killCount.get(deathPlayer.get(i)) + ChatColor.GRAY + " kill");
 					}
 
 					for(String arg : args) {
