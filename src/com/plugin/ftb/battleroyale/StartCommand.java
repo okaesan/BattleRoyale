@@ -151,9 +151,6 @@ public class StartCommand extends BattleRoyale {
 			//チェストにアイテムを配置する際の場所
 			List<Integer> inChestLocation = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26);
 			Collections.shuffle(inChestLocation);
-			for(Player p :plugin.getServer().getOnlinePlayers()){
-				p.sendMessage(String.valueOf(inChestLocation.get(0)));
-			}
 
 			//チェストにアイテムを配置した回数
 			inChestCounter = 0;
@@ -161,9 +158,6 @@ public class StartCommand extends BattleRoyale {
 			itemCounter = chestItemsConfig.getInt("chestItem.setItemCounter");
 
 			do{
-				for(Player p :plugin.getServer().getOnlinePlayers()){
-					p.sendMessage("- "+String.valueOf(inChestCounter));
-				}
 				int id = (int)((Math.random()*1000)%itemCounter+1);
 
 				Material material = Material.getMaterial(chestItemsConfig.getString("chestItem.item"+id));

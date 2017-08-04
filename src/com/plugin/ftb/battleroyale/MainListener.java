@@ -62,11 +62,15 @@ class RunTP extends BukkitRunnable{
 			if(board.getTeam(TEAM_ALIVE_NAME).hasPlayer(p)){
 
 				p.getPlayer().teleport(worB);
+				p.setHealth(20);
+				p.setFoodLevel(20);
 				board.getTeam(TEAM_ALIVE_NAME).removePlayer(p);
 
 			}else if(board.getTeam(TEAM_DEAD_NAME).hasPlayer(p)){
 
 				p.getPlayer().teleport(worB);
+				p.setHealth(20);
+				p.setFoodLevel(20);
 				board.getTeam(TEAM_DEAD_NAME).removePlayer(p);
 
 			}
