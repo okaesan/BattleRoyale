@@ -362,18 +362,27 @@ public class MainListener implements Listener {
 					 * 終了時統計を表示
 					 */
 					broadcast(ChatColor.DARK_AQUA + "------------終了------------");
-
-					for(Map.Entry<Integer, Integer> entry : rankSort.entrySet()){
+					String[] args = {"", "", ""};
+	    			
+					for(int i : rankSort.keySet()){
 						ChatColor color = ChatColor.WHITE;
-						if(entry.getValue() == 1)
+						if(rankSort.get(i) == 1)
 							color = ChatColor.GOLD;
-						if(entry.getValue() == 2)
+						if(rankSort.get(i) == 2)
 							color = ChatColor.YELLOW;
-						if(entry.getValue() == 3)
+						if(rankSort.get(i) == 3)
 							color = ChatColor.GREEN;
 
-						broadcast(" " + color + String.valueOf(entry.getValue()) + "位 : " + deathPlayer.get(entry.getKey()).getName());
-						broadcast(" " + ChatColor.RED + killCount.get(deathPlayer.get(entry.getKey())) + ChatColor.GRAY + " kill");
+						if(rankSort.get(i) == 1)
+							args[0] = " " + color + String.valueOf(rankSort.get(i)) + "位 : " + deathPlayer.get(i).getName() + "\n" + " " + ChatColor.RED + killCount.get(deathPlayer.get(i)) + ChatColor.GRAY + " kill";
+						if(rankSort.get(i) == 2)
+							args[1] = " " + color + String.valueOf(rankSort.get(i)) + "位 : " + deathPlayer.get(i).getName() + "\n" + " " + ChatColor.RED + killCount.get(deathPlayer.get(i)) + ChatColor.GRAY + " kill";
+						if(rankSort.get(i) == 3)
+							args[2] = " " + color + String.valueOf(rankSort.get(i)) + "位 : " + deathPlayer.get(i).getName() + "\n" + " " + ChatColor.RED + killCount.get(deathPlayer.get(i)) + ChatColor.GRAY + " kill";
+					}
+
+					for(String arg : args) {
+						broadcast(arg);
 					}
 					broadcast(ChatColor.DARK_AQUA + "-----------------------------");
 				}
