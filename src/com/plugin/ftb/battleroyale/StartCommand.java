@@ -1,7 +1,10 @@
 package com.plugin.ftb.battleroyale;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
@@ -11,20 +14,13 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
-
-class attack extends BukkitRunnable{
-
-	@Override
-	public void run(){
-		MainListener.Attack = false;
-	}
-}
 
 class countDown extends BukkitRunnable{
 
@@ -37,13 +33,12 @@ class countDown extends BukkitRunnable{
 	DeathArea deathA = new DeathArea();
 	PlusDeathArea PdeathA = new PlusDeathArea();
 
-	int _countdown = 10;
+	int countDown = 10;
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	public void run(){
 
-		if(_countdown == 0){
-
+		if(countDown == 0){
 			this.cancel();
 
 			Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
@@ -60,7 +55,6 @@ class countDown extends BukkitRunnable{
 						Random rnd = new Random();
 			        	ran = rnd.nextInt(locs.size());
 					}
-
 					p.getPlayer().teleport(locs.get(ran));
 					StartingInventory.StartingInventoryFunc((Player)p);
 					p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GOLD + "ゲームスタート");
@@ -71,12 +65,10 @@ class countDown extends BukkitRunnable{
 			PdeathA.setPlusDeath();
 			PdeathA.plus();
 			MainConfig.giveMap();
-			new attack().runTaskLater(plugin, plugin.getConfig().getInt("NATimer")*20);
-
 		}
 
 		countChat();
-		_countdown--;
+		countDown--;
 
 	}
 
@@ -84,10 +76,10 @@ class countDown extends BukkitRunnable{
 	public void countChat(){
 		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
 
-		if(_countdown!=0){
+		if(countDown!=0){
 			for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
 				if(p.isOnline()){
-					p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "" + _countdown + "");
+					p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "" + countDown + "");
 				}
 			}
 		}
@@ -108,8 +100,12 @@ public class StartCommand extends BattleRoyale {
 	DeathArea deathA = new DeathArea();
 	PlusDeathArea PdeathA = new PlusDeathArea();
 
+	//ゲームが開始してからの秒数
+	public static int gameTimer = 0;
+
 	public static int locX, locY, locZ, start=0;
-	static int c, r, item;
+	static int inChestCounter, nextChance, itemCounter;
+
 	public static ArrayList<Integer> loc = new ArrayList<Integer>();
 
 	/*
@@ -130,44 +126,75 @@ public class StartCommand extends BattleRoyale {
 		cd.runTaskTimer(plugin, 0, 20);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void setChest(){
+		FileConfiguration chestItemsConfig = MainConfig.getChestItemsConfig();
 
 		for(int i = 1; i <= plugin.getConfig().getInt("chestCounter"); i++){
 
+			//チェストのロケーションを取得
 			locX = plugin.getConfig().getInt("chestlocations"+i+".x");
 			locY = plugin.getConfig().getInt("chestlocations"+i+".y");
 			locZ = plugin.getConfig().getInt("chestlocations"+i+".z");
 
+			//チェストのインベントリを取得
 			Block block = Bukkit.getWorld("world").getBlockAt(locX, locY, locZ);
 			block.setType(Material.CHEST);
 			Chest chest = (Chest)block.getState();
 			Inventory inv = chest.getInventory();
 
-			c = 0;
+			//値保存
+			MainListener.bBLOCK.add(block);
+			MainListener.bDATA.add(block.getData());
+			MainListener.bMAT.add(block.getType());
+
+			//チェストにアイテムを配置する際の場所
+			List<Integer> inChestLocation = Arrays.asList(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26);
+			Collections.shuffle(inChestLocation);
+			for(Player p :plugin.getServer().getOnlinePlayers()){
+				p.sendMessage(String.valueOf(inChestLocation.get(0)));
+			}
+
+			//チェストにアイテムを配置した回数
+			inChestCounter = 0;
+
+			itemCounter = chestItemsConfig.getInt("chestItem.setItemCounter");
 
 			do{
-				item = plugin.getConfig().getInt("chestItem.setItemCounter");
-				
-				int id = (int)((Math.random()*1000)%item+1);
-				
-				Material material = Material.getMaterial(plugin.getConfig().getString("chestItem.item"+id));
-				
+				for(Player p :plugin.getServer().getOnlinePlayers()){
+					p.sendMessage("- "+String.valueOf(inChestCounter));
+				}
+				int id = (int)((Math.random()*1000)%itemCounter+1);
+
+				Material material = Material.getMaterial(chestItemsConfig.getString("chestItem.item"+id));
+
 				ItemStack itemStack = new ItemStack(material,1);
-				
-				if(plugin.getConfig().getString("chestItem.item"+id + "_name") != null && plugin.getConfig().getString("chestItem.item"+id + "_amount") != null) {
+
+				if(chestItemsConfig.getString("chestItem.item"+id + "_name") != null && chestItemsConfig.getString("chestItem.item"+id + "_amount") != null) {
 					ItemMeta im = itemStack.getItemMeta();
-					
-					String name = "§e" + plugin.getConfig().getString("chestItem.item"+id + "_name") + "§e ▪ «" + plugin.getConfig().getString("chestItem.item"+id + "_amount") + "»";
-					
+
+					String name = "§e" + chestItemsConfig.getString("chestItem.item"+id + "_name") + "§e ▪ «" + chestItemsConfig.getString("chestItem.item"+id + "_amount") + "»";
+
 					im.setDisplayName(name);
 					itemStack.setItemMeta(im);
-				 }
-				
-				inv.setItem((int)(Math.random()*729)/27, itemStack);
+				}
+				if(material==Material.BOW){
+					inv.setItem(inChestLocation.get(inChestCounter), new ItemStack(Material.ARROW, chestItemsConfig.getInt("chestItem.item" + id + "_amount")));
+					inChestCounter++;
+				}
+				if(chestItemsConfig.getString("chestItem.item" + id + "_amount") != null){
+					itemStack.setAmount(chestItemsConfig.getInt("chestItem.item" + id + "_amount"));
+				}
+				itemStack.setDurability((short) chestItemsConfig.getInt("chestItem.item" + id + "_damage"));
 
-				c++;
-				r = (int)(Math.random() * 1000 + 22) % 22 - c;
-			}while(r>0);
+				inv.setItem(inChestLocation.get(inChestCounter), itemStack);
+
+				if(inChestCounter==2){
+					break;
+				}
+				inChestCounter++;
+				nextChance = (int)(Math.random()*100) % 3;
+			}while(nextChance!=0);
 		}
 	}
 }
