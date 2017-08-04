@@ -1,4 +1,4 @@
-﻿package com.plugin.ftb.battleroyale;
+package com.plugin.ftb.battleroyale;
 
 import java.io.File;
 import java.io.IOException;
