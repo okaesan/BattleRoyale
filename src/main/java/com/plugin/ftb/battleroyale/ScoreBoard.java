@@ -25,6 +25,7 @@ public class ScoreBoard {
 	//intのokはゲームが終了しているかどうかの変数、0=ゲーム終了時、1=ゲーム中
 	public static void scoreSide(boolean nowPlay){
 		Scoreboard teamBoard = plugin.getServer().getScoreboardManager().getMainScoreboard();
+		int maxPersons = teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size()+teamBoard.getTeam(TEAM_DEAD_NAME).getPlayers().size();
 
 		// オブジェクティブが既に登録されているかどうか確認し、
 		// 登録されていないなら新規作成します。
@@ -58,8 +59,11 @@ public class ScoreBoard {
 		 * 変数の中身が変わった状態で再セットされると、変数の部分だけが変わらずに全部がコピーされたのが何個も複製されるため、変数変更前の部分は削除する。
 		 * 何を言ってるかよくわからないと思うので、理解してもらうには下のコード消して試してもらえると早いかもです。
 		 */
-		o.getScoreboard().resetScores("" + ChatColor.YELLOW + "残り人数 " + ChatColor.RESET + ": " + String.valueOf(teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size()-1));
-		o.getScoreboard().resetScores("" + ChatColor.YELLOW + "残り人数 " + ChatColor.RESET + ": " + String.valueOf(teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size()+1));
+		for(int maxPersonsCounter=0; maxPersonsCounter<maxPersons; maxPersonsCounter++){
+			if(teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size() != maxPersonsCounter){
+				o.getScoreboard().resetScores("" + ChatColor.YELLOW + "残り人数 " + ChatColor.RESET + ": " + String.valueOf(maxPersonsCounter));
+			}
+		}
 		o.getScoreboard().resetScores("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "禁止エリア追加まで " + ChatColor.RESET + ": " + String.valueOf(PlusThreadClass.loopC+1));
 		o.getScoreboard().resetScores("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "禁止エリア追加まで " + ChatColor.RESET + ": 0");
 		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "攻撃可能になるまで" + ChatColor.RESET + ": " + String.valueOf(PlusThreadClass.attackCountDown+1));
