@@ -319,7 +319,6 @@ public class MainConfig extends BattleRoyale {
 		plugin.getConfig().set("mapX", mapView.getCenterX());
 		plugin.getConfig().set("mapZ", mapView.getCenterZ());
 		plugin.getConfig().set("mapScale", mapView.getScale().name());
-		broadcast(mapView.getScale().name() );
 		plugin.saveConfig();
 	}
 
@@ -491,7 +490,6 @@ public class MainConfig extends BattleRoyale {
 			try{
 				config.save(file);
 			}catch(IOException e){
-				Bukkit.broadcastMessage(e.toString());
 			}
 		}
 	}

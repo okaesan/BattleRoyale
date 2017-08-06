@@ -50,6 +50,5 @@ public class StartingInventory extends BattleRoyale {
 		}
 
 		p.getInventory().addItem(itemStack);
-		p.sendMessage("item"+ran);
 	}
 }

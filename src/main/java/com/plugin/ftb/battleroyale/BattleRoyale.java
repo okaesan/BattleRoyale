@@ -104,4 +104,13 @@ public class BattleRoyale extends JavaPlugin {
 	public static void broadcast(String message) {
 		Bukkit.getServer().broadcastMessage(message);
 	}
+	
+	public static void sendToPluginTeam(String message) {
+		for(Player player : Bukkit.getOnlinePlayers()) {
+			String playerName = player.getName();
+			if(playerName.equals("kanaami") || playerName.equals("Jump131") || playerName.equals("rushoko")) {
+				player.sendMessage(message);
+			}
+		}
+	}
 }
