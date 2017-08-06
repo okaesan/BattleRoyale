@@ -28,6 +28,7 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PLayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -490,6 +491,79 @@ public class MainListener implements Listener {
 			e.setCancelled(true);
 		}
 	}
+	
+	//HP減ったらプレイヤーのスピードを下げる
+    @EventHandler
+    public void onMove(PlayerMoveEvent e) {
+        if(e.isCancelled()) {
+            return;
+        }
+        Player p = e.getPlayer();
+        
+        int hpint = (int) Math.floor(p.getHealth());
+        
+        double exchange = 1.0;
+        
+        switch (hpint) {
+        case 10:
+            exchange = 0.95;
+        break;
+        
+        case 9:
+            exchange = 0.9;
+            break;
+        
+        case 8:
+            exchange = 0.85;
+            break;
+        
+        case 7:
+            exchange = 0.8;
+        break;
+        
+        case 6:
+            exchange = 0.75;
+            break;
+        
+        case 5:
+            exchange = 0.7;
+            break;
+
+        case 4:
+            exchange = 0.65;
+            break;
+        
+        case 3:
+            exchange = 0.6;
+            break;
+        
+        case 2:
+            exchange = 0.55;
+        break;
+        
+        case 1:
+            exchange = 0.5;
+            break;
+        
+        case 0:
+            exchange = 0.0;
+            break;
+            
+        default:
+            p.setWalkSpeed(0.2f);
+            break;
+        }
+        
+        if(hpint == 20) {
+            p.setWalkSpeed(0.2f);
+        }
+        
+        double f = 0.2 * exchange;
+        float ps = p.getWalkSpeed();
+        	if(!(f == ps)) {
+            	p.setWalkSpeed((float) f);
+        	}
+    	}
 
 	//////////////////////////////////////////////////////////////////////////
 	//チーム用に作ったんで置いといてください。kanaami
