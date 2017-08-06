@@ -33,13 +33,14 @@ public class StartingInventory extends BattleRoyale {
 
 			meta.setDisplayName(name);
 			itemStack.setItemMeta(meta);
-		}
-		if(material==Material.BOW){
-			p.getInventory().addItem(new ItemStack(Material.ARROW, firstItemsConfig.getInt("firstItem.item" + ran + "_amount")));
-		}
-
-		if(firstItemsConfig.getString("firstItem.item" + ran + "_amount") != null){
-			itemStack.setAmount(firstItemsConfig.getInt("firstItem.item" + ran + "_amount"));
+		}else {
+			if(material==Material.BOW){
+				p.getInventory().addItem(new ItemStack(Material.ARROW, firstItemsConfig.getInt("firstItem.item" + ran + "_amount")));
+			}else {
+				if(firstItemsConfig.getString("firstItem.item" + ran + "_amount") != null){
+					itemStack.setAmount(firstItemsConfig.getInt("firstItem.item" + ran + "_amount"));
+				}
+			}
 		}
 
 		itemStack.setDurability((short) firstItemsConfig.getInt("firstItem.item" + ran + "_damage"));

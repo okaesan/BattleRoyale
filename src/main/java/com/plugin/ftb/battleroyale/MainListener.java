@@ -28,7 +28,6 @@ import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -71,9 +70,9 @@ class RunTP extends BukkitRunnable{
 				}
   				p.getInventory().clear();
   				board.getTeam(TEAM_ALIVE_NAME).removePlayer(p);
-  
+
   			}else if(board.getTeam(TEAM_DEAD_NAME).hasPlayer(p)){
-  
+
   				p.getPlayer().teleport(worB);
   				p.setHealth(20);
   				p.setFoodLevel(20);
@@ -376,7 +375,7 @@ public class MainListener implements Listener {
 					rankStrings.add(new ArrayList<String>());
 					rankStrings.add(new ArrayList<String>());
 					rankStrings.add(new ArrayList<String>());
-	    			
+
 					for(int i : rankSort.keySet()){
 						ChatColor color = ChatColor.WHITE;
 						int rank = 0;
@@ -402,19 +401,19 @@ public class MainListener implements Listener {
 							//同率プレイヤーがいた場合
 							value = rankStrings.get(rank);
 						}
-						value.add((" " + color + String.valueOf(rankSort.get(i)) + "位 : " + deathPlayer.get(i).getName() + "\n" 
+						value.add((" " + color + String.valueOf(rankSort.get(i)) + "位 : " + deathPlayer.get(i).getName() + "\n"
 								+ " " + ChatColor.RED + killCount.get(deathPlayer.get(i)) + ChatColor.GRAY + " kill"));
-						
+
 						rankStrings.set(rank, value);
 					}
-					
+
 					//表示
 					for(ArrayList<String> values : rankStrings) {
 						for(String value : values) {
 							broadcast(value);
 						}
 					}
-					
+
 					broadcast(ChatColor.DARK_AQUA + "-----------------------------");
 				}
 			}.runTaskLater(plugin, 20);
@@ -491,7 +490,8 @@ public class MainListener implements Listener {
 			e.setCancelled(true);
 		}
 	}
-	
+
+	/*
 	//HP減ったらプレイヤーのスピードを下げる
     @EventHandler
     public void onMove(PlayerMoveEvent e) {
@@ -499,32 +499,32 @@ public class MainListener implements Listener {
             return;
         }
         Player p = e.getPlayer();
-        
+
         int hpint = (int) Math.floor(p.getHealth());
-        
+
         double exchange = 1.0;
-        
+
         switch (hpint) {
         case 10:
             exchange = 0.95;
         break;
-        
+
         case 9:
             exchange = 0.9;
             break;
-        
+
         case 8:
             exchange = 0.85;
             break;
-        
+
         case 7:
             exchange = 0.8;
         break;
-        
+
         case 6:
             exchange = 0.75;
             break;
-        
+
         case 5:
             exchange = 0.7;
             break;
@@ -532,39 +532,39 @@ public class MainListener implements Listener {
         case 4:
             exchange = 0.65;
             break;
-        
+
         case 3:
             exchange = 0.6;
             break;
-        
+
         case 2:
             exchange = 0.55;
         break;
-        
+
         case 1:
             exchange = 0.5;
             break;
-        
+
         case 0:
             exchange = 0.0;
             break;
-            
+
         default:
             p.setWalkSpeed(0.2f);
             break;
         }
-        
+
         if(hpint == 20) {
             p.setWalkSpeed(0.2f);
         }
-        
+
         double f = 0.2 * exchange;
         float ps = p.getWalkSpeed();
         	if(!(f == ps)) {
             	p.setWalkSpeed((float) f);
         	}
     	}
-
+*/
 	//////////////////////////////////////////////////////////////////////////
 	//チーム用に作ったんで置いといてください。kanaami
 	//////////////////////////////////////////////////////////////////////////

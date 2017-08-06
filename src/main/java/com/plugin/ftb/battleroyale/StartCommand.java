@@ -169,14 +169,15 @@ public class StartCommand extends BattleRoyale {
 
 					meta.setDisplayName(name);
 					itemStack.setItemMeta(meta);
-				}
-				if(material==Material.BOW){
-					inv.setItem(inChestLocation.get(inChestCounter), new ItemStack(Material.ARROW, chestItemsConfig.getInt("chestItem.item" + id + "_amount")));
-					inChestCounter++;
-				}
-
-				if(chestItemsConfig.getString("chestItem.item" + id + "_amount") != null){
-					itemStack.setAmount(chestItemsConfig.getInt("chestItem.item" + id + "_amount"));
+				}else {
+					if(material==Material.BOW){
+						inv.setItem(inChestLocation.get(inChestCounter), new ItemStack(Material.ARROW, chestItemsConfig.getInt("chestItem.item" + id + "_amount")));
+						inChestCounter++;
+					}else {
+						if(chestItemsConfig.getString("chestItem.item" + id + "_amount") != null){
+							itemStack.setAmount(chestItemsConfig.getInt("chestItem.item" + id + "_amount"));
+						}
+					}
 				}
 
 				itemStack.setDurability((short) chestItemsConfig.getInt("chestItem.item" + id + "_damage"));
