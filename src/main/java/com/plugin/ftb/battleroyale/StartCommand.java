@@ -49,15 +49,29 @@ class countDown extends BukkitRunnable{
 			}
 
 			for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
-				if(p.isOnline()){
-					int ran = 0;
-					if(plugin.getConfig().getBoolean("isRandom")){
-						Random rnd = new Random();
-			        	ran = rnd.nextInt(locs.size());
+				if(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() <= locs.size()) {
+					if(p.isOnline()) {
+						int ran = 0;
+						if(plugin.getConfig().getBoolean("isRandom")){
+							Random rnd = new Random();
+				        	ran = rnd.nextInt(locs.size());
+						}
+						p.getPlayer().teleport(locs.get(ran));
+						locs.remove(ran);
+						StartingInventory.StartingInventoryFunc((Player)p);
+						p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GOLD + "ゲームスタート");
 					}
-					p.getPlayer().teleport(locs.get(ran));
-					StartingInventory.StartingInventoryFunc((Player)p);
-					p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GOLD + "ゲームスタート");
+				}else{
+					if(p.isOnline()){
+						int ran = 0;
+						if(plugin.getConfig().getBoolean("isRandom")){
+							Random rnd = new Random();
+				        	ran = rnd.nextInt(locs.size());
+						}
+						p.getPlayer().teleport(locs.get(ran));
+						StartingInventory.StartingInventoryFunc((Player)p);
+						p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GOLD + "ゲームスタート");
+					}
 				}
 			}
 
