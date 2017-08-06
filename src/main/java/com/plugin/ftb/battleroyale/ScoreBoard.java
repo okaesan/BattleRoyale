@@ -59,7 +59,7 @@ public class ScoreBoard {
 		 * 変数の中身が変わった状態で再セットされると、変数の部分だけが変わらずに全部がコピーされたのが何個も複製されるため、変数変更前の部分は削除する。
 		 * 何を言ってるかよくわからないと思うので、理解してもらうには下のコード消して試してもらえると早いかもです。
 		 */
-		for(int maxPersonsCounter=0; maxPersonsCounter<maxPersons; maxPersonsCounter++){
+		for(int maxPersonsCounter=0; maxPersonsCounter<=maxPersons; maxPersonsCounter++){
 			if(teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size() != maxPersonsCounter){
 				o.getScoreboard().resetScores("" + ChatColor.YELLOW + "残り人数 " + ChatColor.RESET + ": " + String.valueOf(maxPersonsCounter));
 			}
