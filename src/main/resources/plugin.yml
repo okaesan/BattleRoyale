@@ -4,4 +4,8 @@ version: 1.1.41
 commands:
   battleroyale:
     usage:  /<command>
-    default: true
+    permission: battleroyale.command
+    
+permissions:
+  battleroyale.command:
+    default: op
