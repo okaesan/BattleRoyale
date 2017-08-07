@@ -28,8 +28,8 @@ public class StartingInventory extends BattleRoyale {
 		ItemStack itemStack = new ItemStack(material);
 		ItemMeta meta = itemStack.getItemMeta();
 
-		if(firstItemsConfig.getString("firstItem.item" + ran + "_name") != null && firstItemsConfig.getString("firstItem.item" + ran + "_amount") != null) {
-			String name = "§e" + firstItemsConfig.getString("firstItem.item" + ran + "_name") + "§e ▪ «" + firstItemsConfig.getString("firstItem.item" + ran + "_amount") + "»";
+		if(firstItemsConfig.getString("firstItem.item" + ran + "_name") != null) {
+			String name = firstItemsConfig.getString("firstItem.item" + ran + "_name");
 
 			meta.setDisplayName(name);
 			itemStack.setItemMeta(meta);

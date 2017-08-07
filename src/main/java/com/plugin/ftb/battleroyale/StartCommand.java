@@ -178,8 +178,8 @@ public class StartCommand extends BattleRoyale {
 				ItemStack itemStack = new ItemStack(material,1);
 				ItemMeta meta = itemStack.getItemMeta();
 
-				if(chestItemsConfig.getString("chestItem.item"+id + "_name") != null && chestItemsConfig.getString("chestItem.item"+id + "_amount") != null) {
-					String name = "§e" + chestItemsConfig.getString("chestItem.item"+id + "_name") + "§e ▪ «" + chestItemsConfig.getString("chestItem.item"+id + "_amount") + "»";
+				if(chestItemsConfig.getString("chestItem.item"+id + "_name") != null) {
+					String name = chestItemsConfig.getString("chestItem.item"+id + "_name");
 
 					meta.setDisplayName(name);
 					itemStack.setItemMeta(meta);
