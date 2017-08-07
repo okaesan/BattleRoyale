@@ -39,7 +39,7 @@ public class JoinSystem {
 			joinSign.update();
 		}
 
-		MainListener.killCount.put(player, 0);
+		MainListener.killCount.put(player.getUniqueId(), 0);
 
 		//スコアボードの設定
 		ScoreBoard.scoreSide(true);

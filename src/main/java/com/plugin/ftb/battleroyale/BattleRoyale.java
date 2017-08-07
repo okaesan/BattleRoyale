@@ -2,6 +2,7 @@ package com.plugin.ftb.battleroyale;
 
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,7 +27,7 @@ public class BattleRoyale extends JavaPlugin {
 	 * ゲーム進行関連変数
 	 */
 	// キル数カウント
-	public static HashMap<Player, Integer> killCount = new HashMap<Player, Integer>();
+	public static HashMap<UUID, Integer> killCount = new HashMap<UUID, Integer>();
 	// ポイントカウント
 	public static HashMap<Integer, Integer> rankSort = new HashMap<Integer, Integer>();
 

@@ -101,7 +101,7 @@ public class ScoreBoard {
 		}
 
 		//スコアボードの中身
-		o.getScore(killer).setScore(MainListener.killCount.get(killer));
+		o.getScore(killer).setScore(MainListener.killCount.get(killer.getUniqueId()));
 
 		for(OfflinePlayer p : teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers()){
 			if(p.isOnline()==true){

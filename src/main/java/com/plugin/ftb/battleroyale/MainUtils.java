@@ -36,7 +36,7 @@ public class MainUtils {
 		 * @playerNumber リストから取得する要素番号
 		 * @registerRank ランクの登録時に使用
 		 */
-		for(int rankNumber = 1; rankNumber<=3; ){
+		for(int rankNumber = 1; rankNumber<=2; ){
 			for(int playerNumber = 0; playerNumber<listSize; playerNumber++){
 				//死亡した時間が遅い人(ランキング上位の人)を探す
 				if(strongPlayer<deathTime.get(playerNumber)){

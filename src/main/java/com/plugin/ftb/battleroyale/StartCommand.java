@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -106,7 +107,7 @@ public class StartCommand extends BattleRoyale {
 	public static String prefix = BattleRoyale.prefix;
 
 	// キル数カウント
-	public static HashMap<Player, Integer> killCount = BattleRoyale.killCount;
+	public static HashMap<UUID, Integer> killCount = BattleRoyale.killCount;
 
 	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
 	public static final String TEAM_DEAD_NAME = BattleRoyale.TEAM_DEAD_NAME;
@@ -173,7 +174,6 @@ public class StartCommand extends BattleRoyale {
 
 			do{
 				int id = (int)((Math.random()*1000)%itemCounter+1);
-
 				Material material = Material.getMaterial(chestItemsConfig.getString("chestItem.item"+id));
 				ItemStack itemStack = new ItemStack(material,1);
 				ItemMeta meta = itemStack.getItemMeta();

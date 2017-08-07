@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -148,7 +149,7 @@ public class MainListener implements Listener {
 	public static final String TEAM_DEAD_NAME = BattleRoyale.TEAM_DEAD_NAME;
 
 	// キル数カウント
-	public static HashMap<Player, Integer> killCount = BattleRoyale.killCount;
+	public static HashMap<UUID, Integer> killCount = BattleRoyale.killCount;
 
 	//ランクがソートされた値を受け取る
 	public static Map<Integer, Integer> rankSort = BattleRoyale.rankSort;
@@ -169,7 +170,7 @@ public class MainListener implements Listener {
 	public static ArrayList<Integer> locDeath = new ArrayList<>();
 	//死亡順に並べる用
 	public static ArrayList<Integer> deathTime = new ArrayList<>();
-	public static ArrayList<Player> deathPlayer = new ArrayList<>();
+	public static ArrayList<UUID> deathPlayer = new ArrayList<>();
 
 	@SuppressWarnings("deprecation")
 	@EventHandler
@@ -289,7 +290,7 @@ public class MainListener implements Listener {
 		if (board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
 			//死亡した場合、死亡時の時刻と死亡者を保存する
 			deathTime.add(StartCommand.gameTimer);
-			deathPlayer.add(player);
+			deathPlayer.add(player.getUniqueId());
 
 			board.getTeam(TEAM_ALIVE_NAME).removePlayer(player);
 			board.getTeam(TEAM_DEAD_NAME).addPlayer(player);
@@ -325,8 +326,8 @@ public class MainListener implements Listener {
 
 		if(killer != null){
 			// キル数をカウント
-			if (killCount.containsKey(killer)) {
-				killCount.put(killer, killCount.get(killer) + 1);
+			if (killCount.containsKey(killer.getUniqueId())) {
+				killCount.put(killer.getUniqueId(), killCount.get(killer.getUniqueId()) + 1);
 				//スコアボードのキル数表示の変更
 				ScoreBoard.scoreList(killer, true);
 			}
@@ -335,88 +336,84 @@ public class MainListener implements Listener {
 		//最後の一人の場合はゲームを終了させる
 		if (board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() == 1 && StartCommand.start == 1) {
 
-			new BukkitRunnable() {
-
-				@Override
-				public void run() {
-					//一位は一度も死なないため、ここでランキングを設定する
-					if(killer!=null){
-						//処理的に死亡者と同じ時間になるため、gameTimerに+1し、重複をなくす。
-						deathTime.add(StartCommand.gameTimer+1);
-						deathPlayer.add(killer);			}
-					//禁止区域などで同時に死亡し、ゲームがフィニッシュした場合(キルした人が存在しない場合)
-					else{
-						for(OfflinePlayer checkPlayer : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
-							if(checkPlayer.isOnline()){
-								if(MainUtils.lastPlayer((Player) checkPlayer)){
-									//処理的に死亡者と同じ時間になるため、gameTimerに+1し、重複をなくす。
-									deathTime.add(StartCommand.gameTimer+1);
-									deathPlayer.add((Player) checkPlayer);
-								}
-								else{
-									//死亡した場合、死亡時の時刻と死亡者を保存する
-									deathTime.add(StartCommand.gameTimer);
-									deathPlayer.add((Player) checkPlayer);
-								}
-							}
+			//一位は一度も死なないため、ここでランキングを設定する
+			if(killer!=null){
+				//処理的に死亡者と同じ時間になるため、gameTimerに+1し、重複をなくす。
+				deathTime.add(StartCommand.gameTimer+1);
+				deathPlayer.add(killer.getUniqueId());			}
+			//禁止区域などで同時に死亡し、ゲームがフィニッシュした場合(キルした人が存在しない場合)
+			else{
+				for(OfflinePlayer checkPlayer : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+					if(checkPlayer.isOnline()){
+						if(MainUtils.lastPlayer((Player) checkPlayer)){
+							//処理的に死亡者と同じ時間になるため、gameTimerに+1し、重複をなくす。
+							deathTime.add(StartCommand.gameTimer+1);
+							deathPlayer.add(checkPlayer.getUniqueId());
+						}
+						else{
+							//死亡した場合、死亡時の時刻と死亡者を保存する
+							deathTime.add(StartCommand.gameTimer);
+							deathPlayer.add(checkPlayer.getUniqueId());
 						}
 					}
-
-					//ランク上位3位までを抽出
-					rankSort = MainUtils.rankSort(deathTime);
-					rankSort.entrySet().stream().sorted(Entry.comparingByValue());
-
-					/*
-					 * 終了時統計を表示
-					 */
-					broadcast(ChatColor.DARK_AQUA + "------------終了------------");
-					ArrayList<ArrayList<String>> rankStrings = new ArrayList<>();
-					//仮の要素を挿入
-					rankStrings.add(new ArrayList<String>());
-					rankStrings.add(new ArrayList<String>());
-					rankStrings.add(new ArrayList<String>());
-
-					for(int i : rankSort.keySet()){
-						ChatColor color = ChatColor.WHITE;
-						int rank = 0;
-						if(rankSort.get(i) == 1) {
-							color = ChatColor.GOLD;
-							rank = 0;
-						}
-						if(rankSort.get(i) == 2) {
-							color = ChatColor.YELLOW;
-							rank = 1;
-						}
-						if(rankSort.get(i) == 3) {
-							color = ChatColor.GREEN;
-							rank = 2;
-						}
-
-						//順位に応じた場所に入れる。
-						ArrayList<String> value;
-						if(rankStrings.get(rank).isEmpty()) {
-							//同率プレイヤーがいない場合
-							value = new ArrayList<>();
-						}else{
-							//同率プレイヤーがいた場合
-							value = rankStrings.get(rank);
-						}
-						value.add((" " + color + String.valueOf(rankSort.get(i)) + "位 : " + deathPlayer.get(i).getName() + "\n"
-								+ " " + ChatColor.RED + killCount.get(deathPlayer.get(i)) + ChatColor.GRAY + " kill"));
-
-						rankStrings.set(rank, value);
-					}
-
-					//表示
-					for(ArrayList<String> values : rankStrings) {
-						for(String value : values) {
-							broadcast(value);
-						}
-					}
-
-					broadcast(ChatColor.DARK_AQUA + "-----------------------------");
 				}
-			}.runTaskLater(plugin, 20);
+			}
+
+			//ランク上位3位までを抽出
+			rankSort = MainUtils.rankSort(deathTime);
+			rankSort.entrySet().stream().sorted(Entry.comparingByValue());
+
+			/*
+			 * 終了時統計を表示
+			 */
+			broadcast(ChatColor.DARK_AQUA + "------------終了------------");
+			ArrayList<ArrayList<String>> rankStrings = new ArrayList<>();
+			//仮の要素を挿入
+			rankStrings.add(new ArrayList<String>());
+			rankStrings.add(new ArrayList<String>());
+			rankStrings.add(new ArrayList<String>());
+
+			for(int i : rankSort.keySet()){
+				ChatColor color = ChatColor.WHITE;
+				int rank = 0;
+				if(rankSort.get(i) == 1) {
+					color = ChatColor.GOLD;
+					rank = 0;
+				}
+				if(rankSort.get(i) == 2) {
+					color = ChatColor.YELLOW;
+					rank = 1;
+				}
+				if(rankSort.get(i) == 3) {
+					color = ChatColor.GREEN;
+					rank = 2;
+				}
+
+				//順位に応じた場所に入れる。
+				ArrayList<String> value;
+				if(rankStrings.get(rank).isEmpty()) {
+					//同率プレイヤーがいない場合
+					value = new ArrayList<>();
+				}else{
+					//同率プレイヤーがいた場合
+					value = rankStrings.get(rank);
+				}
+				value.add((" " + color + String.valueOf(rankSort.get(i)) + "位 : " + Bukkit.getPlayer(deathPlayer.get(i)).getName() + "\n"
+						+ " " + ChatColor.RED + killCount.get(deathPlayer.get(i)) + ChatColor.GRAY + " kill"));
+
+				sendLog("deathPlayer(i):" + deathPlayer.get(i) + "killCount.get(deathPlayer):" + killCount.get(deathPlayer.get(i))
+						+ "\n" + "deathPlayer:" + deathPlayer + "killCount:" + killCount);
+				rankStrings.set(rank, value);
+			}
+
+			//表示
+			for(ArrayList<String> values : rankStrings) {
+				for(String value : values) {
+					broadcast(value);
+				}
+			}
+
+			broadcast(ChatColor.DARK_AQUA + "-----------------------------");
 
 			for(Player p : Bukkit.getOnlinePlayers()){
 				if(board.getTeam(TEAM_ALIVE_NAME).hasPlayer(p)){
@@ -655,5 +652,10 @@ public class MainListener implements Listener {
 	// ブロードキャスト
 	public void broadcast(String message) {
 		BattleRoyale.broadcast(message);
+	}
+	
+	//サーバーにログを残す
+	public void sendLog(String message) {
+		Bukkit.getLogger().info(message);
 	}
 }
