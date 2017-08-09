@@ -28,6 +28,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -487,6 +488,21 @@ public class MainListener implements Listener {
 			e.setCancelled(true);
 		}
 	}
+	
+	//ゲーム中にログアウトしたプレイヤーはロビーに転送
+	@SuppressWarnings("deprecation")
+	@EventHandler
+	public void onQuit(PlayerQuitEvent event) {
+		if(StartCommand.start == 1) {
+			Player player = event.getPlayer();
+			Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
+			if(board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
+				Location loc = new Location(Bukkit.getWorld("world"), MainConfig._lobbypoint.get(0) ,  MainConfig._lobbypoint.get(1),  MainConfig._lobbypoint.get(2));
+				player.teleport(loc);
+				board.getTeam(TEAM_ALIVE_NAME).removePlayer(player);
+			}
+		}
+	}
 
 	/*
 	//HP減ったらプレイヤーのスピードを下げる
@@ -562,92 +578,6 @@ public class MainListener implements Listener {
         	}
     	}
 */
-	//////////////////////////////////////////////////////////////////////////
-	//チーム用に作ったんで置いといてください。kanaami
-	//////////////////////////////////////////////////////////////////////////
-	/*
-	//GUIをクリックしたときの動作
-	@EventHandler
-	public void onInventoryClick(InventoryClickEvent event) {
-		//null回避
-		if(event.getClickedInventory() == null || event.getCurrentItem() == null || event.getCurrentItem().getItemMeta() == null) {
-			return;
-		}
-
-		String inventoryName = event.getClickedInventory().getName();
-
-		//Mainインベントリをクリックしたとき
-		if(inventoryName.equals("Main")){
-			//イベントをキャンセル(アイテムを持ち運べないように)
-			event.setCancelled(true);
-
-			Player player = (Player) event.getWhoClicked();
-			String displayName = event.getCurrentItem().getItemMeta().getDisplayName();
-			//チームを作成をクリックしたとき
-			if(displayName.equals("チームを作成")) {
-				//既にチームに参加していた場合
-				if(MainConfig.teamHasPlayer(player)) {
-					player.sendMessage(BattleRoyale.prefix + ChatColor.RED + "既に他のチームに参加しています。");
-				}else {
-					//新規チームを作成
-					MainConfig.loadConfig();
-					int teamNumber = 1;
-					if(MainConfig._teams.keySet() != null) {
-						teamNumber = MainConfig._teams.keySet().size() + 1;
-					}
-					MainConfig.makeTeam("チーム" + teamNumber);
-					//再表示
-					TeamGUI.displayMainGUI(player);
-				}
-			}
-			//チームから脱退をクリックしたとき
-			if(displayName.equals("チームから脱退")) {
-				//チームに参加していない場合
-				if(!MainConfig.teamHasPlayer(player)) {
-					player.sendMessage(BattleRoyale.prefix + ChatColor.RED + "チームに参加していません。");
-				}else {
-					MainConfig.leaveTeam(player);
-					player.sendMessage(BattleRoyale.prefix + ChatColor.WHITE + "チームから脱退しました。");
-				}
-				//再表示
-				TeamGUI.displayMainGUI(player);
-				return;
-			}
-			//リロードをクリックしたとき
-			if(displayName.equals("リロード")) {
-				//再表示
-				TeamGUI.displayMainGUI(player);
-				return;
-			}
-
-			//エメラルド(チーム一覧)をクリックしたとき
-			if(event.getCurrentItem().getType().equals(Material.EMERALD)) {
-				MainConfig.loadConfig();
-				if(MainConfig.teamHasPlayer(player)) {
-					player.sendMessage(BattleRoyale.prefix + ChatColor.RED + "既にチームに参加しています。");
-					//再表示
-					TeamGUI.displayMainGUI(player);
-					return;
-				}
-				String teamName = ChatColor.stripColor(displayName);
-				ArrayList<String> uuids = MainConfig._teams.get(teamName);
-
-				//既に同じチームに入っていないときのみ
-				if(uuids == null || !uuids.contains(player.getUniqueId().toString())) {
-					//チームに参加
-					MainConfig.joinTeam(teamName, player);
-					player.sendMessage(BattleRoyale.prefix + ChatColor.WHITE + "チームに参加しました。");
-				}else {
-					player.sendMessage(BattleRoyale.prefix + ChatColor.RED + "既にこのチームに参加しています。");
-				}
-				//再表示
-				TeamGUI.displayMainGUI(player);
-				return;
-			}
-		}
-	}
-	*/
-
 
 	// ブロードキャスト
 	public void broadcast(String message) {
