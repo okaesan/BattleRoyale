@@ -200,7 +200,13 @@ public class MainCommandExecutor implements CommandExecutor {
 							+ "\n\n" + ChatColor.DARK_GREEN + ChatColor.BOLD + "- 設定されたチェストの数 -\n" + ChatColor.RESET + ChatColor.GRAY + _plugin.getConfig().getString("chestCounter"));
 				}
 				return true;
-
+			case "reload":
+				//スコアボードをリロード
+				if(args.length == 1) {
+					ScoreBoard.reloadScoreboard();
+					_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "スコアボードをリロードしました。");
+					return true;
+				}
 			default:
 				_player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "\n/battleroyale " + ChatColor.RED + "setStageL\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setStageR\n"
@@ -216,7 +222,8 @@ public class MainCommandExecutor implements CommandExecutor {
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "areaJoinGame\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setChest\n"
 						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "comChest\n"
-						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setProtection");
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "setProtection\n"
+						+ ChatColor.GRAY + "/battleroyale " + ChatColor.RED + "reload");
 				return true;
 			}
 		}

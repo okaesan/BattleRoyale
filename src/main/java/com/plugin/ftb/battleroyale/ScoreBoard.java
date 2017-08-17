@@ -114,4 +114,13 @@ public class ScoreBoard {
 			}
 		}
 	}
+	
+	//スコアボードをリロード(unregister)する
+	public static void reloadScoreboard() {
+		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
+		Objective brStatus = board.getObjective("brStatus");
+		Objective brKills = board.getObjective("brKills");
+		if(brStatus != null) brStatus.unregister();
+		if(brKills != null) brKills.unregister();
+	}
 }
