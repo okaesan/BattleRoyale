@@ -20,6 +20,9 @@ public class ScoreBoard {
 	// チーム名
 	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
 	public static final String TEAM_DEAD_NAME = BattleRoyale.TEAM_DEAD_NAME;
+	
+	//過去の人数
+	public static int playerSize = 0;
 
 	@SuppressWarnings("deprecation")
 	//intのokはゲームが終了しているかどうかの変数、0=ゲーム終了時、1=ゲーム中
@@ -53,17 +56,12 @@ public class ScoreBoard {
 		//o.getScore("" + ChatColor.AQUA + "部活 " + ChatColor.RESET + ": " + "test部").setScore(-2);
 		//o.getScore("" + ChatColor.GREEN + "チーム " + ChatColor.RESET + ": " + "test").setScore(-3);
 		o.getScore("").setScore(0);
+		
+		o.getScoreboard().resetScores("" + ChatColor.YELLOW + "残り人数 " + ChatColor.RESET + ": " + playerSize);
+		playerSize = teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size();
+		
 		o.getScore("" + ChatColor.YELLOW + "残り人数 " + ChatColor.RESET + ": " + teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size()).setScore(-1);
-
-		/*
-		 * 変数の中身が変わった状態で再セットされると、変数の部分だけが変わらずに全部がコピーされたのが何個も複製されるため、変数変更前の部分は削除する。
-		 * 何を言ってるかよくわからないと思うので、理解してもらうには下のコード消して試してもらえると早いかもです。
-		 */
-		for(int maxPersonsCounter=0; maxPersonsCounter<=maxPersons; maxPersonsCounter++){
-			if(teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size() != maxPersonsCounter){
-				o.getScoreboard().resetScores("" + ChatColor.YELLOW + "残り人数 " + ChatColor.RESET + ": " + String.valueOf(maxPersonsCounter));
-			}
-		}
+		
 		o.getScoreboard().resetScores("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "禁止エリア追加まで " + ChatColor.RESET + ": " + String.valueOf(PlusThreadClass.loopC+1));
 		o.getScoreboard().resetScores("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "禁止エリア追加まで " + ChatColor.RESET + ": 0");
 		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "攻撃可能になるまで" + ChatColor.RESET + ": " + String.valueOf(PlusThreadClass.attackCountDown+1));
