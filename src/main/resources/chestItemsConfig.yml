@@ -1,4 +1,7 @@
 chestItem:
+  #minValue<=maxValueの関係性になるようにしてください。同数の場合はチェストの中のアイテムの個数が固定されます(0以上27以下)
+  minValue: 6 #チェストにアイテムが入る数(最小)
+  maxValue: 9 #チェストにアイテムが入る数(最大)
   setItemCounter: 9
   item1: WOOD_SWORD
   item2: WOOD_SWORD

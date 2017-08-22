@@ -118,8 +118,14 @@ public class StartCommand extends BattleRoyale {
 	//ゲームが開始してからの秒数
 	public static int gameTimer = 0;
 
-	public static int locX, locY, locZ, start=0;
-	static int inChestCounter, nextChance, itemCounter;
+	public static int locX, locY, locZ;
+	public static int start=0;
+	static int inChestCounter;
+	static int nextChance;
+	static int itemCounter;
+	static int maxInChestCounter;
+	static int maxItemPercent;
+	static int minItemPercent;
 
 	public static ArrayList<Integer> loc = new ArrayList<Integer>();
 
@@ -147,6 +153,14 @@ public class StartCommand extends BattleRoyale {
 
 		for(int i = 1; i <= plugin.getConfig().getInt("chestCounter"); i++){
 
+			/*
+			 * configから取得
+			 */
+			//チェストに入るアイテムの登録数を取得
+			itemCounter = chestItemsConfig.getInt("chestItem.setItemCounter");
+			//チェストに入るアイテムの数の幅を取得
+			maxItemPercent = chestItemsConfig.getInt("chestItem.maxValue");
+			minItemPercent = chestItemsConfig.getInt("chestItem.minValue");
 			//チェストのロケーションを取得
 			locX = plugin.getConfig().getInt("chestlocations"+i+".x");
 			locY = plugin.getConfig().getInt("chestlocations"+i+".y");
@@ -170,9 +184,14 @@ public class StartCommand extends BattleRoyale {
 			//チェストにアイテムを配置した回数
 			inChestCounter = 0;
 
-			itemCounter = chestItemsConfig.getInt("chestItem.setItemCounter");
+			//チェストに入るアイテムの個数
+			if(maxItemPercent == minItemPercent){
+				maxInChestCounter = minItemPercent;
+			}else{
+				maxInChestCounter = (int)(Math.random()*1000) % (maxItemPercent - minItemPercent) + minItemPercent;
+			}
 
-			do{
+			for(; inChestCounter<maxInChestCounter; inChestCounter++){
 				int id = (int)((Math.random()*1000)%itemCounter+1);
 				Material material = Material.getMaterial(chestItemsConfig.getString("chestItem.item"+id));
 				ItemStack itemStack = new ItemStack(material,1);
@@ -202,13 +221,7 @@ public class StartCommand extends BattleRoyale {
 				}
 
 				inv.setItem(inChestLocation.get(inChestCounter), itemStack);
-
-				if(inChestCounter==2){
-					break;
-				}
-				inChestCounter++;
-				nextChance = (int)(Math.random()*100) % 3;
-			}while(nextChance!=0);
+			}
 		}
 	}
 }
