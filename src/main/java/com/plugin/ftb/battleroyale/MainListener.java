@@ -16,6 +16,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.block.Skull;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,10 +31,18 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
+
+import net.minecraft.server.v1_12_R1.NBTBase;
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.NBTTagInt;
+import net.minecraft.server.v1_12_R1.NBTTagList;
+import net.minecraft.server.v1_12_R1.NBTTagString;
 
 class RunTP extends BukkitRunnable{
 
@@ -443,7 +452,7 @@ public class MainListener implements Listener {
 			}
 
 			//ダメージ無効時間中はダメージを受けないようにする。
-			if(Attack&&board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)){
+			if(Attack){
 				event.setCancelled(true);
 			}
 		}
@@ -466,7 +475,6 @@ public class MainListener implements Listener {
 			&& event.getClickedBlock().getType().equals(Material.SOIL) && board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
 			event.setCancelled(true);
 		}
-
 	}
 
 	//チェストの初期化が行われたときドロップしたアイテムを削除する

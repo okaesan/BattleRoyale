@@ -10,18 +10,24 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
+
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
+import net.minecraft.server.v1_12_R1.NBTTagInt;
+import net.minecraft.server.v1_12_R1.NBTTagList;
 
 class countDown extends BukkitRunnable{
 
@@ -142,9 +148,21 @@ public class StartCommand extends BattleRoyale {
 
 		setChest();
 		ScoreBoard.scoreSide(true);
+		//スペクターモード以外のプレイヤーをサバイバルモードに
+		setSurvival();
 
 		countDown cd = new countDown();
 		cd.runTaskTimer(plugin, 0, 20);
+	}
+	
+	//サバイバルモードに変更
+	public static void setSurvival() {
+		for(Player player : Bukkit.getOnlinePlayers()) {
+			if(!player.getGameMode().equals(GameMode.SPECTATOR)) {
+				//スペクターモード以外のプレイヤーをサバイバルモードに
+				player.setGameMode(GameMode.SURVIVAL);
+			}
+		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -171,6 +189,8 @@ public class StartCommand extends BattleRoyale {
 			block.setType(Material.CHEST);
 			Chest chest = (Chest)block.getState();
 			Inventory inv = chest.getInventory();
+			//インベントリの中身を一度クリア
+			inv.clear();
 
 			//値保存
 			MainListener.bBLOCK.add(block);
@@ -194,30 +214,63 @@ public class StartCommand extends BattleRoyale {
 			for(; inChestCounter<maxInChestCounter; inChestCounter++){
 				int id = (int)((Math.random()*1000)%itemCounter+1);
 				Material material = Material.getMaterial(chestItemsConfig.getString("chestItem.item"+id));
-				ItemStack itemStack = new ItemStack(material,1);
-				ItemMeta meta = itemStack.getItemMeta();
-
-				if(chestItemsConfig.getString("chestItem.item"+id + "_name") != null) {
-					String name = chestItemsConfig.getString("chestItem.item"+id + "_name");
-
-					meta.setDisplayName(name);
+				ItemStack itemStack;
+				if(material.equals(Material.POTION) || material.equals(Material.SPLASH_POTION)) {
+					//水入りのポーションを作成
+					int potionID = material.equals(Material.POTION) ? 16383: 16384;
+					int amount = chestItemsConfig.getInt("chestItem.item"+id + "_amount");
+					ItemStack potion = new ItemStack(Material.POTION, amount, (short)potionID);
+					//nmsに変換
+					net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(potion);
+					//CustomPotionEffectsタグを取得
+					NBTTagList tag = (NBTTagList)nmsStack.getTag().get("CustomPotionEffects");
+					//nullなら初期化
+					if(tag == null) {
+						tag = new NBTTagList();
+					}
+					//タグの中身
+					NBTTagCompound damage = new NBTTagCompound();
+					damage.set("Id", new NBTTagInt(chestItemsConfig.getInt("chestItem.item"+id + "_effectID")));		//エフェクトID
+					damage.set("Amplifier", new NBTTagInt(chestItemsConfig.getInt("chestItem.item"+id + "_level")-1));	//レベル(0=レベル1なので、config値より-1
+					damage.set("Duration", new NBTTagInt(chestItemsConfig.getInt("chestItem.item"+id + "_sec")*20));	//効果時間[tick] tickなのでconfig値[秒]*20
+					//タグを設定
+					tag.add(damage);
+					//タグを付与
+					nmsStack.getTag().set("CustomPotionEffects", tag);
+					//itemStackに変換
+					itemStack = CraftItemStack.asBukkitCopy(nmsStack);
+					
+					//名前を設定
+					ItemMeta meta = itemStack.getItemMeta();
+					meta.setDisplayName(chestItemsConfig.getString("chestItem.item"+id + "_name"));
 					itemStack.setItemMeta(meta);
+					
 				}else {
-					if(material==Material.BOW){
-						inv.setItem(inChestLocation.get(inChestCounter), new ItemStack(Material.ARROW, chestItemsConfig.getInt("chestItem.item" + id + "_amount")));
-						inChestCounter++;
+					itemStack = new ItemStack(material,1);
+					ItemMeta meta = itemStack.getItemMeta();
+	
+					if(chestItemsConfig.getString("chestItem.item"+id + "_name") != null) {
+						String name = chestItemsConfig.getString("chestItem.item"+id + "_name");
+	
+						meta.setDisplayName(name);
+						itemStack.setItemMeta(meta);
 					}else {
-						if(chestItemsConfig.getString("chestItem.item" + id + "_amount") != null){
-							itemStack.setAmount(chestItemsConfig.getInt("chestItem.item" + id + "_amount"));
+						if(material==Material.BOW){
+							inv.setItem(inChestLocation.get(inChestCounter), new ItemStack(Material.ARROW, chestItemsConfig.getInt("chestItem.item" + id + "_amount")));
+							inChestCounter++;
+						}else {
+							if(chestItemsConfig.getString("chestItem.item" + id + "_amount") != null){
+								itemStack.setAmount(chestItemsConfig.getInt("chestItem.item" + id + "_amount"));
+							}
 						}
 					}
-				}
-
-				itemStack.setDurability((short) chestItemsConfig.getInt("chestItem.item" + id + "_damage"));
-
-				if(chestItemsConfig.getString("chestItem.item" + id + "_unbreakable") != null){
-					meta.setUnbreakable(chestItemsConfig.getBoolean("chestItem.item" + id + "_unbreakable"));
-					itemStack.setItemMeta(meta);
+	
+					itemStack.setDurability((short) chestItemsConfig.getInt("chestItem.item" + id + "_damage"));
+	
+					if(chestItemsConfig.getString("chestItem.item" + id + "_unbreakable") != null){
+						meta.setUnbreakable(chestItemsConfig.getBoolean("chestItem.item" + id + "_unbreakable"));
+						itemStack.setItemMeta(meta);
+					}
 				}
 
 				inv.setItem(inChestLocation.get(inChestCounter), itemStack);
