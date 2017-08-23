@@ -22,6 +22,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -86,6 +88,7 @@ class countDown extends BukkitRunnable{
 			PdeathA.setPlusDeath();
 			PdeathA.plus();
 			MainConfig.giveMap();
+			startEffectTask();
 		}
 
 		countChat();
@@ -93,6 +96,38 @@ class countDown extends BukkitRunnable{
 
 	}
 
+	//5分に1回プレイヤーを発光させるタスク
+	public void startEffectTask() {
+		new BukkitRunnable() {
+			 
+            @Override
+            public void run() {
+                //5分に1回実行される
+            	if(StartCommand.start == 0) this.cancel();
+            	for(Player player : Bukkit.getOnlinePlayers()) {
+            		if(player.getGameMode().equals(GameMode.SPECTATOR)) return;
+            		player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 10000000, 1000000));
+            	}
+            }
+        }.runTaskTimer(plugin, 5*60*20, 5*60*20);
+        
+        new BukkitRunnable() {
+			 
+            @Override
+            public void run() {
+                //10秒遅れで5分に1回実行される
+            	if(StartCommand.start == 0) this.cancel();
+            	for(Player player : Bukkit.getOnlinePlayers()) {
+            		if(player.getGameMode().equals(GameMode.SPECTATOR)) return;
+            		if(player.getPotionEffect(PotionEffectType.GLOWING) != null && player.getPotionEffect(PotionEffectType.GLOWING).getAmplifier() > 0) {
+            			//エフェクト削除
+            			player.removePotionEffect(PotionEffectType.GLOWING);
+            		}
+            	}
+            }
+        }.runTaskTimer(plugin, 5*60*20 + 15*20, 5*60*20);
+	}
+		
 	@SuppressWarnings("deprecation")
 	public void countChat(){
 		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
