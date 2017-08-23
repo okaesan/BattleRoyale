@@ -17,7 +17,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -25,9 +25,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
-import net.minecraft.server.v1_12_R1.NBTTagCompound;
-import net.minecraft.server.v1_12_R1.NBTTagInt;
-import net.minecraft.server.v1_12_R1.NBTTagList;
+import net.minecraft.server.v1_11_R1.NBTTagCompound;
+import net.minecraft.server.v1_11_R1.NBTTagInt;
+import net.minecraft.server.v1_11_R1.NBTTagList;
 
 class countDown extends BukkitRunnable{
 
@@ -221,7 +221,7 @@ public class StartCommand extends BattleRoyale {
 					int amount = chestItemsConfig.getInt("chestItem.item"+id + "_amount");
 					ItemStack potion = new ItemStack(Material.POTION, amount, (short)potionID);
 					//nmsに変換
-					net.minecraft.server.v1_12_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(potion);
+					net.minecraft.server.v1_11_R1.ItemStack nmsStack = CraftItemStack.asNMSCopy(potion);
 					//CustomPotionEffectsタグを取得
 					NBTTagList tag = (NBTTagList)nmsStack.getTag().get("CustomPotionEffects");
 					//nullなら初期化

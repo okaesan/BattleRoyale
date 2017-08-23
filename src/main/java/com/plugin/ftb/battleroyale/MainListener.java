@@ -16,7 +16,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.block.Skull;
-import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,12 +36,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
-
-import net.minecraft.server.v1_12_R1.NBTBase;
-import net.minecraft.server.v1_12_R1.NBTTagCompound;
-import net.minecraft.server.v1_12_R1.NBTTagInt;
-import net.minecraft.server.v1_12_R1.NBTTagList;
-import net.minecraft.server.v1_12_R1.NBTTagString;
 
 class RunTP extends BukkitRunnable{
 
