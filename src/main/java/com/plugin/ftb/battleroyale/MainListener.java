@@ -275,7 +275,7 @@ public class MainListener implements Listener {
 
 		if(board.getTeam(TEAM_DEAD_NAME).hasPlayer(e.getPlayer())||board.getTeam(TEAM_ALIVE_NAME).hasPlayer(e.getPlayer())){
 			e.setRespawnLocation(worDeath);
-			e.getPlayer().getInventory().clear();
+			//e.getPlayer().getInventory().clear();
 		}
 	}
 
@@ -312,6 +312,8 @@ public class MainListener implements Listener {
 			Block block = loc.getBlock();
 			block.setType(Material.CHEST);
 			Chest chest = (Chest)block.getState();
+			//ItemStack[] itemStacks = new ItemStack[event.getDrops().toArray().clone().length];
+			//event.getDrops().toArray(itemStacks);
 			for(ItemStack itemStack : event.getDrops()){
 				chest.getInventory().addItem(itemStack);
 			}
