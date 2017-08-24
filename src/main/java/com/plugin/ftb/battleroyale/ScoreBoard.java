@@ -41,7 +41,7 @@ public class ScoreBoard {
 			o.setDisplaySlot(DisplaySlot.SIDEBAR);
 		}
 
-		if(nowPlay==false){
+		if(!(nowPlay)){
 			o.unregister();
 			return;
 		}
@@ -93,7 +93,7 @@ public class ScoreBoard {
 			o.setDisplaySlot(DisplaySlot.PLAYER_LIST);
 		}
 
-		if(nowPlay==false){
+		if(!(nowPlay)){
 			o.unregister();
 			return;
 		}

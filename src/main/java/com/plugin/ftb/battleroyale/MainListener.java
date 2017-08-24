@@ -416,7 +416,8 @@ public class MainListener implements Listener {
 			}
 
 			broadcast(ChatColor.DARK_AQUA + "-----------------------------");
-			
+
+
 			//エフェクト削除
 			for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 				if(onlinePlayer.getPotionEffect(PotionEffectType.GLOWING) != null && onlinePlayer.getPotionEffect(PotionEffectType.GLOWING).getAmplifier() > 0) {
