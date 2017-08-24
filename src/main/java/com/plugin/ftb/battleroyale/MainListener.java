@@ -118,7 +118,6 @@ class RunTP extends BukkitRunnable{
 		StartCommand.gameTimer=0;
 		PlusThreadClass.attackCountDown=plugin.getConfig().getInt("NATimer");
 		PlusThreadClass.loopC=plugin.getConfig().getIntegerList("Timer").get(0);
-		PlusThreadClass.deathRandom.clear();
 		PlusThreadClass.deathRandomCount.clear();
 		PlusThreadClass.deathRandomCountPast.clear();
 		PlusDeathArea.plusDeathX.clear();
@@ -316,6 +315,7 @@ public class MainListener implements Listener {
 				chest.getInventory().addItem(itemStack);
 			}
 			event.getDrops().clear();
+			player.getInventory().clear();
 
 			//プレイヤーの頭を置く
 			block = loc.add(0, 1, 0).getBlock();
