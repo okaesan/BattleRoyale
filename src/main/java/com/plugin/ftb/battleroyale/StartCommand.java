@@ -110,6 +110,7 @@ class countDown extends BukkitRunnable{
 				if(StartCommand.start == 0) this.cancel();
 				for(Player player : Bukkit.getOnlinePlayers()) {
 					if(player.getGameMode().equals(GameMode.SPECTATOR)) return;
+					if(StartCommand.start == 0) this.cancel();
 					player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 10000000, 1000000));
 				}
 			}
@@ -119,14 +120,13 @@ class countDown extends BukkitRunnable{
 			@Override
 			public void run() {
 				//10秒遅れで5分に1回実行される
-				if(StartCommand.start == 0) this.cancel();
 				for(Player player : Bukkit.getOnlinePlayers()) {
-					if(player.getGameMode().equals(GameMode.SPECTATOR)) return;
 					if(player.getPotionEffect(PotionEffectType.GLOWING) != null && player.getPotionEffect(PotionEffectType.GLOWING).getAmplifier() > 0) {
 						//エフェクト削除
 						player.removePotionEffect(PotionEffectType.GLOWING);
 					}
 				}
+				if(StartCommand.start == 0) this.cancel();
 			}
 		}.runTaskTimer(plugin, 5*60*20 + 15*20, 5*60*20);
 	}

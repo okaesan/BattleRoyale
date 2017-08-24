@@ -32,6 +32,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
 
@@ -415,6 +416,14 @@ public class MainListener implements Listener {
 			}
 
 			broadcast(ChatColor.DARK_AQUA + "-----------------------------");
+			
+			//エフェクト削除
+			for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+				if(onlinePlayer.getPotionEffect(PotionEffectType.GLOWING) != null && onlinePlayer.getPotionEffect(PotionEffectType.GLOWING).getAmplifier() > 0) {
+					//エフェクト削除
+					onlinePlayer.removePotionEffect(PotionEffectType.GLOWING);
+				}
+			}
 
 			for(Player p : Bukkit.getOnlinePlayers()){
 				if(board.getTeam(TEAM_ALIVE_NAME).hasPlayer(p)){
