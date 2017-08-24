@@ -68,7 +68,8 @@ class countDown extends BukkitRunnable{
 						p.getPlayer().teleport(locs.get(ran));
 						locs.remove(ran);
 						StartingInventory.StartingInventoryFunc((Player)p);
-						p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GOLD + "ゲームスタート");
+						//p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GOLD + "ゲームスタート");
+						MainUtils.sendTitle((Player)p, "" + ChatColor.GOLD + ChatColor.BOLD + "ゲームスタート", "", 1, 1, 1);
 					}
 				}else{
 					if(p.isOnline()){
@@ -79,7 +80,8 @@ class countDown extends BukkitRunnable{
 						}
 						p.getPlayer().teleport(locs.get(ran));
 						StartingInventory.StartingInventoryFunc((Player)p);
-						p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GOLD + "ゲームスタート");
+						//p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GOLD + "ゲームスタート");
+						MainUtils.sendTitle((Player)p, "" + ChatColor.GOLD + ChatColor.BOLD + "ゲームスタート", "", 1, 1, 1);
 					}
 				}
 			}
@@ -154,7 +156,8 @@ class countDown extends BukkitRunnable{
 		if(countDown!=0){
 			for(OfflinePlayer p : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
 				if(p.isOnline()){
-					p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "" + countDown + "");
+					//p.getPlayer().sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "" + countDown + "");
+					MainUtils.sendTitle((Player)p, "" + ChatColor.GREEN + ChatColor.BOLD + countDown, "", 1, 1, 1);
 				}
 			}
 		}

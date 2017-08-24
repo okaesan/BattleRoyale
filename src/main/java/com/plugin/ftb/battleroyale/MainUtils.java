@@ -4,9 +4,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
+
+import net.minecraft.server.v1_11_R1.IChatBaseComponent;
+import net.minecraft.server.v1_11_R1.IChatBaseComponent.ChatSerializer;
+import net.minecraft.server.v1_11_R1.PacketPlayOutTitle;
+import net.minecraft.server.v1_11_R1.PacketPlayOutTitle.EnumTitleAction;
 
 /*
  * ユーティリティクラス。自由にどうぞ
@@ -135,4 +142,39 @@ public class MainUtils {
 
 		return true;
 	}
+	
+	/*
+	 * プレイヤーにタイトルを表示する
+	 */
+	public static void sendTitle(Player player, String title, String subtitle, int fadein, int say, int fadeout) {
+		IChatBaseComponent chatTitle = ChatSerializer.a("{\"text\": \"" + title + "\"}");
+		IChatBaseComponent chatsubtitle = ChatSerializer.a("{\"text\": \"" + subtitle + "\"}");
+
+		PacketPlayOutTitle t = new PacketPlayOutTitle (EnumTitleAction.TITLE, chatTitle);
+		PacketPlayOutTitle s = new PacketPlayOutTitle (EnumTitleAction.SUBTITLE, chatsubtitle);
+		PacketPlayOutTitle length = new PacketPlayOutTitle (fadein * 20, say * 20, fadeout * 20);
+
+		((CraftPlayer) player).getHandle().playerConnection.sendPacket (t);
+		((CraftPlayer) player).getHandle().playerConnection.sendPacket (s);
+		((CraftPlayer) player).getHandle().playerConnection.sendPacket (length);
+	}
+	
+	/*
+	 * 全員にタイトルを表示する
+	 */
+	public static void sendTitleToEveryone(String title, String subtitle, int fadein, int say, int fadeout) {
+		IChatBaseComponent chatTitle = ChatSerializer.a("{\"text\": \"" + title + "\"}");
+		IChatBaseComponent chatsubtitle = ChatSerializer.a("{\"text\": \"" + subtitle + "\"}");
+
+		PacketPlayOutTitle t = new PacketPlayOutTitle (EnumTitleAction.TITLE, chatTitle);
+		PacketPlayOutTitle s = new PacketPlayOutTitle (EnumTitleAction.SUBTITLE, chatsubtitle);
+		PacketPlayOutTitle length = new PacketPlayOutTitle (fadein * 20, say * 20, fadeout * 20);
+
+		for(Player player : Bukkit.getOnlinePlayers()) {
+			((CraftPlayer) player).getHandle().playerConnection.sendPacket (t);
+			((CraftPlayer) player).getHandle().playerConnection.sendPacket (s);
+			((CraftPlayer) player).getHandle().playerConnection.sendPacket (length);
+		}
+	}
+		
 }

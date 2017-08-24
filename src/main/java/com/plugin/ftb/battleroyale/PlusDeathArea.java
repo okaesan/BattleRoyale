@@ -191,7 +191,8 @@ class PlusThreadClass extends BukkitRunnable{
 				//deathRandom = Arrays.asList(0,3,2,1,15,13,5,6,14,7,4,11,10,9,8,12);
 			}
 			deathRandomCount.add(count);
-			Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "30秒後" + ChatColor.GRAY + "に禁止区域が追加されます。");
+			//Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "30秒後" + ChatColor.GRAY + "に禁止区域が追加されます。");
+			MainUtils.sendTitleToEveryone(ChatColor.RED + "30秒後", ChatColor.WHITE + "禁止区域が追加されます。", 1, 3, 1);
 			count++;
 		}
 
@@ -202,7 +203,8 @@ class PlusThreadClass extends BukkitRunnable{
 				return;
 			}
 			deathRandomCountPast.add(countPast);
-			Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "禁止区域が追加されました。");
+			//Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "禁止区域が追加されました。");
+			MainUtils.sendTitleToEveryone(ChatColor.RED + "禁止区域", ChatColor.RED + "が追加されました。", 1, 3, 1);
 			countPast++;
 			//二週目からはずっと同じ一定時間
 			loopC=plugin.getConfig().getIntegerList("Timer").get(1);
