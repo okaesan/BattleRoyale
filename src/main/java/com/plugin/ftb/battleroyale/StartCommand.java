@@ -99,35 +99,34 @@ class countDown extends BukkitRunnable{
 	//5分に1回プレイヤーを発光させるタスク
 	public void startEffectTask() {
 		new BukkitRunnable() {
-			 
-            @Override
-            public void run() {
-                //5分に1回実行される
-            	if(StartCommand.start == 0) this.cancel();
-            	for(Player player : Bukkit.getOnlinePlayers()) {
-            		if(player.getGameMode().equals(GameMode.SPECTATOR)) return;
-            		player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 10000000, 1000000));
-            	}
-            }
-        }.runTaskTimer(plugin, 5*60*20, 5*60*20);
-        
-        new BukkitRunnable() {
-			 
-            @Override
-            public void run() {
-                //10秒遅れで5分に1回実行される
-            	if(StartCommand.start == 0) this.cancel();
-            	for(Player player : Bukkit.getOnlinePlayers()) {
-            		if(player.getGameMode().equals(GameMode.SPECTATOR)) return;
-            		if(player.getPotionEffect(PotionEffectType.GLOWING) != null && player.getPotionEffect(PotionEffectType.GLOWING).getAmplifier() > 0) {
-            			//エフェクト削除
-            			player.removePotionEffect(PotionEffectType.GLOWING);
-            		}
-            	}
-            }
-        }.runTaskTimer(plugin, 5*60*20 + 15*20, 5*60*20);
+
+			@Override
+			public void run() {
+				//5分に1回実行される
+				if(StartCommand.start == 0) this.cancel();
+				for(Player player : Bukkit.getOnlinePlayers()) {
+					if(player.getGameMode().equals(GameMode.SPECTATOR)) return;
+					player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 10000000, 1000000));
+				}
+			}
+		}.runTaskTimer(plugin, 5*60*20, 5*60*20);
+
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				//10秒遅れで5分に1回実行される
+				if(StartCommand.start == 0) this.cancel();
+				for(Player player : Bukkit.getOnlinePlayers()) {
+					if(player.getGameMode().equals(GameMode.SPECTATOR)) return;
+					if(player.getPotionEffect(PotionEffectType.GLOWING) != null && player.getPotionEffect(PotionEffectType.GLOWING).getAmplifier() > 0) {
+						//エフェクト削除
+						player.removePotionEffect(PotionEffectType.GLOWING);
+					}
+				}
+			}
+		}.runTaskTimer(plugin, 5*60*20 + 15*20, 5*60*20);
 	}
-		
+
 	@SuppressWarnings("deprecation")
 	public void countChat(){
 		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
@@ -161,6 +160,7 @@ public class StartCommand extends BattleRoyale {
 
 	public static int locX, locY, locZ;
 	public static int start=0;
+	public static int playCount = 0;
 	static int inChestCounter;
 	static int nextChance;
 	static int itemCounter;
@@ -178,6 +178,13 @@ public class StartCommand extends BattleRoyale {
 		//ゲーム中は1、ゲーム中以外は0
 		start = 1;
 
+		if(PlusThreadClass.deathNotRandom.size()<=playCount){
+			playCount = 1;
+		}else{
+			//ゲームが実行された回数
+			playCount++;
+		}
+
 		PlusThreadClass.loopC=plugin.getConfig().getIntegerList("Timer").get(0);
 		plugin.reloadConfig();
 
@@ -189,7 +196,7 @@ public class StartCommand extends BattleRoyale {
 		countDown cd = new countDown();
 		cd.runTaskTimer(plugin, 0, 20);
 	}
-	
+
 	//サバイバルモードに変更
 	public static void setSurvival() {
 		for(Player player : Bukkit.getOnlinePlayers()) {
@@ -274,19 +281,19 @@ public class StartCommand extends BattleRoyale {
 					nmsStack.getTag().set("CustomPotionEffects", tag);
 					//itemStackに変換
 					itemStack = CraftItemStack.asBukkitCopy(nmsStack);
-					
+
 					//名前を設定
 					ItemMeta meta = itemStack.getItemMeta();
 					meta.setDisplayName(chestItemsConfig.getString("chestItem.item"+id + "_name"));
 					itemStack.setItemMeta(meta);
-					
+
 				}else {
 					itemStack = new ItemStack(material,1);
 					ItemMeta meta = itemStack.getItemMeta();
-	
+
 					if(chestItemsConfig.getString("chestItem.item"+id + "_name") != null) {
 						String name = chestItemsConfig.getString("chestItem.item"+id + "_name");
-	
+
 						meta.setDisplayName(name);
 						itemStack.setItemMeta(meta);
 					}else {
@@ -299,9 +306,9 @@ public class StartCommand extends BattleRoyale {
 							}
 						}
 					}
-	
+
 					itemStack.setDurability((short) chestItemsConfig.getInt("chestItem.item" + id + "_damage"));
-	
+
 					if(chestItemsConfig.getString("chestItem.item" + id + "_unbreakable") != null){
 						meta.setUnbreakable(chestItemsConfig.getBoolean("chestItem.item" + id + "_unbreakable"));
 						itemStack.setItemMeta(meta);

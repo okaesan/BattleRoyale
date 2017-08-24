@@ -2,6 +2,7 @@ package com.plugin.ftb.battleroyale;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,9 +18,9 @@ public class CustomMap extends MapRenderer {
 
 	public static ArrayList<Integer> plusDeathX = PlusDeathArea.plusDeathX;
 	public static ArrayList<Integer> plusDeathZ = PlusDeathArea.plusDeathZ;
-	public static ArrayList<Integer> deathRandom = PlusThreadClass.deathRandom;
 	public static ArrayList<Integer> locL = PlusDeathArea.locL;
 	public static ArrayList<Integer> locR = PlusDeathArea.locR;
+	public static List<Integer> deathRandom = PlusThreadClass.deathNotRandom.get(PlusThreadClass.rootRandom.get(StartCommand.playCount));
 	public static String scaleString;
 	public static Scale scale = Scale.FARTHEST;
 	public static float locPerPix;

@@ -20,7 +20,7 @@ public class ScoreBoard {
 	// チーム名
 	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
 	public static final String TEAM_DEAD_NAME = BattleRoyale.TEAM_DEAD_NAME;
-	
+
 	//過去の人数
 	public static int playerSize = 0;
 
@@ -28,7 +28,7 @@ public class ScoreBoard {
 	//intのokはゲームが終了しているかどうかの変数、0=ゲーム終了時、1=ゲーム中
 	public static void scoreSide(boolean nowPlay){
 		Scoreboard teamBoard = plugin.getServer().getScoreboardManager().getMainScoreboard();
-		int maxPersons = teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size()+teamBoard.getTeam(TEAM_DEAD_NAME).getPlayers().size();
+		//int maxPersons = teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size()+teamBoard.getTeam(TEAM_DEAD_NAME).getPlayers().size();
 
 		// オブジェクティブが既に登録されているかどうか確認し、
 		// 登録されていないなら新規作成します。
@@ -56,12 +56,12 @@ public class ScoreBoard {
 		//o.getScore("" + ChatColor.AQUA + "部活 " + ChatColor.RESET + ": " + "test部").setScore(-2);
 		//o.getScore("" + ChatColor.GREEN + "チーム " + ChatColor.RESET + ": " + "test").setScore(-3);
 		o.getScore("").setScore(0);
-		
+
 		o.getScoreboard().resetScores("" + ChatColor.YELLOW + "残り人数 " + ChatColor.RESET + ": " + playerSize);
 		playerSize = teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size();
-		
+
 		o.getScore("" + ChatColor.YELLOW + "残り人数 " + ChatColor.RESET + ": " + teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers().size()).setScore(-1);
-		
+
 		o.getScoreboard().resetScores("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "禁止エリア追加まで " + ChatColor.RESET + ": " + String.valueOf(PlusThreadClass.loopC+1));
 		o.getScoreboard().resetScores("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "禁止エリア追加まで " + ChatColor.RESET + ": 0");
 		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "攻撃可能になるまで" + ChatColor.RESET + ": " + String.valueOf(PlusThreadClass.attackCountDown+1));
@@ -112,7 +112,7 @@ public class ScoreBoard {
 			}
 		}
 	}
-	
+
 	//スコアボードをリロード(unregister)する
 	public static void reloadScoreboard() {
 		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();

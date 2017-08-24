@@ -30,9 +30,7 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
@@ -489,7 +487,7 @@ public class MainListener implements Listener {
 			e.setCancelled(true);
 		}
 	}
-	
+
 	//ゲーム中にログアウトしたプレイヤーはロビーに転送
 	@SuppressWarnings("deprecation")
 	@EventHandler
@@ -584,7 +582,7 @@ public class MainListener implements Listener {
 	public void broadcast(String message) {
 		BattleRoyale.broadcast(message);
 	}
-	
+
 	//サーバーにログを残す
 	public void sendLog(String message) {
 		Bukkit.getLogger().info(message);

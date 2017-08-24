@@ -1,7 +1,10 @@
 package com.plugin.ftb.battleroyale;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -132,7 +135,12 @@ class PlusThreadClass extends BukkitRunnable{
 	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
 	public static final String TEAM_DEAD_NAME = BattleRoyale.TEAM_DEAD_NAME;
 
-	public static ArrayList<Integer> deathRandom = new ArrayList<Integer>();
+	//規定の追加方法の場合
+	public static HashMap<Integer, List<Integer>> deathNotRandom = new HashMap<Integer, List<Integer>>();
+	//抽選
+	public static List<Integer> rootRandom = new ArrayList<Integer>();
+	//完全ランダムの場合
+	public static List<Integer> deathRandom = new ArrayList<Integer>();
 
 	//猶予段階のエリア
 	public static ArrayList<Integer> deathRandomCount = new ArrayList<Integer>();
@@ -163,12 +171,30 @@ class PlusThreadClass extends BukkitRunnable{
 				return;
 			}
 			if(PlusDeathArea.beta==0){
-				for(int i=0; i<PlusDeathArea.plusDeathX.size(); i++){
-					deathRandom.add(PlusDeathArea.beta);
 
-					PlusDeathArea.beta++;
-					Collections.shuffle(deathRandom);
+				//規定の追加方法の場合
+				deathRandom = Arrays.asList(0,3,2,1,15,13,5,6,14,7,4,11,10,9,8,12);
+				deathNotRandom.put(1, deathRandom);
+				deathRandom = Arrays.asList(12,10,5,13,11,3,15,14,6,7,9,8,4,2,0,1);
+				deathNotRandom.put(2, deathRandom);
+				deathRandom = Arrays.asList(12,8,11,0,2,3,4,1,5,7,6,9,13,14,10,15);
+				deathNotRandom.put(3, deathRandom);
+				deathRandom = Arrays.asList(13,15,1,0,10,14,3,4,11,2,6,7,5,8,9,12);
+				deathNotRandom.put(4, deathRandom);
+				deathRandom = Arrays.asList(6,14,5,9,13,12,15,8,4,0,10,1,2,11,7,3);
+				deathNotRandom.put(5, deathRandom);
+				deathRandom = Arrays.asList(9,10,6,5,4,8,12,13,14,15,11,7,3,2,1,0);
+				deathNotRandom.put(6, deathRandom);
+				deathRandom = Arrays.asList(5,3,15,6,7,11,2,10,1,14,13,10,0,12,8,4);
+				deathNotRandom.put(7, deathRandom);
+
+				if(rootRandom.isEmpty()){
+					rootRandom = Arrays.asList(1,2,3,4,5,6,7);
+					Collections.shuffle(rootRandom);
 				}
+
+				//とりあえず1パターン用
+				//deathRandom = Arrays.asList(0,3,2,1,15,13,5,6,14,7,4,11,10,9,8,12);
 			}
 			deathRandomCount.add(count);
 			Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "30秒後" + ChatColor.GRAY + "に禁止区域が追加されます。");
@@ -229,7 +255,9 @@ class PlusDeathThreadClass extends BukkitRunnable{
 				return;
 			}
 
-			int r = PlusThreadClass.deathRandom.get(i);
+			//規定の追加方法の場合
+			int r = PlusThreadClass.deathNotRandom.get(PlusThreadClass.rootRandom.get(StartCommand.playCount)).get(i);
+
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);
 
