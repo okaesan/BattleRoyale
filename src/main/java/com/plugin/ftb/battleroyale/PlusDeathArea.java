@@ -2,7 +2,6 @@ package com.plugin.ftb.battleroyale;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -187,11 +186,6 @@ class PlusThreadClass extends BukkitRunnable{
 				deathNotRandom.put(6, deathRandom);
 				deathRandom = Arrays.asList(5,3,15,6,7,11,2,10,1,14,13,10,0,12,8,4);
 				deathNotRandom.put(7, deathRandom);
-
-				if(rootRandom.isEmpty()){
-					rootRandom = Arrays.asList(1,2,3,4,5,6,7);
-					Collections.shuffle(rootRandom);
-				}
 
 				//とりあえず1パターン用
 				//deathRandom = Arrays.asList(0,3,2,1,15,13,5,6,14,7,4,11,10,9,8,12);

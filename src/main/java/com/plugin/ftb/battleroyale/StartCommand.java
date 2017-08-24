@@ -83,6 +83,10 @@ class countDown extends BukkitRunnable{
 					}
 				}
 			}
+			if(PlusThreadClass.rootRandom.isEmpty()){
+				PlusThreadClass.rootRandom = Arrays.asList(1,2,3,4,5,6,7);
+				Collections.shuffle(PlusThreadClass.rootRandom);
+			}
 
 			deathA.deathArea();
 			PdeathA.setPlusDeath();
@@ -179,7 +183,7 @@ public class StartCommand extends BattleRoyale {
 		start = 1;
 
 		if(PlusThreadClass.deathNotRandom.size()<=playCount){
-			playCount = 1;
+			playCount = 0;
 		}else{
 			//ゲームが実行された回数
 			playCount++;
