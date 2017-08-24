@@ -45,10 +45,10 @@ public class CustomMap extends MapRenderer {
 		 * 追加されたときのみ描画する。
 		 */
 		for(int i:PlusThreadClass.deathRandomCount){
-			if(i >= PlusThreadClass.deathRandom.size()){
+			if(i >= PlusThreadClass.deathNotRandom.get(PlusThreadClass.rootRandom.get(StartCommand.playCount)).size()){
 				break;
 			}
-			int r = PlusThreadClass.deathRandom.get(i);
+			int r = PlusThreadClass.deathNotRandom.get(PlusThreadClass.rootRandom.get(StartCommand.playCount)).get(i);
 
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);
@@ -93,7 +93,7 @@ public class CustomMap extends MapRenderer {
 
 		for(int i:PlusThreadClass.deathRandomCountPast){
 
-			int r = PlusThreadClass.deathRandom.get(i);
+			int r = PlusThreadClass.deathNotRandom.get(PlusThreadClass.rootRandom.get(StartCommand.playCount)).get(i);
 
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);
@@ -126,7 +126,7 @@ public class CustomMap extends MapRenderer {
 
 		for(int i:PlusThreadClass.deathRandomCountPast){
 
-			int r = PlusThreadClass.deathRandom.get(i);
+			int r = PlusThreadClass.deathNotRandom.get(PlusThreadClass.rootRandom.get(StartCommand.playCount)).get(i);
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);
 
