@@ -111,11 +111,21 @@ class countDown extends BukkitRunnable{
 			PdeathA.plus();
 			MainConfig.giveMap();
 			startEffectTask();
+			setPlayer();
 		}
 
 		countChat();
 		countDown--;
 
+	}
+	
+	//プレイヤーの満腹度、HPを満タンに
+	@SuppressWarnings("deprecation")
+	public void setPlayer() {
+		for(Player player : Bukkit.getOnlinePlayers()) {
+			player.setHealth(player.getMaxHealth());
+			player.setFoodLevel(20);
+		}
 	}
 
 	//5分に1回プレイヤーを発光させるタスク
@@ -224,8 +234,10 @@ public class StartCommand extends BattleRoyale {
 	public static void setSurvival() {
 		for(Player player : Bukkit.getOnlinePlayers()) {
 			if(!player.getGameMode().equals(GameMode.SPECTATOR)) {
-				//スペクターモード以外のプレイヤーをサバイバルモードに
-				player.setGameMode(GameMode.SURVIVAL);
+				if(!player.hasPermission("battleroyale.op")) {
+					//スペクターモード以外のプレイヤーをサバイバルモードに
+					player.setGameMode(GameMode.SURVIVAL);
+				}
 			}
 		}
 	}

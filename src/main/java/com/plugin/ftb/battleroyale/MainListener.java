@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -28,6 +29,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -353,14 +355,14 @@ public class MainListener implements Listener {
 				for(OfflinePlayer checkPlayer : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
 					if(checkPlayer.isOnline()){
 						if(MainUtils.lastPlayer((Player) checkPlayer)){
-							if(!deathPlayer.contains(killer.getUniqueId())) {
+							if(!deathPlayer.contains(checkPlayer.getUniqueId())) {
 								//処理的に死亡者と同じ時間になるため、gameTimerに+1し、重複をなくす。
 								deathTime.add(StartCommand.gameTimer+1);
 								deathPlayer.add(checkPlayer.getUniqueId());
 							}
 						}
 						else{
-							if(!deathPlayer.contains(killer.getUniqueId())) {
+							if(!deathPlayer.contains(checkPlayer.getUniqueId())) {
 								//死亡した場合、死亡時の時刻と死亡者を保存する
 								deathTime.add(StartCommand.gameTimer);
 								deathPlayer.add(checkPlayer.getUniqueId());
@@ -374,64 +376,74 @@ public class MainListener implements Listener {
 			rankSort = MainUtils.rankSort(deathTime);
 			rankSort.entrySet().stream().sorted(Entry.comparingByValue());
 
-			/*
-			 * 終了時統計を表示
-			 */
-			broadcast(ChatColor.DARK_AQUA + "------------終了------------");
-			ArrayList<ArrayList<String>> rankStrings = new ArrayList<>();
-			//仮の要素を挿入
-			rankStrings.add(new ArrayList<String>());
-			rankStrings.add(new ArrayList<String>());
-			rankStrings.add(new ArrayList<String>());
+			new BukkitRunnable() {
+				 
+	            @Override
+	            public void run() {
+	            	/*
+	    			 * 終了時統計を表示
+	    			 */
+	    			broadcast(ChatColor.DARK_AQUA + "------------終了------------");
+	    			ArrayList<ArrayList<String>> rankStrings = new ArrayList<>();
+	    			//仮の要素を挿入
+	    			rankStrings.add(new ArrayList<String>());
+	    			rankStrings.add(new ArrayList<String>());
+	    			rankStrings.add(new ArrayList<String>());
 
-			for(int i : rankSort.keySet()){
-				ChatColor color = ChatColor.WHITE;
-				int rank = 0;
-				if(rankSort.get(i) == 1) {
-					color = ChatColor.GOLD;
-					rank = 0;
-				}
-				if(rankSort.get(i) == 2) {
-					color = ChatColor.YELLOW;
-					rank = 1;
-				}
-				if(rankSort.get(i) == 3) {
-					color = ChatColor.GREEN;
-					rank = 2;
-				}
+	    			for(int i : rankSort.keySet()){
+	    				ChatColor color = ChatColor.WHITE;
+	    				int rank = 0;
+	    				if(rankSort.get(i) == 1) {
+	    					color = ChatColor.GOLD;
+	    					rank = 0;
+	    				}
+	    				if(rankSort.get(i) == 2) {
+	    					color = ChatColor.YELLOW;
+	    					rank = 1;
+	    				}
+	    				if(rankSort.get(i) == 3) {
+	    					color = ChatColor.GREEN;
+	    					rank = 2;
+	    				}
 
-				//順位に応じた場所に入れる。
-				ArrayList<String> value;
-				if(rankStrings.get(rank).isEmpty()) {
-					//同率プレイヤーがいない場合
-					value = new ArrayList<>();
-				}else{
-					//同率プレイヤーがいた場合
-					value = rankStrings.get(rank);
-				}
-				value.add((" " + color + String.valueOf(rankSort.get(i)) + "位 : " + Bukkit.getPlayer(deathPlayer.get(i)).getName() + "\n"
-						+ " " + ChatColor.RED + killCount.get(deathPlayer.get(i)) + ChatColor.GRAY + " kill"));
+	    				//順位に応じた場所に入れる。
+	    				ArrayList<String> value;
+	    				if(rankStrings.get(rank).isEmpty()) {
+	    					//同率プレイヤーがいない場合
+	    					value = new ArrayList<>();
+	    				}else{
+	    					//同率プレイヤーがいた場合
+	    					value = rankStrings.get(rank);
+	    				}
+	    				value.add((" " + color + String.valueOf(rankSort.get(i)) + "位 : " + Bukkit.getPlayer(deathPlayer.get(i)).getName() + "\n"
+	    						+ " " + ChatColor.RED + killCount.get(deathPlayer.get(i)) + ChatColor.GRAY + " kill"));
 
-				sendLog("deathPlayer(i):" + deathPlayer.get(i) + "killCount.get(deathPlayer):" + killCount.get(deathPlayer.get(i))
-						+ "\n" + "deathPlayer:" + deathPlayer + "killCount:" + killCount);
-				rankStrings.set(rank, value);
-			}
+	    				sendLog("deathPlayer(i):" + deathPlayer.get(i) + "killCount.get(deathPlayer):" + killCount.get(deathPlayer.get(i))
+	    						+ "\n" + "deathPlayer:" + deathPlayer + "killCount:" + killCount);
+	    				rankStrings.set(rank, value);
+	    			}
 
-			//表示
-			for(ArrayList<String> values : rankStrings) {
-				for(String value : values) {
-					broadcast(value);
-				}
-			}
+	    			//表示
+	    			for(ArrayList<String> values : rankStrings) {
+	    				for(String value : values) {
+	    					broadcast(value);
+	    				}
+	    			}
 
-			broadcast(ChatColor.DARK_AQUA + "-----------------------------");
+	    			broadcast(ChatColor.DARK_AQUA + "-----------------------------");
+	            }
+	        }.runTaskLater(plugin, 20);
 
 
-			//エフェクト削除
+			//エフェクト削除、op以外をadvに
 			for(Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 				if(onlinePlayer.getPotionEffect(PotionEffectType.GLOWING) != null && onlinePlayer.getPotionEffect(PotionEffectType.GLOWING).getAmplifier() > 0) {
 					//エフェクト削除
 					onlinePlayer.removePotionEffect(PotionEffectType.GLOWING);
+				}
+				
+				if(!onlinePlayer.hasPermission("battleroyale.op")) {
+					onlinePlayer.setGameMode(GameMode.ADVENTURE);
 				}
 			}
 
@@ -463,6 +475,10 @@ public class MainListener implements Listener {
 
 			//ダメージ無効時間中はダメージを受けないようにする。
 			if(Attack){
+				event.setCancelled(true);
+			}
+			
+			if(StartCommand.start == 0) {
 				event.setCancelled(true);
 			}
 		}
@@ -519,6 +535,26 @@ public class MainListener implements Listener {
 				player.teleport(loc);
 				board.getTeam(TEAM_ALIVE_NAME).removePlayer(player);
 			}
+		}
+	}
+	
+	//スタート前はブロックの破壊を禁止
+	@EventHandler
+	public void onBreak(BlockBreakEvent event) {
+		if(StartCommand.start == 0) {
+			Player player = event.getPlayer();
+			if(player.getGameMode() != GameMode.CREATIVE || player.getGameMode() != GameMode.SPECTATOR) {
+				event.setCancelled(true);
+			}
+		}
+	}
+	
+	//開始前はアドベンチャーモードに
+	@EventHandler
+	public void onLogin(PlayerLoginEvent event) {
+		Player player = event.getPlayer();
+		if(!player.hasPermission("battleroyale.op")) {
+			event.getPlayer().setGameMode(GameMode.ADVENTURE);
 		}
 	}
 
