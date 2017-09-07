@@ -149,6 +149,8 @@ class countDown extends BukkitRunnable{
 			public void run() {
 				//10秒遅れで5分に1回実行される
 				for(Player player : Bukkit.getOnlinePlayers()) {
+					if(player.hasPermission("battleroyale.op"))
+						continue;
 					if(player.getPotionEffect(PotionEffectType.GLOWING) != null && player.getPotionEffect(PotionEffectType.GLOWING).getAmplifier() > 0) {
 						//エフェクト削除
 						player.removePotionEffect(PotionEffectType.GLOWING);
