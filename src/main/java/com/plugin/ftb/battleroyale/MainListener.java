@@ -343,21 +343,28 @@ public class MainListener implements Listener {
 			//一位は一度も死なないため、ここでランキングを設定する
 			if(killer!=null){
 				//処理的に死亡者と同じ時間になるため、gameTimerに+1し、重複をなくす。
-				deathTime.add(StartCommand.gameTimer+1);
-				deathPlayer.add(killer.getUniqueId());			}
+				if(!deathPlayer.contains(killer.getUniqueId())) {
+					deathTime.add(StartCommand.gameTimer+1);
+					deathPlayer.add(killer.getUniqueId());	
+				}
+			}
 			//禁止区域などで同時に死亡し、ゲームがフィニッシュした場合(キルした人が存在しない場合)
 			else{
 				for(OfflinePlayer checkPlayer : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
 					if(checkPlayer.isOnline()){
 						if(MainUtils.lastPlayer((Player) checkPlayer)){
-							//処理的に死亡者と同じ時間になるため、gameTimerに+1し、重複をなくす。
-							deathTime.add(StartCommand.gameTimer+1);
-							deathPlayer.add(checkPlayer.getUniqueId());
+							if(!deathPlayer.contains(killer.getUniqueId())) {
+								//処理的に死亡者と同じ時間になるため、gameTimerに+1し、重複をなくす。
+								deathTime.add(StartCommand.gameTimer+1);
+								deathPlayer.add(checkPlayer.getUniqueId());
+							}
 						}
 						else{
-							//死亡した場合、死亡時の時刻と死亡者を保存する
-							deathTime.add(StartCommand.gameTimer);
-							deathPlayer.add(checkPlayer.getUniqueId());
+							if(!deathPlayer.contains(killer.getUniqueId())) {
+								//死亡した場合、死亡時の時刻と死亡者を保存する
+								deathTime.add(StartCommand.gameTimer);
+								deathPlayer.add(checkPlayer.getUniqueId());
+							}
 						}
 					}
 				}

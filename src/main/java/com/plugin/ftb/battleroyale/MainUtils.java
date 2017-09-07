@@ -87,7 +87,7 @@ public class MainUtils {
 				return true;
 			}
 
-			int r = PlusThreadClass.deathRandom.get(i);
+			int r = PlusThreadClass.deathNotRandom.get(PlusThreadClass.rootRandom.get(StartCommand.playCount)).get(i);
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);
 
