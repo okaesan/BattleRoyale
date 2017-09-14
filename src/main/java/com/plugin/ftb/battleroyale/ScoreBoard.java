@@ -48,8 +48,8 @@ public class ScoreBoard {
 
 		//スコアボードの中身
 		o.getScore("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "禁止エリア追加まで " + ChatColor.RESET + ": " + PlusThreadClass.loopC).setScore(2);
-		if(PlusThreadClass.attackCountDown!=0){
-			o.getScore("" + ChatColor.RED + ChatColor.BOLD + "攻撃可能になるまで" + ChatColor.RESET + ": " + PlusThreadClass.attackCountDown).setScore(1);
+		if(0<countDown.attackCountDown){
+			o.getScore("" + ChatColor.RED + ChatColor.BOLD + "攻撃可能になるまで" + ChatColor.RESET + ": " + countDown.attackCountDown).setScore(1);
 		}else{
 			o.getScore("" + ChatColor.RED + ChatColor.BOLD + "攻撃可能").setScore(1);
 		}
@@ -64,7 +64,7 @@ public class ScoreBoard {
 
 		o.getScoreboard().resetScores("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "禁止エリア追加まで " + ChatColor.RESET + ": " + String.valueOf(PlusThreadClass.loopC+1));
 		o.getScoreboard().resetScores("" + ChatColor.LIGHT_PURPLE + ChatColor.BOLD + "禁止エリア追加まで " + ChatColor.RESET + ": 0");
-		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "攻撃可能になるまで" + ChatColor.RESET + ": " + String.valueOf(PlusThreadClass.attackCountDown+1));
+		o.getScoreboard().resetScores("" + ChatColor.RED + ChatColor.BOLD + "攻撃可能になるまで" + ChatColor.RESET + ": " + String.valueOf(countDown.attackCountDown+1));
 
 		for(OfflinePlayer p : teamBoard.getTeam(TEAM_ALIVE_NAME).getPlayers()){
 			if(p.isOnline()==true){

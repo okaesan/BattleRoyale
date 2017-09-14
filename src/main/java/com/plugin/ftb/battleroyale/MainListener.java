@@ -118,7 +118,7 @@ class RunTP extends BukkitRunnable{
 		PlusDeathArea.beta=0;
 		StartCommand.start=0;
 		StartCommand.gameTimer=0;
-		PlusThreadClass.attackCountDown=plugin.getConfig().getInt("NATimer");
+		countDown.attackCountDown=plugin.getConfig().getInt("NATimer");
 		PlusThreadClass.loopC=plugin.getConfig().getIntegerList("Timer").get(0);
 		PlusThreadClass.deathRandomCount.clear();
 		PlusThreadClass.deathRandomCountPast.clear();
@@ -339,6 +339,40 @@ public class MainListener implements Listener {
 			}
 		}
 
+		//残り人数が10,5,3人の時に残ってる人のIDを表示する
+		if(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() == 10
+				|| board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() == 5
+				|| board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() == 3){
+
+			for(OfflinePlayer offPlayer : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+				if(offPlayer.isOnline()){
+					Player onlinePlayer = (Player) offPlayer;
+					onlinePlayer.sendMessage("-" + ChatColor.DARK_AQUA + "残りの生存者" + ChatColor.RESET + "-");
+				}
+			}
+			for(OfflinePlayer offPlayer : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+				if(offPlayer.isOnline()){
+					Player onlinePlayer = (Player) offPlayer;
+					onlinePlayer.sendMessage("-" + ChatColor.DARK_AQUA + "残りの生存者" + ChatColor.RESET + "-");
+				}
+			}
+
+			for(OfflinePlayer alivePlayer : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+				for(OfflinePlayer offPlayer : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+					if(offPlayer.isOnline()){
+						Player onlinePlayer = (Player) offPlayer;
+						onlinePlayer.sendMessage(alivePlayer.getName() + " - " + killCount.get(alivePlayer.getUniqueId()) + "キル");
+					}
+				}
+				for(OfflinePlayer offPlayer : board.getTeam(TEAM_ALIVE_NAME).getPlayers()){
+					if(offPlayer.isOnline()){
+						Player onlinePlayer = (Player) offPlayer;
+						onlinePlayer.sendMessage(alivePlayer.getName() + " - " + killCount.get(alivePlayer.getUniqueId()) + "キル");
+					}
+				}
+			}
+		}
+
 		//最後の一人の場合はゲームを終了させる
 		if (board.getTeam(TEAM_ALIVE_NAME).getPlayers().size() == 1 && StartCommand.start == 1) {
 
@@ -347,7 +381,7 @@ public class MainListener implements Listener {
 				//処理的に死亡者と同じ時間になるため、gameTimerに+1し、重複をなくす。
 				if(!deathPlayer.contains(killer.getUniqueId())) {
 					deathTime.add(StartCommand.gameTimer+1);
-					deathPlayer.add(killer.getUniqueId());	
+					deathPlayer.add(killer.getUniqueId());
 				}
 			}
 			//禁止区域などで同時に死亡し、ゲームがフィニッシュした場合(キルした人が存在しない場合)
@@ -377,7 +411,7 @@ public class MainListener implements Listener {
 			rankSort.entrySet().stream().sorted(Entry.comparingByValue());
 
 			new BukkitRunnable() {
-				 
+
 	            @Override
 	            public void run() {
 	            	/*
@@ -441,7 +475,7 @@ public class MainListener implements Listener {
 					//エフェクト削除
 					onlinePlayer.removePotionEffect(PotionEffectType.GLOWING);
 				}
-				
+
 				if(!onlinePlayer.hasPermission("battleroyale.op")) {
 					onlinePlayer.setGameMode(GameMode.ADVENTURE);
 				}
@@ -477,7 +511,7 @@ public class MainListener implements Listener {
 			if(Attack){
 				event.setCancelled(true);
 			}
-			
+
 			if(StartCommand.start == 0) {
 				event.setCancelled(true);
 			}
@@ -537,7 +571,7 @@ public class MainListener implements Listener {
 			}
 		}
 	}
-	
+
 	//スタート前はブロックの破壊を禁止
 	@EventHandler
 	public void onBreak(BlockBreakEvent event) {
@@ -548,7 +582,7 @@ public class MainListener implements Listener {
 			}
 		}
 	}
-	
+
 	//開始前はアドベンチャーモードに
 	@EventHandler
 	public void onLogin(PlayerLoginEvent event) {

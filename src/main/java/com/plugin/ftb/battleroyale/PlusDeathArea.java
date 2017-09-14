@@ -1,11 +1,9 @@
 package com.plugin.ftb.battleroyale;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -152,8 +150,6 @@ class PlusThreadClass extends BukkitRunnable{
 	public static int countPast=0;
 	//禁止区域が追加されるまでのカウンター
 	public static int loopC=plugin.getConfig().getIntegerList("Timer").get(0);
-	//攻撃が可能になるまでの時間
-	public static int attackCountDown=plugin.getConfig().getInt("NATimer");
 
 	/*
 	 *スコアボードに禁止区域追加までの時間を表示させるため、追加方法の処理を変更しました
@@ -169,27 +165,7 @@ class PlusThreadClass extends BukkitRunnable{
 				this.cancel();
 				return;
 			}
-			if(PlusDeathArea.beta==0){
 
-				//規定の追加方法の場合
-				deathRandom = Arrays.asList(0,3,2,1,15,13,5,6,14,7,4,11,10,9,8,12);
-				deathNotRandom.put(1, deathRandom);
-				deathRandom = Arrays.asList(12,10,5,13,11,3,15,14,6,7,9,8,4,2,0,1);
-				deathNotRandom.put(2, deathRandom);
-				deathRandom = Arrays.asList(12,8,11,0,2,3,4,1,5,7,6,9,13,14,10,15);
-				deathNotRandom.put(3, deathRandom);
-				deathRandom = Arrays.asList(13,15,1,0,10,14,3,4,11,2,6,7,5,8,9,12);
-				deathNotRandom.put(4, deathRandom);
-				deathRandom = Arrays.asList(6,14,5,9,13,12,15,8,4,0,10,1,2,11,7,3);
-				deathNotRandom.put(5, deathRandom);
-				deathRandom = Arrays.asList(9,10,6,5,4,8,12,13,14,15,11,7,3,2,1,0);
-				deathNotRandom.put(6, deathRandom);
-				deathRandom = Arrays.asList(5,3,15,6,7,11,2,10,1,14,13,10,0,12,8,4);
-				deathNotRandom.put(7, deathRandom);
-
-				//とりあえず1パターン用
-				//deathRandom = Arrays.asList(0,3,2,1,15,13,5,6,14,7,4,11,10,9,8,12);
-			}
 			deathRandomCount.add(count);
 			//Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "30秒後" + ChatColor.GRAY + "に禁止区域が追加されます。");
 			MainUtils.sendTitleToEveryone(ChatColor.RED + "30秒後", ChatColor.WHITE + "禁止区域が追加されます。", 1, 3, 1);
@@ -208,13 +184,6 @@ class PlusThreadClass extends BukkitRunnable{
 			countPast++;
 			//二週目からはずっと同じ一定時間
 			loopC=plugin.getConfig().getIntegerList("Timer").get(1);
-		}
-
-		//攻撃可能になるまでの時間が0になったら攻撃を可能にする
-		if(attackCountDown == 0){
-			MainListener.Attack = false;
-		}else{
-			attackCountDown--;
 		}
 
 		//１秒ごとにカウントを減らしていく。
@@ -242,8 +211,8 @@ class PlusDeathThreadClass extends BukkitRunnable{
 		locR = (ArrayList<Integer>) plugin.getConfig().getIntegerList("stagelocationsR");
 
 		if(!(board.getTeam(TEAM_ALIVE_NAME).getPlayers().size()>1)){
-        	this.cancel();
-        }
+			this.cancel();
+		}
 
 		for(int i:PlusThreadClass.deathRandomCountPast){
 			//Bukkit.broadcastMessage(PlusThreadClass.deathRanCount.size() + ", " + PlusThreadClass.deathRan.size());

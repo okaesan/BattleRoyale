@@ -39,6 +39,9 @@ class countDown extends BukkitRunnable{
 	public static final String TEAM_ALIVE_NAME = BattleRoyale.TEAM_ALIVE_NAME;
 	public static final String TEAM_DEAD_NAME = BattleRoyale.TEAM_DEAD_NAME;
 
+	//攻撃が可能になるまでの時間
+	public static int attackCountDown=plugin.getConfig().getInt("NATimer");
+
 	DeathArea deathA = new DeathArea();
 	PlusDeathArea PdeathA = new PlusDeathArea();
 
@@ -108,8 +111,8 @@ class countDown extends BukkitRunnable{
 
 			deathA.deathArea();
 			PdeathA.setPlusDeath();
-			PdeathA.plus();
 			MainConfig.giveMap();
+			attackCountDown();
 			startEffectTask();
 			setPlayer();
 		}
@@ -118,7 +121,7 @@ class countDown extends BukkitRunnable{
 		countDown--;
 
 	}
-	
+
 	//プレイヤーの満腹度、HPを満タンに
 	@SuppressWarnings("deprecation")
 	public void setPlayer() {
@@ -126,6 +129,31 @@ class countDown extends BukkitRunnable{
 			player.setHealth(player.getMaxHealth());
 			player.setFoodLevel(20);
 		}
+	}
+
+	//攻撃可能までのカウントダウン用のタスク
+	public void attackCountDown(){
+		new BukkitRunnable(){
+
+			@Override
+			public void run(){
+				//攻撃可能になってから30秒後に禁止区域の更新を始める。
+				if(attackCountDown == -30){
+					PdeathA.plus();
+					this.cancel();
+				}
+				//攻撃可能になるまでの時間が0になったら攻撃を可能にする
+				else if(attackCountDown == 0){
+					MainListener.Attack = false;
+					attackCountDown--;
+				}
+				else{
+					attackCountDown--;
+				}
+				//スコアボードの設定
+				ScoreBoard.scoreSide(true);
+			}
+		}.runTaskTimer(plugin, 20, 20);
 	}
 
 	//5分に1回プレイヤーを発光させるタスク
