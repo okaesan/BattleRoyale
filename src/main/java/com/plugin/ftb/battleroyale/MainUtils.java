@@ -5,9 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_11_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionType;
 import org.bukkit.scoreboard.Scoreboard;
 
 import net.minecraft.server.v1_11_R1.IChatBaseComponent;
@@ -87,7 +92,7 @@ public class MainUtils {
 				return true;
 			}
 
-			int r = PlusThreadClass.deathNotRandom.get(PlusThreadClass.rootRandom.get(StartCommand.playCount)).get(i);
+			int r = PlusThreadClass.deathNotRandom.get(i);
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);
 
@@ -176,5 +181,83 @@ public class MainUtils {
 			((CraftPlayer) player).getHandle().playerConnection.sendPacket (length);
 		}
 	}
-		
+	
+	/*
+	 * カスタムポーションを返す
+	 */
+    public static ItemStack getPotion(PotionType effectType,int seconds,int level, int amount){
+        ItemStack potion = new ItemStack(Material.SPLASH_POTION, amount);
+        PotionMeta potionMeta = (PotionMeta)potion.getItemMeta();
+        PotionEffect pe = new PotionEffect(effectType.getEffectType(),seconds*20,level-1);
+        potionMeta.addCustomEffect(pe,true);
+        potionMeta.setLocalizedName(getPotionName(effectType));
+        potionMeta.setColor(effectType.getEffectType().getColor());
+        potion.setItemMeta(potionMeta);
+        return potion;
+    }
+
+    public static String getPotionName(PotionType effectType){
+        String s = effectType.getEffectType().getName();
+        String name = "";
+        switch (s){
+            case "AWKWARD":
+                name = "奇妙なスプラッシュポーション";
+                break;
+            case "FIRE_RESISTANCE" :
+                name = "耐火のスプラッシュポーション";
+                break;
+            case "INSTANT_DAMAGE" :
+                name = "負傷のスプラッシュポーション";
+                break;
+            case "INSTANT_HEAL" :
+                name = "治癒のスプラッシュポーション";
+                break;
+            case "INVISIBILITY" :
+                name = "透明化のスプラッシュポーション";
+                break;
+            case "JUMP":
+                name = "跳躍のスプラッシュポーション";
+                break;
+            case "LUCK":
+                name = "幸運のスプラッシュポーション";
+                break;
+            case "MUNDANE" :
+                name = "ありふれたスプラッシュポーション";
+                break;
+            case "NIGHT_VISION":
+                name = "暗視のスプラッシュポーション";
+                break;
+            case "POISON" :
+                name = "毒のスプラッシュポーション";
+                break;
+            case "REGEN" :
+                name = "再生のスプラッシュポーション";
+                break;
+            case "SLOWNESS" :
+                name = "鈍化のスプラッシュポーション";
+                break;
+            case "SPEED" :
+                name = "俊敏のスプラッシュポーション";
+                break;
+            case "STRENGTH" :
+                name = "力のスプラッシュポーション";
+                break;
+            case "THICK" :
+                name = "濃厚なスプラッシュポーション";
+                break;
+            case "WATER" :
+                name = "水入りスプラッシュ瓶";
+                break;
+            case "WATER_BREATHING":
+                name = "水中呼吸のスプラッシュポーション";
+                break;
+            case "WEAKNESS" :
+                name = "弱化のスプラッシュポーション";
+                break;
+            default:
+                name = "クラフト不可能なスプラッシュポーション";
+                break;
+        }
+        return name;
+    }
 }

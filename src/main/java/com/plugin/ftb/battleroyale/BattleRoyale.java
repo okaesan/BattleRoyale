@@ -1,7 +1,10 @@
 package com.plugin.ftb.battleroyale;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -11,6 +14,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
+
+import com.plugin.ftb.battleroyale.clubs.Club;
+import com.plugin.ftb.battleroyale.clubs.ClubManager;
+import com.plugin.ftb.battleroyale.clubs.data.Archery;
+import com.plugin.ftb.battleroyale.clubs.data.BaseBall;
+import com.plugin.ftb.battleroyale.clubs.data.Drama;
+import com.plugin.ftb.battleroyale.clubs.data.Effects;
+import com.plugin.ftb.battleroyale.clubs.data.Karate;
+import com.plugin.ftb.battleroyale.clubs.data.Kendou;
+import com.plugin.ftb.battleroyale.clubs.data.Science;
+import com.plugin.ftb.battleroyale.clubs.data.TeaCeremony;
 
 public class BattleRoyale extends JavaPlugin {
 	/*
@@ -39,7 +53,11 @@ public class BattleRoyale extends JavaPlugin {
 	public static String prefix = ChatColor.GRAY + "[BattleRoyale]";
 	//マップ用ピクセル
 	public static BufferedImage image;
+	
+	//部活設定
+	public static Map<UUID,Club> playersClub = new HashMap<>();;
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onEnable() {
 		plugin = this;
@@ -85,6 +103,91 @@ public class BattleRoyale extends JavaPlugin {
 		teamDead.setSuffix(ChatColor.RESET.toString());
 		teamDead.setDisplayName("team dead");
 		teamDead.setAllowFriendlyFire(false);
+		
+		//部活関係のイベント登録
+		//getServer().getPluginManager().registerEvents(new Test(), this);
+		getServer().getPluginManager().registerEvents(new Archery(), this);
+		getServer().getPluginManager().registerEvents(new BaseBall(), this);
+		getServer().getPluginManager().registerEvents(new Karate(), this);
+		getServer().getPluginManager().registerEvents(new Kendou(), this);
+		getServer().getPluginManager().registerEvents(new TeaCeremony(), this);
+		getServer().getPluginManager().registerEvents(new Science(), this);
+		getServer().getPluginManager().registerEvents(new Drama(), this);
+		getServer().getPluginManager().registerEvents(new Effects(), this);
+		
+		//システムに部活を登録
+		ClubManager.addClub(new Club("Dummy"),"所属なし");
+		ClubManager.addClub(new Club("Archery"),"弓道部");
+		//ClubManager.addClub(new Club("Test"),"テスト部");
+		ClubManager.addClub(new Club("BaseBall"), "野球部");
+		ClubManager.addClub(new Club("Kendou"), "剣道部");
+		ClubManager.addClub(new Club("Swimming"),"水泳部");
+		ClubManager.addClub(new Club("TrackAndField"),"陸上部");
+		ClubManager.addClub(new Club("BasketBall"), "バスケ部");
+		ClubManager.addClub(new Club("VolleyBall"), "バレー部");
+		ClubManager.addClub(new Club("Karate"), "空手部");
+		ClubManager.addClub(new Club("TeaCeremony"), "茶道部");
+		ClubManager.addClub(new Club("Soccer"), "サッカー部");
+		ClubManager.addClub(new Club("Science"), "科学部");
+		ClubManager.addClub(new Club("Drama"), "演劇部");
+
+		List<String> list = new ArrayList<>();
+		list.add("ダミーの部活です。");
+		ClubManager.getClub("Dummy").setInfo(list);
+		list.clear();
+		
+		list.add("弓を最大まで引いてしばらく引き続けると追尾弾になります。");
+		ClubManager.getClub("Archery").setInfo(list);
+		list.clear();
+		
+		/*list.add("テストの部活です。");
+		list.add("仮作成した機能等が含まれます。");
+		ClubManager.getClub("Test").setInfo(list);
+		list.clear();*/
+		
+		list.add("投擲速度が上昇します。");
+		ClubManager.getClub("BaseBall").setInfo(list);
+		list.clear();
+		
+		list.add("剣の攻撃力が上昇します。");
+		ClubManager.getClub("Kendou").setInfo(list);
+		list.clear();
+		
+		list.add("水中での移動速度が上がります。");
+		ClubManager.getClub("Swimming").setInfo(list);
+		list.clear();
+		
+		list.add("移動速度が上昇します。");
+		ClubManager.getClub("TrackAndField").setInfo(list);
+		list.clear();
+		
+		list.add("ジャンプ力が上昇します。");
+		ClubManager.getClub("BasketBall").setInfo(list);
+		list.clear();
+		
+		list.add("ジャンプ力が上昇します。");
+		ClubManager.getClub("VolleyBall").setInfo(list);
+		list.clear();
+		
+		list.add("攻撃力と防御力が上昇します。");
+		ClubManager.getClub("Karate").setInfo(list);
+		list.clear();
+		
+		list.add("回復力が上昇します。");
+		ClubManager.getClub("TeaCeremony").setInfo(list);
+		list.clear();
+		
+		list.add("ジャンプ力と移動速度が上昇します。");
+		ClubManager.getClub("Soccer").setInfo(list);
+		list.clear();
+		
+		list.add("ダメージポーションの威力が上昇します。");
+		ClubManager.getClub("Science").setInfo(list);
+		list.clear();
+		
+		list.add("シフトを押すことで透明になれますが、移動速度減少と盲目になります。");
+		ClubManager.getClub("Drama").setInfo(list);
+		list.clear();
 	}
 
 	@Override

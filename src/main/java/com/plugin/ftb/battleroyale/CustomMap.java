@@ -20,7 +20,7 @@ public class CustomMap extends MapRenderer {
 	public static ArrayList<Integer> plusDeathZ = PlusDeathArea.plusDeathZ;
 	public static ArrayList<Integer> locL = PlusDeathArea.locL;
 	public static ArrayList<Integer> locR = PlusDeathArea.locR;
-	public static List<Integer> deathRandom = PlusThreadClass.deathNotRandom.get(PlusThreadClass.rootRandom.get(StartCommand.playCount));
+	public static List<Integer> deathRandom = PlusThreadClass.deathNotRandom;
 	public static String scaleString;
 	public static Scale scale = Scale.FARTHEST;
 	public static float locPerPix;
@@ -45,10 +45,10 @@ public class CustomMap extends MapRenderer {
 		 * 追加されたときのみ描画する。
 		 */
 		for(int i:PlusThreadClass.deathRandomCount){
-			if(i >= PlusThreadClass.deathNotRandom.get(PlusThreadClass.rootRandom.get(StartCommand.playCount)).size()){
+			if(!PlusThreadClass.deathNotRandom.contains(i)){
 				break;
 			}
-			int r = PlusThreadClass.deathNotRandom.get(PlusThreadClass.rootRandom.get(StartCommand.playCount)).get(i);
+			int r = PlusThreadClass.deathNotRandom.get(i);
 
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);
@@ -93,7 +93,7 @@ public class CustomMap extends MapRenderer {
 
 		for(int i:PlusThreadClass.deathRandomCountPast){
 
-			int r = PlusThreadClass.deathNotRandom.get(PlusThreadClass.rootRandom.get(StartCommand.playCount)).get(i);
+			int r = PlusThreadClass.deathNotRandom.get(i);
 
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);
@@ -126,7 +126,7 @@ public class CustomMap extends MapRenderer {
 
 		for(int i:PlusThreadClass.deathRandomCountPast){
 
-			int r = PlusThreadClass.deathNotRandom.get(PlusThreadClass.rootRandom.get(StartCommand.playCount)).get(i);
+			int r = PlusThreadClass.deathNotRandom.get(i);
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);
 

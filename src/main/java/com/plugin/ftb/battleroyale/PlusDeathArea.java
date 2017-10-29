@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -133,11 +134,9 @@ class PlusThreadClass extends BukkitRunnable{
 	public static final String TEAM_DEAD_NAME = BattleRoyale.TEAM_DEAD_NAME;
 
 	//規定の追加方法の場合
-	public static HashMap<Integer, List<Integer>> deathNotRandom = new HashMap<Integer, List<Integer>>();
-	//抽選
-	public static List<Integer> rootRandom = new ArrayList<Integer>();
+	public static List<Integer> deathNotRandom = new ArrayList<>();
 	//完全ランダムの場合
-	public static List<Integer> deathRandom = new ArrayList<Integer>();
+	public static List<Integer> deathRandom = new ArrayList<>();
 
 	//猶予段階のエリア
 	public static ArrayList<Integer> deathRandomCount = new ArrayList<Integer>();
@@ -179,8 +178,31 @@ class PlusThreadClass extends BukkitRunnable{
 				return;
 			}
 			deathRandomCountPast.add(countPast);
-			//Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "禁止区域が追加されました。");
 			MainUtils.sendTitleToEveryone(ChatColor.RED + "禁止区域", ChatColor.RED + "が追加されました。", 1, 3, 1);
+			
+			//禁止区域をチャットに送信
+			String area = "";
+			boolean[] areas = new boolean[16];
+			for(int count:PlusThreadClass.deathRandomCountPast){
+				int r = PlusThreadClass.deathNotRandom.get(count);
+				//禁止区域のエリアはtrueにしておく
+				areas[r] = true;
+			}
+			for(int i=15; i>=0; i--) {
+				
+				if(areas[i]) {
+					area = area + "■ ";
+					
+				}else {
+					area = area + "□ ";
+				}
+				if((i)%4 == 0) {
+					//改行
+					area = area + "\n";
+				}
+			}
+			Bukkit.broadcastMessage(area);
+			
 			countPast++;
 			//二週目からはずっと同じ一定時間
 			loopC=plugin.getConfig().getIntegerList("Timer").get(1);
@@ -221,7 +243,7 @@ class PlusDeathThreadClass extends BukkitRunnable{
 			}
 
 			//規定の追加方法の場合
-			int r = PlusThreadClass.deathNotRandom.get(PlusThreadClass.rootRandom.get(StartCommand.playCount)).get(i);
+			int r = PlusThreadClass.deathNotRandom.get(i);
 
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);

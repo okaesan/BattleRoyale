@@ -2,6 +2,7 @@ package com.plugin.ftb.battleroyale;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,6 +11,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import com.plugin.ftb.battleroyale.clubs.Club;
+import com.plugin.ftb.battleroyale.clubs.ClubManager;
 
 public class MainCommandExecutor implements CommandExecutor {
 
@@ -169,7 +173,15 @@ public class MainCommandExecutor implements CommandExecutor {
 
 			case "startgame":
 				if(args.length == 1){
+					
+					for(Player player:Bukkit.getOnlinePlayers()) {
+						Club club = ClubManager.getRandomClub();
+						ClubManager.setClub(player, club);
+						player.sendMessage("あなたの部活は " + ChatColor.GREEN + club.getDisplayName() + ChatColor.RESET + " です。");
+					}
+					
 					StartCommand.startGame();
+					
 				}
 				return true;
 
