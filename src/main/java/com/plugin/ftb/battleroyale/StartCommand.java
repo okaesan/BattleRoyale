@@ -84,11 +84,10 @@ class countDown extends BukkitRunnable{
 					}
 				}
 			}
-			if(PlusThreadClass.deathNotRandom.isEmpty()){
-				//規定の追加方法の場合
-				PlusThreadClass.deathRandom = AreaManager.getRandomList();
-				PlusThreadClass.deathNotRandom = PlusThreadClass.deathRandom;
-			}
+			
+			//禁止区域を選定
+			PlusThreadClass.deathRandom = AreaManager.getRandomList();
+			PlusThreadClass.deathNotRandom = PlusThreadClass.deathRandom;
 
 			deathA.deathArea();
 			PdeathA.setPlusDeath();
