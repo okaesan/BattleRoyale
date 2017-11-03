@@ -1,7 +1,6 @@
 package com.plugin.ftb.battleroyale.clubs.data;
 
 import org.bukkit.Material;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,7 +20,10 @@ public class Karate implements Listener {
 			Player p = (Player)e.getDamager();
 			if(ClubManager.hasClub(p)){
 				if(ClubManager.getClub(p) == ClubManager.getClub(name)){
-					Creature c = (Creature)e.getEntity();
+					if(!(e.getEntity() instanceof Player)) {
+						return;
+					}
+					Player c = (Player)e.getEntity();
 					if(p.getInventory().getItemInMainHand().getType() == Material.AIR){
 						c.damage(e.getDamage() + 3);
 					}
