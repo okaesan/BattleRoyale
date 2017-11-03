@@ -260,4 +260,53 @@ public class MainUtils {
         }
         return name;
     }
+    
+    
+    public static void sendDeathArea() {
+    	//禁止区域をチャットに送信
+		String area = "";
+		boolean[] areas = new boolean[16];
+		boolean[] sortedAreas = new boolean[16];
+		for(int count:PlusThreadClass.deathRandomCountPast){
+			int r = PlusThreadClass.deathNotRandom.get(count);
+			//禁止区域のエリアはtrueにしておく
+			areas[r] = true;
+		}
+    	
+    	ArrayList<Integer> locL = new ArrayList<Integer>();
+    	ArrayList<Integer> locR = new ArrayList<Integer>();
+    	if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
+    		//上下左右逆
+    		for(int i=15; i>=0; i--) {
+    			sortedAreas[i] = areas[15-i];
+    		}
+		}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
+			//同じ
+			sortedAreas = areas;
+		}else if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
+			//左右逆
+			for(int x=0; x<4; x++) {
+				for(int z=0; z<4; z++) {
+					sortedAreas[x+(4*z)] = areas[(3-x)+(4*z)];
+				}
+			}
+		}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
+			//逆
+			for(int x=0; x<4; x++) {
+				for(int z=0; z<4; z++) {
+					sortedAreas[x+(4*z)] = areas[x+(4*(3-z))];
+				}
+			}
+		}
+    	
+    	for(int i=0; i<16; i++) {
+    		if(sortedAreas[i]) {
+    			area += "■ ";
+    		}else {
+    			area += "□ ";
+    		}
+    	}
+    	
+    	Bukkit.broadcastMessage(area);
+    }
 }

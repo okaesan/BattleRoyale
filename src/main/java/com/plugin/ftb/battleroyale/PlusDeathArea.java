@@ -180,28 +180,8 @@ class PlusThreadClass extends BukkitRunnable{
 			deathRandomCountPast.add(countPast);
 			MainUtils.sendTitleToEveryone(ChatColor.RED + "禁止区域", ChatColor.RED + "が追加されました。", 1, 3, 1);
 			
-			//禁止区域をチャットに送信
-			String area = "";
-			boolean[] areas = new boolean[16];
-			for(int count:PlusThreadClass.deathRandomCountPast){
-				int r = PlusThreadClass.deathNotRandom.get(count);
-				//禁止区域のエリアはtrueにしておく
-				areas[r] = true;
-			}
-			for(int i=15; i>=0; i--) {
-				
-				if(areas[i]) {
-					area = area + "■ ";
-					
-				}else {
-					area = area + "□ ";
-				}
-				if((i)%4 == 0) {
-					//改行
-					area = area + "\n";
-				}
-			}
-			Bukkit.broadcastMessage(area);
+			//禁止区域を通知
+			MainUtils.sendDeathArea();
 			
 			countPast++;
 			//二週目からはずっと同じ一定時間
