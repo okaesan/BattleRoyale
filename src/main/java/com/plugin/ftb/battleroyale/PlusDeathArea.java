@@ -182,7 +182,8 @@ class PlusThreadClass extends BukkitRunnable{
 			//Bukkit.broadcastMessage(BattleRoyale.prefix + ChatColor.RED + "禁止区域が追加されました。");
 			MainUtils.sendTitleToEveryone(ChatColor.RED + "禁止区域", ChatColor.RED + "が追加されました。", 1, 3, 1);
 			//禁止区域を通知
-			MainUtils.sendDeathArea();
+
+		//	MainUtils.sendDeathArea();
 
 			countPast++;
 			//二週目からはずっと同じ一定時間
