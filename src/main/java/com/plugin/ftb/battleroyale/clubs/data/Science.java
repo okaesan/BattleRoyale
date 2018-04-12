@@ -1,6 +1,5 @@
 package com.plugin.ftb.battleroyale.clubs.data;
 
-import net.minecraft.server.v1_11_R1.ItemStack;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
@@ -17,6 +16,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.plugin.ftb.battleroyale.BattleRoyale;
 import com.plugin.ftb.battleroyale.clubs.ClubManager;
 
+import net.minecraft.server.v1_11_R1.ItemStack;
 import net.minecraft.server.v1_11_R1.NBTTagCompound;
 
 public class Science implements Listener {
@@ -54,7 +54,7 @@ public class Science implements Listener {
 	@EventHandler
 	public void Hit(PotionSplashEvent e){
 		if(name.equals(e.getEntity().getCustomName())){
-			ItemStack nmsItem = CraftItemStack.asNMSCopy(e.getPotion().getItem());
+			ItemStack nmsItem =CraftItemStack.asNMSCopy(e.getPotion().getItem());
 			NBTTagCompound nbttag = nmsItem.getTag();
 			if("minecraft:harming".equals(nbttag.getString("Potion"))){
 				for(LivingEntity le : e.getAffectedEntities()){

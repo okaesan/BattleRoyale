@@ -271,14 +271,7 @@ public class MainListener implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onRespawn(PlayerRespawnEvent e){
-		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
-		locDeath = (ArrayList<Integer>) plugin.getConfig().getIntegerList("Deathpoint");
-		Location worDeath = new Location(Bukkit.getWorld("world"),locDeath.get(0),locDeath.get(1),locDeath.get(2));
 
-		if(board.getTeam(TEAM_DEAD_NAME).hasPlayer(e.getPlayer())||board.getTeam(TEAM_ALIVE_NAME).hasPlayer(e.getPlayer())){
-			e.setRespawnLocation(worDeath);
-			//e.getPlayer().getInventory().clear();
-		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -289,6 +282,10 @@ public class MainListener implements Listener {
 		Player killer = player.getKiller();
 		Location loc = player.getLocation();
 		Scoreboard board = plugin.getServer().getScoreboardManager().getMainScoreboard();
+
+		for(PotionEffect effect :player.getActivePotionEffects ()){
+			player.removePotionEffect(effect.getType ());
+		}
 
 		// 死亡後、DEADチームへ移行
 		if (board.getTeam(TEAM_ALIVE_NAME).hasPlayer(player)) {
@@ -490,6 +487,17 @@ public class MainListener implements Listener {
 			}
 			new RunTP().runTaskLater(plugin, 200);
 		}
+
+		event.getEntity().getPlayer().setHealth(20.0);
+
+		board = plugin.getServer().getScoreboardManager().getMainScoreboard();
+		locDeath = (ArrayList<Integer>) plugin.getConfig().getIntegerList("Deathpoint");
+		Location worDeath = new Location(Bukkit.getWorld("world"),locDeath.get(0),locDeath.get(1),locDeath.get(2));
+
+		if(board.getTeam(TEAM_DEAD_NAME).hasPlayer(event.getEntity().getPlayer())||board.getTeam(TEAM_ALIVE_NAME).hasPlayer(event.getEntity().getPlayer())){
+			event.getEntity().getPlayer().teleport(worDeath);
+			//e.getPlayer().getInventory().clear();
+		}
 	}
 
 	/*
@@ -518,6 +526,15 @@ public class MainListener implements Listener {
 		}
 	}
 
+	@EventHandler
+	public void bedRightClickEvent(PlayerInteractEvent e) {
+		Player p = e.getPlayer();
+		if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			if(e.getClickedBlock().getType() == Material.BED_BLOCK) {
+				e.setCancelled(true);
+			}
+		}
+	}
 	//畑荒らし防止
 	@EventHandler(ignoreCancelled=true)
 	public void onEntityInteractEvent(EntityInteractEvent event){

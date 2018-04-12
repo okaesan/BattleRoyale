@@ -17,6 +17,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -26,6 +27,10 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.Scoreboard;
+
+import net.minecraft.server.v1_11_R1.NBTTagCompound;
+import net.minecraft.server.v1_11_R1.NBTTagInt;
+import net.minecraft.server.v1_11_R1.NBTTagList;
 
 class countDown extends BukkitRunnable{
 
@@ -84,10 +89,27 @@ class countDown extends BukkitRunnable{
 					}
 				}
 			}
-			
-			//禁止区域を選定
-			PlusThreadClass.deathRandom = AreaManager.getRandomList();
-			PlusThreadClass.deathNotRandom = PlusThreadClass.deathRandom;
+			if(PlusThreadClass.rootRandom.isEmpty()){
+				//規定の追加方法の場合
+				PlusThreadClass.deathRandom = Arrays.asList(0,3,2,1,15,13,5,6,14,7,4,11,10,9,8,12);
+				PlusThreadClass.deathNotRandom.put(1, PlusThreadClass.deathRandom);
+				PlusThreadClass.deathRandom = Arrays.asList(12,10,5,13,11,3,15,14,6,7,9,8,4,2,0,1);
+				PlusThreadClass.deathNotRandom.put(2, PlusThreadClass.deathRandom);
+				PlusThreadClass.deathRandom = Arrays.asList(12,8,11,0,2,3,4,1,5,7,6,9,13,14,10,15);
+				PlusThreadClass.deathNotRandom.put(3, PlusThreadClass.deathRandom);
+				PlusThreadClass.deathRandom = Arrays.asList(13,15,1,0,10,14,3,4,11,2,6,7,5,8,9,12);
+				PlusThreadClass.deathNotRandom.put(4, PlusThreadClass.deathRandom);
+				PlusThreadClass.deathRandom = Arrays.asList(6,14,5,9,13,12,15,8,4,0,10,1,2,11,7,3);
+				PlusThreadClass.deathNotRandom.put(5, PlusThreadClass.deathRandom);
+				PlusThreadClass.deathRandom = Arrays.asList(9,10,6,5,4,8,12,13,14,15,11,7,3,2,1,0);
+				PlusThreadClass.deathNotRandom.put(6, PlusThreadClass.deathRandom);
+				PlusThreadClass.deathRandom = Arrays.asList(5,3,15,6,7,11,2,10,1,14,13,10,0,12,8,4);
+				PlusThreadClass.deathNotRandom.put(7, PlusThreadClass.deathRandom);
+
+				PlusThreadClass.rootRandom = Arrays.asList(1,2,3,4,5,6,7);
+				Collections.shuffle(PlusThreadClass.rootRandom);
+			}
+
 
 			deathA.deathArea();
 			PdeathA.setPlusDeath();
@@ -304,11 +326,14 @@ public class StartCommand extends BattleRoyale {
 				ItemStack itemStack;
 				if(material.equals(Material.POTION) || material.equals(Material.SPLASH_POTION)) {
 					PotionType potionType = PotionType.valueOf(chestItemsConfig.getString("chestItem.item"+ id + "_effectType"));
-					
-					itemStack = MainUtils.getPotion(potionType, 
-							chestItemsConfig.getInt("chestItem.item"+id + "_sec"), 
+
+					itemStack = MainUtils.getPotion(potionType,
+							chestItemsConfig.getInt("chestItem.item"+id + "_sec"),
 							chestItemsConfig.getInt("chestItem.item"+id + "_level"),
 							chestItemsConfig.getInt("chestItem.item"+ id + "_amount"));
+
+
+
 				}else {
 					itemStack = new ItemStack(material,1);
 					ItemMeta meta = itemStack.getItemMeta();

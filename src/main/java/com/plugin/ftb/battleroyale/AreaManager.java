@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-
+ 
 import javax.swing.*;
 public class AreaManager {
 	/*
@@ -62,9 +62,9 @@ public class AreaManager {
         for(int i=0; i<list.length; i++) {
             hashMap.put(i, list[i]);
         }
-        List<Map.Entry<Integer,Integer>> entries =
-                  new ArrayList<Map.Entry<Integer,Integer>>(hashMap.entrySet());
-            Collections.sort(entries, new Comparator<Map.Entry<Integer,Integer>>() {
+        List<Entry<Integer,Integer>> entries =
+                  new ArrayList<Entry<Integer,Integer>>(hashMap.entrySet());
+            Collections.sort(entries, new Comparator<Entry<Integer,Integer>>() {
      
                 @Override
                 public int compare(

@@ -92,7 +92,7 @@ public class MainUtils {
 				return true;
 			}
 
-			int r = PlusThreadClass.deathNotRandom.get(i);
+			int r = PlusThreadClass.deathNotRandom.get(PlusThreadClass.rootRandom.get(StartCommand.playCount)).get(i);
 			int pdaX = (int)PlusDeathArea.plusDeathX.get(r);
 			int pdaZ = (int)PlusDeathArea.plusDeathZ.get(r);
 
@@ -181,105 +181,104 @@ public class MainUtils {
 			((CraftPlayer) player).getHandle().playerConnection.sendPacket (length);
 		}
 	}
-	
 	/*
 	 * カスタムポーションを返す
 	 */
-    public static ItemStack getPotion(PotionType effectType,int seconds,int level, int amount){
-        ItemStack potion = new ItemStack(Material.SPLASH_POTION, amount);
-        PotionMeta potionMeta = (PotionMeta)potion.getItemMeta();
-        PotionEffect pe = new PotionEffect(effectType.getEffectType(),seconds*20,level-1);
-        potionMeta.addCustomEffect(pe,true);
-        potionMeta.setLocalizedName(getPotionName(effectType));
-        potionMeta.setColor(effectType.getEffectType().getColor());
-        potion.setItemMeta(potionMeta);
-        return potion;
-    }
+	public static ItemStack getPotion(PotionType effectType, int seconds, int level, int amount){
+		ItemStack potion = new ItemStack(Material.SPLASH_POTION, amount);
+		PotionMeta potionMeta = (PotionMeta)potion.getItemMeta();
+		PotionEffect pe = new PotionEffect(effectType.getEffectType(),seconds*20,level-1);
+		potionMeta.addCustomEffect(pe,true);
+		potionMeta.setLocalizedName(getPotionName(effectType));
+		potionMeta.setColor(effectType.getEffectType().getColor());
+		potion.setItemMeta(potionMeta);
+		return potion;
+	}
 
-    public static String getPotionName(PotionType effectType){
-        String s = effectType.getEffectType().getName();
-        String name = "";
-        switch (s){
-            case "AWKWARD":
-                name = "奇妙なスプラッシュポーション";
-                break;
-            case "FIRE_RESISTANCE" :
-                name = "耐火のスプラッシュポーション";
-                break;
-            case "INSTANT_DAMAGE" :
-                name = "負傷のスプラッシュポーション";
-                break;
-            case "INSTANT_HEAL" :
-                name = "治癒のスプラッシュポーション";
-                break;
-            case "INVISIBILITY" :
-                name = "透明化のスプラッシュポーション";
-                break;
-            case "JUMP":
-                name = "跳躍のスプラッシュポーション";
-                break;
-            case "LUCK":
-                name = "幸運のスプラッシュポーション";
-                break;
-            case "MUNDANE" :
-                name = "ありふれたスプラッシュポーション";
-                break;
-            case "NIGHT_VISION":
-                name = "暗視のスプラッシュポーション";
-                break;
-            case "POISON" :
-                name = "毒のスプラッシュポーション";
-                break;
-            case "REGEN" :
-                name = "再生のスプラッシュポーション";
-                break;
-            case "SLOWNESS" :
-                name = "鈍化のスプラッシュポーション";
-                break;
-            case "SPEED" :
-                name = "俊敏のスプラッシュポーション";
-                break;
-            case "STRENGTH" :
-                name = "力のスプラッシュポーション";
-                break;
-            case "THICK" :
-                name = "濃厚なスプラッシュポーション";
-                break;
-            case "WATER" :
-                name = "水入りスプラッシュ瓶";
-                break;
-            case "WATER_BREATHING":
-                name = "水中呼吸のスプラッシュポーション";
-                break;
-            case "WEAKNESS" :
-                name = "弱化のスプラッシュポーション";
-                break;
-            default:
-                name = "クラフト不可能なスプラッシュポーション";
-                break;
-        }
-        return name;
-    }
-    
-    
-    public static void sendDeathArea() {
-    	//禁止区域をチャットに送信
+	public static String getPotionName(PotionType effectType){
+		String s = effectType.getEffectType().getName();
+		String name = "";
+		switch (s){
+			case "AWKWARD":
+				name = "奇妙なスプラッシュポーション";
+				break;
+			case "FIRE_RESISTANCE" :
+				name = "耐火のスプラッシュポーション";
+				break;
+			case "INSTANT_DAMAGE" :
+				name = "負傷のスプラッシュポーション";
+				break;
+			case "INSTANT_HEAL" :
+				name = "治癒のスプラッシュポーション";
+				break;
+			case "INVISIBILITY" :
+				name = "透明化のスプラッシュポーション";
+				break;
+			case "JUMP":
+				name = "跳躍のスプラッシュポーション";
+				break;
+			case "LUCK":
+				name = "幸運のスプラッシュポーション";
+				break;
+			case "MUNDANE" :
+				name = "ありふれたスプラッシュポーション";
+				break;
+			case "NIGHT_VISION":
+				name = "暗視のスプラッシュポーション";
+				break;
+			case "POISON" :
+				name = "毒のスプラッシュポーション";
+				break;
+			case "REGEN" :
+				name = "再生のスプラッシュポーション";
+				break;
+			case "SLOWNESS" :
+				name = "鈍化のスプラッシュポーション";
+				break;
+			case "SPEED" :
+				name = "俊敏のスプラッシュポーション";
+				break;
+			case "STRENGTH" :
+				name = "力のスプラッシュポーション";
+				break;
+			case "THICK" :
+				name = "濃厚なスプラッシュポーション";
+				break;
+			case "WATER" :
+				name = "水入りスプラッシュ瓶";
+				break;
+			case "WATER_BREATHING":
+				name = "水中呼吸のスプラッシュポーション";
+				break;
+			case "WEAKNESS" :
+				name = "弱化のスプラッシュポーション";
+				break;
+			default:
+				name = "クラフト不可能なスプラッシュポーション";
+				break;
+		}
+		return name;
+	}
+
+
+	public static void sendDeathArea() {
+		//禁止区域をチャットに送信
 		String area = "";
 		boolean[] areas = new boolean[16];
 		boolean[] sortedAreas = new boolean[16];
 		for(int count:PlusThreadClass.deathRandomCountPast){
-			int r = PlusThreadClass.deathNotRandom.get(count);
+			int s = PlusThreadClass.deathNotRandom.get(PlusThreadClass.rootRandom.get(StartCommand.playCount)).get(count);
 			//禁止区域のエリアはtrueにしておく
-			areas[r] = true;
+			areas[s] = true;
 		}
-    	
-    	ArrayList<Integer> locL = new ArrayList<Integer>();
-    	ArrayList<Integer> locR = new ArrayList<Integer>();
-    	if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
-    		//上下左右逆
-    		for(int i=15; i>=0; i--) {
-    			sortedAreas[i] = areas[15-i];
-    		}
+
+		ArrayList<Integer> locL = new ArrayList<Integer>();
+		ArrayList<Integer> locR = new ArrayList<Integer>();
+		if ((int)locL.get(0)>=(int)locR.get(0)&&(int)locL.get(1)>=(int)locR.get(1)){
+			//上下左右逆
+			for(int i=15; i>=0; i--) {
+				sortedAreas[i] = areas[15-i];
+			}
 		}else if ((int)locL.get(0)<(int)locR.get(0)&&(int)locL.get(1)<(int)locR.get(1)){
 			//同じ
 			sortedAreas = areas;
@@ -298,15 +297,16 @@ public class MainUtils {
 				}
 			}
 		}
-    	
-    	for(int i=0; i<16; i++) {
-    		if(sortedAreas[i]) {
-    			area += "■ ";
-    		}else {
-    			area += "□ ";
-    		}
-    	}
-    	
-    	Bukkit.broadcastMessage(area);
-    }
+
+		for(int i=0; i<16; i++) {
+			if(sortedAreas[i]) {
+				area += "■ ";
+			}else {
+				area += "□ ";
+			}
+		}
+
+		Bukkit.broadcastMessage(area);
+	}
+
 }

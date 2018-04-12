@@ -22,10 +22,9 @@ public class AreaJoin {
 		betaRx = (int)locR.get(0);
 		betaRz = (int)locR.get(1);
 
-		for(Player player : Bukkit.getServer().getOnlinePlayers()) {
-			if(player.hasPermission("battleroyale.op")) {
-				
-			}
+		for(Player player : Bukkit.getServer().getOnlinePlayers()){
+			if(player.hasPermission("battleroyale.op"))
+				continue;
 			int playerLocationX = (int) player.getLocation().getX();
 			int playerLocationZ = (int) player.getLocation().getZ();
 			if (betaLx>=playerLocationX&&playerLocationX>=betaRx&&betaLz>=playerLocationZ&&playerLocationZ>=betaRz){
