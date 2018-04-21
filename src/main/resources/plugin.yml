@@ -1,5 +1,5 @@
 name: BattleRoyale
-main: com.plugin.ftb.battleroyale.BattleRoyale
+main: com._28ftb.battleroyale.BattleRoyale
 version: 1.1.41
 commands:
   battleroyale:
