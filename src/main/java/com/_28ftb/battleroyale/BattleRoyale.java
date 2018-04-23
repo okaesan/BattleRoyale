@@ -199,8 +199,8 @@ public class BattleRoyale extends JavaPlugin {
     }
   }
 
-  /*
-   * ブロードキャストするメソッド。簡略化しただけです。デバッグ用
+  /**
+   * メッセージをブロードキャストするメソッド。簡略化しただけです。デバッグ用。
    *
    * @param message ブロードキャストするメッセージ
    */
@@ -208,6 +208,12 @@ public class BattleRoyale extends JavaPlugin {
     Bukkit.getServer().broadcastMessage(message);
   }
 
+  /**
+   * プラグイン班にメッセージを送るメソッド。
+   * アカウント名決め打ち。デバッグ用。
+   *
+   * @param message 送信するメッセージ
+   */
   public static void sendToPluginTeam(String message) {
     for (Player player : Bukkit.getOnlinePlayers()) {
       String playerName = player.getName();
