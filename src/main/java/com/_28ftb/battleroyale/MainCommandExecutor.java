@@ -93,14 +93,14 @@ public class MainCommandExecutor implements CommandExecutor {
 
         case "setLobbypoint":
           if (args.length == 1) {
-            MainConfig.setLobbypoint(_player.getLocation(), _player);
+            MainConfig.setLobbypoint(_player.getLocation());
             _player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "Lobbypointを設定しました");
           }
           return true;
 
         case "setStartpoint":
           if (args.length == 1) {
-            MainConfig.setStartpoint(_player.getLocation(), _player);
+            MainConfig.setStartpoint(_player.getLocation());
             _player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "Startpointを追加しました");
           }
           return true;

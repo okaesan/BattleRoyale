@@ -39,8 +39,8 @@ public class MainConfig extends BattleRoyale {
 
   public static boolean isRandom = false;
 
-  /*
-   * configからlocationsを取得
+  /**
+   * configからlocationsを取得。
    */
   @SuppressWarnings("unchecked")
   public static void loadConfig() {
@@ -120,6 +120,11 @@ public class MainConfig extends BattleRoyale {
     }
   }
 
+  /**
+   * configに看板の座標を書き込む。
+   *
+   * @param loc 看板のLocation
+   */
   public static void setSign(Location loc) {
     loadConfig();
 
@@ -130,14 +135,12 @@ public class MainConfig extends BattleRoyale {
     plugin.saveConfig();
   }
 
-  /*
-   * ステージの対角線の座標
+  /**
+   * ステージの対角線の座標。
    *
    * @param loc コマンドを打った人の現在地の座標
-   *
    * @param player コマンド発信者
-   *
-   * @param jud stageLとstageRのどちらがコマンドとして入力されたかの識別子
+   * @param judge stageLとstageRのどちらがコマンドとして入力されたかの識別子
    */
   public static void makeStage(Location loc, Player player, int judge) {
     loadConfig();
@@ -205,8 +208,12 @@ public class MainConfig extends BattleRoyale {
     }
   }
 
-  // lobbypointの設定
-  public static void setLobbypoint(Location loc, Player player) {
+  /**
+   * lobbypointの設定。
+   *
+   * @param loc lobbypointの座標
+   */
+  public static void setLobbypoint(Location loc) {
     loadConfig();
 
     _lobbypoint.add((int) loc.getX());
@@ -219,8 +226,12 @@ public class MainConfig extends BattleRoyale {
     plugin.saveConfig();
   }
 
-  // startpointの設定
-  public static void setStartpoint(Location loc, Player player) {
+  /**
+   * startpointの設定。
+   *
+   * @param loc startpointの座標。
+   */
+  public static void setStartpoint(Location loc) {
     loadConfig();
 
     ArrayList<Integer> point = new ArrayList<>();
@@ -237,6 +248,11 @@ public class MainConfig extends BattleRoyale {
     plugin.saveConfig();
   }
 
+  /**
+   *
+   *
+   * @param player
+   */
   public static void setStartpointRandom(Player player) {
     loadConfig();
 
@@ -249,7 +265,12 @@ public class MainConfig extends BattleRoyale {
     plugin.saveConfig();
   }
 
-  // Deathpointの設定
+  /**
+   * Deathpointの設定。
+   *
+   * @param loc
+   * @param player
+   */
   public static void setDeathpoint(Location loc, Player player) {
     loadConfig();
 
@@ -262,7 +283,12 @@ public class MainConfig extends BattleRoyale {
     plugin.saveConfig();
   }
 
-  // 禁止区域追加までの時間の設定
+  /**
+   * 禁止区域追加までの時間の設定。
+   *
+   * @param a
+   * @param b
+   */
   public static void setTimer(int a, int b) {
     loadConfig();
 
@@ -276,7 +302,11 @@ public class MainConfig extends BattleRoyale {
     plugin.saveConfig();
   }
 
-  // 最初の攻撃不可の時間の設定
+  /**
+   * 最初の攻撃不可の時間の設定。
+   *
+   * @param parseInt
+   */
   public static void setNATimer(int parseInt) {
     loadConfig();
 
@@ -285,7 +315,12 @@ public class MainConfig extends BattleRoyale {
     plugin.saveConfig();
   }
 
-  // chestの設定
+  /**
+   * chestの設定。
+   *
+   * @param loc
+   * @param player
+   */
   public static void subChestConfig(Location loc, Player player) {
     loadConfig();
 
@@ -311,8 +346,10 @@ public class MainConfig extends BattleRoyale {
     player.sendMessage(BattleRoyale.prefix + ChatColor.GREEN + "このチェストを追加しました");
   }
 
-  /*
-   * マップを保存する
+  /**
+   * マップを保存する。
+   *
+   * @param map
    */
   @SuppressWarnings("deprecation")
   public static void setMap(ItemStack map) {
@@ -326,8 +363,8 @@ public class MainConfig extends BattleRoyale {
     plugin.saveConfig();
   }
 
-  /*
-   * マップを配布する
+  /**
+   * マップを配布する。
    */
   @SuppressWarnings("deprecation")
   public static void giveMap() {
@@ -383,8 +420,10 @@ public class MainConfig extends BattleRoyale {
     }
   }
 
-  /*
-   * マップの初期設定
+  /**
+   * マップの初期設定。
+   *
+   * @param map
    */
   public static void initializeMap(MapView map) {
     plugin.reloadConfig();
@@ -454,7 +493,12 @@ public class MainConfig extends BattleRoyale {
     CursorRenderer.pixPerLoc = pixPerLoc;
   }
 
-  // 破壊できないブロックを追加する
+  /**
+   * 破壊できないブロックを追加する。
+   *
+   * @param loc
+   * @param player
+   */
   public static void addProtectedBlocks(Location loc, Player player) {
     loadConfig();
 
@@ -472,10 +516,9 @@ public class MainConfig extends BattleRoyale {
     saveProtectedBlocksConfig(config);
   }
 
-  /*
-   * コンフィグファイル生成
+  /**
+   * チェストアイテムのconfigファイル生成。
    */
-  // チェストアイテム
   public static void saveDefaultChestItemsConfig() {
     File file = new File(plugin.getDataFolder(), "chestItemsConfig.yml");
     if (!file.exists()) {
@@ -487,7 +530,9 @@ public class MainConfig extends BattleRoyale {
     }
   }
 
-  // 初期アイテム
+  /**
+   * 初期アイテムのconfigファイル生成。
+   */
   public static void saveDefaultFirstItemsConfig() {
     File file = new File(plugin.getDataFolder(), "firstItemsConfig.yml");
     if (!file.exists()) {
@@ -499,7 +544,9 @@ public class MainConfig extends BattleRoyale {
     }
   }
 
-  // 非破壊ブロック用
+  /**
+   * 破壊不可ブロックのconfigファイル生成。
+   */
   public static void saveDefaultProtectedBlocksConfig() {
     File file = new File(plugin.getDataFolder(), "protectedBlocksConfig.yml");
     if (!file.exists()) {
@@ -511,29 +558,41 @@ public class MainConfig extends BattleRoyale {
     }
   }
 
-  /*
-   * チェストアイテム用Configをリロードし、最新のファイル情報を渡す
+  /**
+   * チェストアイテムのconfigをリロードする。
+   *
+   * @return 最新のファイル情報
    */
   public static FileConfiguration getChestItemsConfig() {
     return YamlConfiguration
         .loadConfiguration(new File(plugin.getDataFolder(), "chestItemsConfig.yml"));
   }
 
+  /**
+   * 初期アイテムのconfigをリロードする。
+   *
+   * @return 最新のファイル情報
+   */
   public static FileConfiguration getFirstItemsConfig() {
     return YamlConfiguration
         .loadConfiguration(new File(plugin.getDataFolder(), "firstItemsConfig.yml"));
   }
 
-  // 破壊できないガラス用Config
+  /**
+   * 破壊不可ブロックのconfigをリロードする。
+   *
+   * @return 最新のファイル情報
+   */
   public static FileConfiguration getProtectedBrocksConfig() {
     return YamlConfiguration
         .loadConfiguration(new File(plugin.getDataFolder(), "protectedBlocksConfig.yml"));
   }
 
-  /*
-   * configを上書き
+  /**
+   * チェストアイテムのconfigを上書きする。
+   *
+   * @param config
    */
-  // チェストアイテム
   public static void saveChestItemsConfig(FileConfiguration config) {
     File file = new File(plugin.getDataFolder(), "chestItemsConfig.yml");
     try {
@@ -542,7 +601,11 @@ public class MainConfig extends BattleRoyale {
     }
   }
 
-  // 初期アイテム
+  /**
+   * 初期アイテムのconfigを上書きする。
+   *
+   * @param config
+   */
   public static void saveFirstItemsConfig(FileConfiguration config) {
     File file = new File(plugin.getDataFolder(), "firstItemsConfig.yml");
     try {
@@ -551,7 +614,11 @@ public class MainConfig extends BattleRoyale {
     }
   }
 
-  // 非破壊ブロック用
+  /**
+   * 破壊不可ブロックのconfigを上書きする。
+   *
+   * @param config
+   */
   public static void saveProtectedBlocksConfig(FileConfiguration config) {
     File file = new File(plugin.getDataFolder(), "protectedBlocksConfig.yml");
     try {
@@ -569,20 +636,20 @@ public class MainConfig extends BattleRoyale {
    * public static Boolean isTeamExist(String teamName) { loadConfig();
    * if(!_teams.keySet().isEmpty() && _teams.keySet().contains(teamName)) { return true; }else {
    * return false; } }
-   * 
+   *
    * /* プレイヤーがチームに参加しているか返す
    *
    * public static boolean teamHasPlayer(Player player) { loadConfig(); //チームが1つもない場合
    * if(_teams.keySet().isEmpty()) { return false; } //valuesにplayerが含まれているか検索 for(ArrayList<String>
    * uuids : _teams.values()) { if(uuids.contains(player.getUniqueId().toString())){ return true; }
    * } return false; }
-   * 
+   *
    * /* プレイヤーが参加しているチームを返す
    *
    * public static String joiningTeamName(Player player) { loadConfig(); for(String teamName :
    * _teams.keySet()) { if(_teams.get(teamName).contains(player.getUniqueId().toString())) { return
    * teamName; } } return ""; }
-   * 
+   *
    * /* チームをconfigに書き込み
    *
    * public static void makeTeam(String name) { loadConfig(); if(_teams.keySet() != null &&
@@ -591,41 +658,41 @@ public class MainConfig extends BattleRoyale {
    * ArrayList<Map<String,ArrayList<String>>>(); mapList.add(_teams);
    * plugin.getConfig().set("teams", null); plugin.getConfig().set("teams", mapList);
    * plugin.saveConfig(); }
-   * 
+   *
    * /* チームをすべて削除
    *
    * public static void removeAllTeams() { loadConfig(); _teams = new HashMap<>();
    * plugin.getConfig().set("teams", null); plugin.saveConfig(); }
-   * 
+   *
    * /* チームに参加
    *
    * public static void joinTeam(String teamName, Player player) { loadConfig();
-   * 
+   *
    * //UUIDを追加、保存 ArrayList<String> uuids = _teams.get(teamName); //既に同じチームに入っていないときのみ
    * if(!uuids.contains(player.getUniqueId().toString())) {
    * uuids.add(player.getUniqueId().toString()); }
-   * 
+   *
    * //一度List<Map<>()に変換する List<Map<String,ArrayList<String>>> mapList = new
    * ArrayList<Map<String,ArrayList<String>>>(); mapList.add(_teams);
-   * 
+   *
    * plugin.getConfig().set("teams", null); plugin.getConfig().set("teams", mapList);
    * plugin.saveConfig(); }
-   * 
+   *
    * /* チームから脱退
    *
    * public static void leaveTeam(Player player) { loadConfig();
-   * 
+   *
    * String teamName = joiningTeamName(player);
-   * 
+   *
    * //uuidsからプレイヤーを削除 ArrayList<String> uuids = _teams.get(teamName);
    * uuids.remove(player.getUniqueId().toString()); _teams.put(teamName, uuids);
-   * 
+   *
    * //一度List<Map<>()に変換する List<Map<String,ArrayList<String>>> mapList = new
    * ArrayList<Map<String,ArrayList<String>>>(); mapList.add(_teams);
-   * 
+   *
    * plugin.getConfig().set("teams", null); plugin.getConfig().set("teams", mapList);
    * plugin.saveConfig(); }
-   * 
+   *
    * /* チーム用本を配る
    *
    * public static void giveBook() { for(Player player : Bukkit.getOnlinePlayers()) { ItemStack book
