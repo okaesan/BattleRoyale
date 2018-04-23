@@ -48,6 +48,7 @@ public class ClubCommand implements CommandExecutor {
               return true;
             }
           }
+
         case "remove":
           if (args.length == 1) {
             player.sendMessage(ChatColor.RED + "プレーヤーを選択してください。");
@@ -70,6 +71,7 @@ public class ClubCommand implements CommandExecutor {
               return true;
             }
           }
+
         case "get":
           if (args.length == 1) {
             player.sendMessage(ChatColor.RED + "プレーヤーを選択してください。");
@@ -95,6 +97,7 @@ public class ClubCommand implements CommandExecutor {
               return true;
             }
           }
+
         case "list":
           player.sendMessage(ChatColor.AQUA + "<システム名> : <表示される名前>");
           for (Club c : ClubManager.getClubList()) {
@@ -102,6 +105,9 @@ public class ClubCommand implements CommandExecutor {
                 ChatColor.AQUA + "<" + c.getName() + "> : <" + c.getDisplayName() + ">");
           }
           return true;
+
+        default:
+          return false;
       }
     }
     return true;

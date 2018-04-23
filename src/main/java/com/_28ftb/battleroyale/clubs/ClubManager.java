@@ -17,7 +17,6 @@ public class ClubManager extends BattleRoyale {
 
   /**
    * システムに部活を登録します。
-   * <p>
    * 登録されていない場合、エラーになるのため最初に登録してください。
    */
   public static void addClub(Club club) {
@@ -26,9 +25,7 @@ public class ClubManager extends BattleRoyale {
 
   /**
    * システムに部活を登録します。
-   * <p>
    * 登録されていない場合、エラーになるのため最初に登録してください。
-   * <p>
    * また、表示されるべき名前も同時に設定します。
    */
   public static void addClub(Club club, String displayname) {
@@ -49,8 +46,7 @@ public class ClubManager extends BattleRoyale {
 
   /**
    * プレイヤーの部活を取得します。
-   * <p>
-   * 
+   *
    * @return プレイヤーの所属する部活(Club)
    */
   public static Club getClub(Player player) {
@@ -62,7 +58,7 @@ public class ClubManager extends BattleRoyale {
 
   /**
    * プレイヤーが部活に所属しているか判定します。
-   * 
+   *
    * @return プレイヤーが部活に所属しているか(true or false)
    */
   public static boolean hasClub(Player player) {
@@ -91,7 +87,7 @@ public class ClubManager extends BattleRoyale {
 
   /**
    * 対象をシステムから抹消します。
-   * 
+   *
    * @param club
    */
   public static void removeClub(Club club) {
@@ -102,7 +98,7 @@ public class ClubManager extends BattleRoyale {
 
   /**
    * 登録されている部活一覧を取得します。
-   * 
+   *
    * @return 部活リスト(List Club)
    */
   public static List<Club> getClubList() {
@@ -111,9 +107,8 @@ public class ClubManager extends BattleRoyale {
 
   /**
    * システム名から部活を取得します。
-   * <p>
    * 登録されていない場合、Nullが変えるので注意してください。
-   * 
+   *
    * @return Club
    */
   public static Club getClub(String clubname) {
@@ -129,7 +124,7 @@ public class ClubManager extends BattleRoyale {
 
   /**
    * システム名が対象の部活が存在するか判定します。
-   * 
+   *
    * @param clubname
    * @return 対象が存在するか(true or false)
    */
