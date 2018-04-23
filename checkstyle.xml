@@ -11,12 +11,13 @@
     To completely disable a check, just comment it out or delete it from the file.
     Authors: Max Vetrenko, Ruslan Diachenko, Roman Ivanov.
  -->
- 
+
 <!--
     このCheckstyleは、Google Checksを元に一部を改変しています。
 
     【改変内容】
     - パッケージ名に"_"を含められるようにした。
+    - Javadocの1行目の終了文字を"."から"。"に変更した。
  -->
 
 <module name = "Checker">
@@ -222,6 +223,7 @@
         <module name="SummaryJavadoc">
             <property name="forbiddenSummaryFragments"
              value="^@return the *|^This method returns |^A [{]@code [a-zA-Z0-9]+[}]( is a )"/>
+            <property name="period" value="。"/>
         </module>
         <module name="JavadocParagraph"/>
         <module name="AtclauseOrder">
