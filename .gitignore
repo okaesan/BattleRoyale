@@ -133,3 +133,11 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+
+#
+# 追加設定
+#
+
+# Checkstyle設定ファイル
+.checkstyle
