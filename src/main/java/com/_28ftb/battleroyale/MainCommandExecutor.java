@@ -27,15 +27,12 @@ public class MainCommandExecutor implements CommandExecutor {
     MainCommandExecutor._plugin = plugin;
   }
 
-  /*
+  /**
    * onEnable()メソッドで定義したコマンドが実行されるとこのメソッドを通る。
    *
    * @param sender コマンド実行者
-   *
    * @param cmd 実行されたコマンド
-   *
    * @param label コマンドエイリアス
-   *
    * @param args コマンドの引数
    */
   @SuppressWarnings({ "deprecation" })
@@ -49,7 +46,7 @@ public class MainCommandExecutor implements CommandExecutor {
 
       Player _player = (Player) sender;
 
-      /*
+      /**
        * 対角線でステージの登録を行うためのL、Rの登録 引数の0と1は、LとRの識別子
        */
       switch (args[0]) {
@@ -199,6 +196,7 @@ public class MainCommandExecutor implements CommandExecutor {
               return true;
             }
           }
+          return true;
 
         case "checkConf":
           if (args.length == 1) {
@@ -229,6 +227,7 @@ public class MainCommandExecutor implements CommandExecutor {
             _player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "スコアボードをリロードしました。");
             return true;
           }
+          return true;
 
         default:
           _player.sendMessage(BattleRoyale.prefix + ChatColor.GRAY + "\n/battleroyale "
